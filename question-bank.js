@@ -233,7 +233,7 @@ window.curatedQuestionBankZhTW = {
       },
       {
         question: "降價換量要維持原 EBIT，可用什麼觀點評估？",
-        answer: "比較新舊 EBIT，差額可視為可容許的固定成本增加上限。",
+        answer: "可比較新舊 EBIT；兩者差額可視為可容許的最大固定成本增加額度。",
       },
       {
         question: "疫情期間 Airbnb 大幅裁員反映哪種成本習性調整？",
@@ -242,7 +242,7 @@ window.curatedQuestionBankZhTW = {
     ],
     hard: [
       {
-        question: "請說明 Uber 商業模式在成本習性上的優劣勢。",
+        question: "請說明 Uber 商業模式在成本習性上的優劣勢？",
         answer: "透過將車輛與維護成本轉嫁給司機來降低固定成本與風險，但成長時利潤槓桿較受限。",
       },
       {
@@ -254,7 +254,7 @@ window.curatedQuestionBankZhTW = {
         answer: "4,500 -（800 × 3.2）= 1,940。",
       },
       {
-        question: "原 EBIT 600,000、原 FC 1,400,000；新 FC 增至 1,500,000、銷量 40,000 不變，維持原 EBIT 最低 uCM 為何？",
+        question: "原 EBIT 為 600,000、原 FC 為 1,400,000；新 FC 增至 1,500,000，且銷量維持 40,000 不變，維持原 EBIT 所需最低 uCM 為何？",
         answer: "uCM =（600,000 + 1,500,000）÷ 40,000 = 52.5。",
       },
       {
@@ -346,7 +346,7 @@ window.curatedQuestionBankZhTW = {
         answer: "650,000 ÷ 120 = 5,417 單位。",
       },
       {
-        question: "請寫出以邊際貢獻表示的 EBIT 推導結果。",
+        question: "請寫出以邊際貢獻表示的 EBIT 推導結果？",
         answer: "EBIT =（SP × Qty）-（uVC × Qty）- FC =（SP - uVC）× Qty - FC =（uCM × Qty）- FC。",
       },
     ],
@@ -419,7 +419,7 @@ window.curatedQuestionBankZhTW = {
     hard: [
       {
         question: "愛爾蘭與波蘭設廠案例中，無異點方程式如何建立？",
-        answer: "將兩地利潤式設為相等： （愛爾蘭 uCM × Qty）- 愛爾蘭 FC =（波蘭 uCM × Qty）- 波蘭 FC。",
+        answer: "將兩地利潤式設為相等：（愛爾蘭 uCM × Qty）- 愛爾蘭 FC =（波蘭 uCM × Qty）- 波蘭 FC。",
       },
       {
         question: "多產品（A 與 B）計算整體 BEP 或目標利潤前，必須先算哪個指標？",
