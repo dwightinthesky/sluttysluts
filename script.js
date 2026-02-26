@@ -529,6 +529,23 @@ const money = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
 
+const lectureOrder = ["l2", "l3", "l4", "l5", "l6"];
+
+function updateLectureStatus(lectureKey) {
+  const focusTitle = document.getElementById("current-lecture-tag");
+  const progressText = document.getElementById("lecture-progress");
+
+  if (!focusTitle || !progressText || !lectureData[lectureKey]) {
+    return;
+  }
+
+  const position = lectureOrder.indexOf(lectureKey);
+  const lectureIndex = position >= 0 ? position + 1 : 1;
+
+  focusTitle.textContent = lectureData[lectureKey].title;
+  progressText.textContent = `${lectureIndex} of ${lectureOrder.length} lectures active`;
+}
+
 function renderLecture(lectureKey) {
   const lecture = lectureData[lectureKey];
   const title = document.getElementById("lecture-title");
@@ -547,6 +564,8 @@ function renderLecture(lectureKey) {
     `
     )
     .join("");
+
+  updateLectureStatus(lectureKey);
 }
 
 function setupLectureNav() {

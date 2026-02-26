@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
@@ -15,18 +15,19 @@
   <body>
     <div class="page-shell">
       <header class="topbar">
-        <a href="#" class="brand">StudyFlow</a>
-        <p class="topbar-note">Managerial Accounting Revision Workspace</p>
+        <a href="#" class="brand">STUDYFLOW</a>
+        <p class="topbar-note">Managerial Accounting Studio</p>
+        <p class="topbar-kicker">Focused Revision Workspace</p>
       </header>
 
       <section class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">Built for AC11 midterm review</p>
-          <h1>Review managerial accounting with confidence.</h1>
+          <p class="eyebrow">AC11 Midterm Intensive</p>
+          <h1>Learn the numbers. Read the risk. Make the decision.</h1>
           <p class="subtitle">
-            Clean summaries, practical formulas, interactive quizzes, and
-            instant CVP calculations. Everything is in English and optimized for
-            focused study sessions.
+            WeWork-inspired learning interface for managerial accounting:
+            precise lecture notes, formula drills, quiz checks, and CVP tools
+            in one clean workspace.
           </p>
           <div class="hero-actions">
             <button class="btn btn-primary" data-jump="lecture-panel">
@@ -56,8 +57,8 @@
         </div>
 
         <aside class="hero-card">
-          <p class="hero-card-label">Fast Review Path</p>
-          <h2>What to finish in 15 minutes</h2>
+          <p class="hero-card-label">Sprint Plan</p>
+          <h2>15-minute high-retention flow</h2>
           <ol>
             <li>Scan lecture highlights by topic.</li>
             <li>Flip formula cards and memorize core equations.</li>
@@ -73,6 +74,13 @@
         </aside>
       </section>
 
+      <section class="quick-nav" aria-label="Quick learning navigation">
+        <button class="quick-item" data-jump="lecture-panel">Lecture Notes</button>
+        <button class="quick-item" data-jump="formula-panel">Formula Deck</button>
+        <button class="quick-item" data-jump="quiz-panel">Quiz Check</button>
+        <button class="quick-item" data-jump="calculator-panel">CVP Lab</button>
+      </section>
+
       <main class="layout">
         <aside class="sidebar">
           <h2>Lecture Map</h2>
@@ -80,6 +88,13 @@
             Move by chapter and review each concept block before doing the
             quiz.
           </p>
+          <section class="study-progress" aria-label="Current lecture status">
+            <p class="progress-label">Current Focus</p>
+            <p id="current-lecture-tag" class="progress-title">
+              Lecture 2: Financial vs Managerial
+            </p>
+            <p id="lecture-progress" class="progress-meta">1 of 5 lectures active</p>
+          </section>
           <nav id="lecture-nav" aria-label="Lecture navigation">
             <button class="nav-item active" data-lecture="l2">
               Lecture 2: Financial vs Managerial
