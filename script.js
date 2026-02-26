@@ -1723,7 +1723,20 @@ function buildGeneratedUnitQuiz(lectureKey = currentLectureKey) {
     ];
   });
 
-  return shuffleArray(questions);
+  const taggedQuestions = questions.map((question, index) => {
+    const mod = index % 3;
+    const difficulty = mod === 0 ? "easy" : mod === 1 ? "medium" : "hard";
+    return {
+      ...question,
+      difficulty,
+    };
+  });
+
+  if (currentQuizDifficulty === "easy" || currentQuizDifficulty === "medium" || currentQuizDifficulty === "hard") {
+    return shuffleArray(taggedQuestions.filter((question) => question.difficulty === currentQuizDifficulty));
+  }
+
+  return shuffleArray(taggedQuestions);
 }
 
 function buildUnitQuiz(lectureKey = currentLectureKey) {
@@ -2155,9 +2168,12 @@ function updateQuizDifficultyControls(lectureKey = currentLectureKey) {
   if (!select) {
     return;
   }
-  const hasCuratedQuiz = Boolean(getCuratedQuestionGroups(lectureKey));
-  select.disabled = !hasCuratedQuiz;
-  select.value = hasCuratedQuiz ? currentQuizDifficulty : "all";
+  const validDifficulties = new Set(["all", "easy", "medium", "hard"]);
+  if (!validDifficulties.has(currentQuizDifficulty)) {
+    currentQuizDifficulty = "all";
+  }
+  select.disabled = false;
+  select.value = currentQuizDifficulty;
 }
 
 function setupQuizDifficultyFilter() {
