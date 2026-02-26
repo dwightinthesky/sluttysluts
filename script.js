@@ -1071,6 +1071,9 @@ const uiText = {
     flashcardLabel: "Formula Card",
     quizTitle: "Practice Quiz",
     quizCopy: "Check understanding with quick multiple-choice questions.",
+    quizUnitMeta: "Current unit: {unit} ({count} questions)",
+    quizQuestionHeadingPrompt: "Which concept best matches this key point?",
+    quizQuestionTextPrompt: "Which statement best explains this concept?",
     submitQuizBtn: "Submit Quiz",
     resetBtn: "Reset",
     shuffleQuizBtn: "Shuffle Quiz",
@@ -1163,6 +1166,9 @@ const uiText = {
     flashcardLabel: "公式卡",
     quizTitle: "練習測驗",
     quizCopy: "用選擇題快速確認理解程度。",
+    quizUnitMeta: "目前單元：{unit}（{count} 題）",
+    quizQuestionHeadingPrompt: "以下重點最對應哪個概念？",
+    quizQuestionTextPrompt: "以下概念最對應哪段敘述？",
     submitQuizBtn: "提交測驗",
     resetBtn: "重置",
     shuffleQuizBtn: "重排題目",
@@ -1253,6 +1259,9 @@ const uiText = {
     flashcardLabel: "Formelkarte",
     quizTitle: "Praxis Quiz",
     quizCopy: "Verstandnis mit kurzen Multiple-Choice-Fragen prufen.",
+    quizUnitMeta: "Aktuelle Einheit: {unit} ({count} Fragen)",
+    quizQuestionHeadingPrompt: "Welches Konzept passt am besten zu diesem Punkt?",
+    quizQuestionTextPrompt: "Welche Aussage beschreibt dieses Konzept am besten?",
     submitQuizBtn: "Quiz auswerten",
     resetBtn: "Zurucksetzen",
     shuffleQuizBtn: "Quiz mischen",
@@ -1411,9 +1420,11 @@ function applyStaticTranslations() {
 
 function updateMetrics() {
   const content = getContent();
+  const lecture = content.lectures[currentLectureKey];
+  const quizCount = lecture ? lecture.points.length * 2 : 0;
   document.getElementById("metric-lectures-count").textContent = String(lectureOrder.length);
   document.getElementById("metric-cards-count").textContent = String(content.flashcards.length);
-  document.getElementById("metric-quiz-count").textContent = String(content.quiz.length);
+  document.getElementById("metric-quiz-count").textContent = String(quizCount);
 }
 
 function renderLectureNav() {
@@ -1485,7 +1496,8 @@ function updateLectureControlButtons() {
   next.disabled = index >= lectureOrder.length - 1;
 }
 
-function renderLecture(lectureKey = currentLectureKey) {
+function renderLecture(lectureKey = currentLectureKey, options = {}) {
+  const { refreshQuiz = true } = options;
   currentLectureKey = lectureKey;
   saveLastLecture(lectureKey);
   const ui = getUi();
@@ -1528,6 +1540,12 @@ function renderLecture(lectureKey = currentLectureKey) {
   updateLectureStatus(lectureKey);
   updateCompletionWidgets();
   updateLectureControlButtons();
+
+  if (refreshQuiz) {
+    refreshQuizForLecture(lectureKey);
+  } else {
+    updateQuizMeta(lectureKey);
+  }
 }
 
 function setupLectureNav() {
@@ -1585,6 +1603,76 @@ function setupFlashcards() {
     }
     card.classList.toggle("revealed");
   });
+}
+
+function shuffleArray(items) {
+  const copy = [...items];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+  }
+  return copy;
+}
+
+function buildMultipleChoiceOptions(correctOption, optionPool) {
+  const distractorPool = Array.from(new Set(optionPool.filter((option) => option !== correctOption)));
+  const distractors = shuffleArray(distractorPool).slice(0, 3);
+  const options = shuffleArray([correctOption, ...distractors]);
+  return {
+    options,
+    correctIndex: options.indexOf(correctOption),
+  };
+}
+
+function buildUnitQuiz(lectureKey = currentLectureKey) {
+  const lecture = getContent().lectures[lectureKey];
+  if (!lecture || !Array.isArray(lecture.points) || !lecture.points.length) {
+    return [];
+  }
+
+  const ui = getUi();
+  const headingPool = lecture.points.map((point) => point.heading);
+  const textPool = lecture.points.map((point) => point.text);
+  const questions = lecture.points.flatMap((point) => {
+    const headingOptions = buildMultipleChoiceOptions(point.heading, headingPool);
+    const textOptions = buildMultipleChoiceOptions(point.text, textPool);
+
+    return [
+      {
+        question: `${ui.quizQuestionHeadingPrompt} "${point.text}"`,
+        options: headingOptions.options,
+        correct: headingOptions.correctIndex,
+      },
+      {
+        question: `${ui.quizQuestionTextPrompt} "${point.heading}"`,
+        options: textOptions.options,
+        correct: textOptions.correctIndex,
+      },
+    ];
+  });
+
+  return shuffleArray(questions);
+}
+
+function updateQuizMeta(lectureKey = currentLectureKey) {
+  const meta = document.getElementById("quiz-unit-meta");
+  const lecture = getContent().lectures[lectureKey];
+  if (!meta || !lecture) {
+    return;
+  }
+
+  meta.textContent = formatTemplate(getUi().quizUnitMeta, {
+    unit: lecture.title,
+    count: currentQuizData.length,
+  });
+}
+
+function refreshQuizForLecture(lectureKey = currentLectureKey) {
+  currentQuizData = buildUnitQuiz(lectureKey);
+  renderQuiz();
+  resetQuiz();
+  updateQuizMeta(lectureKey);
+  updateMetrics();
 }
 
 function resetQuiz() {
@@ -1652,9 +1740,10 @@ function gradeQuiz() {
 }
 
 function shuffleQuiz() {
-  currentQuizData = [...currentQuizData].sort(() => Math.random() - 0.5);
+  currentQuizData = shuffleArray(currentQuizData);
   renderQuiz();
   resetQuiz();
+  updateQuizMeta(currentLectureKey);
 }
 
 function safeNumber(value) {
@@ -1749,13 +1838,9 @@ function setLanguage(language, persist = true) {
   });
 
   applyStaticTranslations();
-  updateMetrics();
   renderLectureNav();
   renderFlashcards();
-  currentQuizData = [...getContent().quiz];
-  renderQuiz();
-  resetQuiz();
-  renderLecture(currentLectureKey);
+  renderLecture(currentLectureKey, { refreshQuiz: true });
   runCvp();
   runHighLow();
 }
@@ -1777,7 +1862,7 @@ function setupStudyTools() {
   const resetProgressButton = document.getElementById("reset-progress");
 
   searchInput.addEventListener("input", () => {
-    renderLecture(currentLectureKey);
+    renderLecture(currentLectureKey, { refreshQuiz: false });
   });
 
   toggleCompleteButton.addEventListener("click", () => {
@@ -1834,7 +1919,6 @@ function bootstrap() {
   completedLectures = loadCompletedLectures();
   currentLanguage = loadLanguage();
   currentLectureKey = loadLastLecture();
-  currentQuizData = [...getContent().quiz];
 
   setupLectureNav();
   setupLectureFlowControls();

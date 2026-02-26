@@ -619,6 +619,13 @@ h1 {
   background: #fff4f6;
 }
 
+.quiz-unit-meta {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  color: #705d43;
+  font-weight: 600;
+}
+
 .quiz-actions {
   margin-top: 0.95rem;
   display: flex;
