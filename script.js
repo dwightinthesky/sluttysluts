@@ -231,27 +231,79 @@ const lectureData = {
   l5: {
     title: "Lecture 5: CVP Analysis and Break-Even Point",
     summary:
-      "CVP links volume, cost, and profit so managers can estimate how sales changes affect EBIT and risk.",
+      "Lecture 5 introduces CVP as a practical model for linking price, cost, and volume to operating profit and break-even risk.",
     points: [
       {
-        heading: "Contribution Margin",
-        text: "CM = Sales - Variable costs. Unit CM = Selling price - Unit variable cost. CM covers fixed costs first, then profit.",
+        heading: "Core Variables",
+        text: "CVP uses SP (selling price), uVC (unit variable cost), FC (total fixed cost), Qty (quantity), and EBIT (operating profit).",
       },
       {
-        heading: "CM Ratio",
-        text: "CM Ratio = Unit CM / Selling price. It shows how much of each sales dollar contributes to fixed costs and profit.",
+        heading: "Baseline EBIT Formula",
+        text: "EBIT = Revenue - Cost = (SP × Qty) - (uVC × Qty) - FC.",
       },
       {
-        heading: "EBIT Formula Forms",
-        text: "EBIT = Sales - Total costs = (SP × Q) - (uVC × Q) - FC = (uCM × Q) - FC.",
+        heading: "What Contribution Margin Means",
+        text: "Contribution margin is the amount left after variable costs. It first covers fixed costs, then generates profit.",
+      },
+      {
+        heading: "Total Contribution Margin",
+        text: "Total CM = Total Sales - Total Variable Cost.",
+      },
+      {
+        heading: "Unit Contribution Margin (uCM)",
+        text: "uCM = SP - uVC. It shows how much one additional unit contributes to FC recovery and profit.",
+      },
+      {
+        heading: "Contribution Margin Ratio",
+        text: "CM Ratio = uCM / SP, or Total CM / Total Sales. It is the share of each sales dollar available for FC and profit.",
+      },
+      {
+        heading: "EBIT in CM Form",
+        text: "EBIT = (SP - uVC) × Qty - FC = (uCM × Qty) - FC.",
+      },
+      {
+        heading: "Break-Even Definition",
+        text: "Break-even is the activity level where EBIT = 0, so total revenue equals total cost.",
+      },
+      {
+        heading: "Break-Even Logic",
+        text: "At BEP, total contribution margin equals total fixed cost (CM = FC).",
       },
       {
         heading: "Break-Even Units",
-        text: "Break-even units = FC / uCM. At this quantity, EBIT equals zero.",
+        text: "BEP (units) = FC / uCM.",
       },
       {
         heading: "Break-Even Sales Dollars",
-        text: "Break-even sales = Break-even units × SP, or FC / CM ratio.",
+        text: "BEP (sales) = BEP units × SP, or FC / CM ratio.",
+      },
+      {
+        heading: "Risk KPI Interpretation",
+        text: "Break-even is a risk KPI because it shows the minimum sales needed to avoid losses.",
+      },
+      {
+        heading: "CVP Chart Axes",
+        text: "X-axis is activity level (units or sales volume). Y-axis is dollars/euros.",
+      },
+      {
+        heading: "CVP Chart Lines",
+        text: "Total cost starts at FC on the Y-axis and rises with variable cost slope. Revenue starts at origin with slope equal to SP.",
+      },
+      {
+        heading: "BEP on the Graph",
+        text: "The intersection of revenue and total cost lines is the break-even point.",
+      },
+      {
+        heading: "Profit and Loss Regions",
+        text: "Right of BEP: profit region (Revenue > Cost). Left of BEP: loss region (Revenue < Cost).",
+      },
+      {
+        heading: "What-If: Higher Fixed Cost",
+        text: "If FC rises, BEP increases. New BEP units = (old FC + added FC) / uCM.",
+      },
+      {
+        heading: "What-If: Improve EBIT",
+        text: "Managers compare actions such as raising SP, reducing uVC, or cutting FC and select the scenario with the highest final EBIT.",
       },
     ],
   },
