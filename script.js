@@ -1740,8 +1740,9 @@ function buildGeneratedUnitQuiz(lectureKey = currentLectureKey) {
 }
 
 function buildUnitQuiz(lectureKey = currentLectureKey) {
-  const curatedQuiz = buildCuratedUnitQuiz(lectureKey);
-  if (curatedQuiz.length) {
+  const hasCuratedGroups = Boolean(getCuratedQuestionGroups(lectureKey));
+  if (hasCuratedGroups) {
+    const curatedQuiz = buildCuratedUnitQuiz(lectureKey);
     return shuffleArray(curatedQuiz);
   }
   return buildGeneratedUnitQuiz(lectureKey);
