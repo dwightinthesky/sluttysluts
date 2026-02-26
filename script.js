@@ -2,27 +2,63 @@ const lectureData = {
   l2: {
     title: "Lecture 2: Financial vs Managerial Accounting",
     summary:
-      "Financial accounting focuses on external reporting and standards, while managerial accounting supports internal planning, control, and decisions.",
+      "Lecture 2 explains why external financial statements are not enough for internal decisions, and how managerial accounting fills that gap with detailed, decision-ready analysis.",
     points: [
       {
-        heading: "Primary Users",
-        text: "Financial accounting serves investors, lenders, regulators, and external stakeholders. Managerial accounting serves managers and employees.",
+        heading: "Why Managerial Accounting Exists",
+        text: "In the Dana Matthews case, company-level profit looked weak, but financial statements did not show product-level profitability. Managers still needed product-by-product insight to act.",
       },
       {
-        heading: "Rules and Flexibility",
-        text: "Financial reports follow GAAP/IFRS. Managerial reports are flexible and designed around operational needs.",
+        heading: "Why Financial Statements Were Not Enough",
+        text: "Financial accounting is designed for external users under GAAP/IFRS. It does not normally disclose sensitive internal profitability details by product line.",
+      },
+      {
+        heading: "Primary Purpose",
+        text: "Financial accounting reports organizational performance to outside stakeholders. Managerial accounting supports internal planning, control, and decision quality.",
+      },
+      {
+        heading: "Information Users",
+        text: "Financial accounting serves investors, lenders, regulators, and creditors. Managerial accounting serves managers, teams, and operating decision makers.",
+      },
+      {
+        heading: "Report Type and Frequency",
+        text: "Financial reports are standardized statements issued periodically (monthly, quarterly, annually). Managerial reports are produced whenever needed: daily, weekly, or by project.",
+      },
+      {
+        heading: "Regulation and Audit",
+        text: "Financial accounting is legally required and externally audited. Managerial accounting has no mandatory format but is critical for internal performance and strategy.",
       },
       {
         heading: "Time Orientation",
-        text: "Financial accounting is historical and objective. Managerial accounting is forward-looking with forecasts and budgets.",
+        text: "Financial accounting emphasizes historical, objective records. Managerial accounting is future-oriented, using forecasts, plans, and scenario analysis.",
       },
       {
-        heading: "Level of Detail",
-        text: "Financial accounting summarizes the whole business. Managerial accounting can drill down by product, department, and process.",
+        heading: "Level of Detail and Data Type",
+        text: "Financial accounting summarizes the full company with mostly quantitative data. Managerial accounting drills down to product, customer, and department using quantitative and qualitative data.",
       },
       {
-        heading: "Statement Building Practice",
-        text: "Students should know basic structure of balance sheet and income statement terms such as COGS, gross profit, EBIT, and net income.",
+        heading: "Typical MA Question: Special Orders",
+        text: "If the company receives an extra order outside normal operations, what is the minimum acceptable price or cost threshold?",
+      },
+      {
+        heading: "Typical MA Question: Cost Structure",
+        text: "Should the business choose higher fixed costs or a more variable-cost model? How should HQ overhead be allocated across products or services?",
+      },
+      {
+        heading: "Typical MA Question: Strategic Choices",
+        text: "Should we make or buy, launch or drop a product, or cut price to drive volume? Which product mix should be prioritized under capacity constraints?",
+      },
+      {
+        heading: "Balance Sheet Structure (Practice)",
+        text: "Core equation: Assets = Liabilities + Stockholders' Equity. Classified sections include current assets, long-term assets, current liabilities, long-term liabilities, and equity.",
+      },
+      {
+        heading: "Income Statement Structure (Practice)",
+        text: "Flow: Sales - COGS = Gross Profit; minus operating expenses = EBIT; minus non-operating expenses and tax = Net Income.",
+      },
+      {
+        heading: "Link to Retained Earnings",
+        text: "Retained earnings increase with net income and decrease with dividends, connecting income statement results to balance sheet equity.",
       },
     ],
   },
