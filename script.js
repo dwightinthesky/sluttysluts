@@ -1066,7 +1066,7 @@ const uiText = {
     lectureProgress: "{current} of {total} lectures active",
     prevLectureBtn: "Previous Lecture",
     nextLectureBtn: "Next Lecture",
-    shortcutsHint: "Shortcuts: N next lecture, P previous lecture, / focus search",
+    shortcutsHint: "Shortcuts: N next lecture, P previous lecture, / focus search, ←/→ quiz question",
     formulaTitle: "Formula Flashcards",
     formulaCopy: "Click a card to reveal the formula and when to use it.",
     flashcardLabel: "Formula Card",
@@ -1078,6 +1078,11 @@ const uiText = {
     quizDifficultyMedium: "Medium",
     quizDifficultyHard: "Hard",
     quizUnitMeta: "Current unit: {unit} ({count} questions)",
+    quizFlowMeta: "Question {current}/{total} · Answered {answered}",
+    quizEmpty: "No questions available for this filter.",
+    quizPrevQuestionBtn: "Previous Question",
+    quizNextQuestionBtn: "Next Question",
+    quizNextUnansweredBtn: "Next Unanswered",
     quizQuestionHeadingPrompt: "Which concept best matches this key point?",
     quizQuestionTextPrompt: "Which statement best explains this concept?",
     submitQuizBtn: "Submit Quiz",
@@ -1166,7 +1171,7 @@ const uiText = {
     lectureProgress: "目前第 {current} / {total} 講",
     prevLectureBtn: "上一講",
     nextLectureBtn: "下一講",
-    shortcutsHint: "快捷鍵：N 下一講、P 上一講、/ 聚焦搜尋",
+    shortcutsHint: "快捷鍵：N 下一講、P 上一講、/ 聚焦搜尋、←/→ 測驗換題",
     formulaTitle: "公式複習卡",
     formulaCopy: "點一下卡片即可顯示公式與用途。",
     flashcardLabel: "公式卡",
@@ -1178,6 +1183,11 @@ const uiText = {
     quizDifficultyMedium: "中等",
     quizDifficultyHard: "困難",
     quizUnitMeta: "目前單元：{unit}（{count} 題）",
+    quizFlowMeta: "第 {current}/{total} 題・已作答 {answered}",
+    quizEmpty: "此篩選目前沒有可用題目。",
+    quizPrevQuestionBtn: "上一題",
+    quizNextQuestionBtn: "下一題",
+    quizNextUnansweredBtn: "下一題未作答",
     quizQuestionHeadingPrompt: "以下重點最對應哪個概念？",
     quizQuestionTextPrompt: "以下概念最對應哪段敘述？",
     submitQuizBtn: "提交測驗",
@@ -1264,7 +1274,7 @@ const uiText = {
     lectureProgress: "{current} von {total} Kapiteln aktiv",
     prevLectureBtn: "Vorheriges Kapitel",
     nextLectureBtn: "Nachstes Kapitel",
-    shortcutsHint: "Shortcuts: N nachstes Kapitel, P vorheriges Kapitel, / Suche fokussieren",
+    shortcutsHint: "Shortcuts: N nachstes Kapitel, P vorheriges Kapitel, / Suche fokussieren, ←/→ Quizfrage",
     formulaTitle: "Formel Flashcards",
     formulaCopy: "Karte anklicken, um Formel und Anwendung zu sehen.",
     flashcardLabel: "Formelkarte",
@@ -1276,6 +1286,11 @@ const uiText = {
     quizDifficultyMedium: "Mittel",
     quizDifficultyHard: "Schwer",
     quizUnitMeta: "Aktuelle Einheit: {unit} ({count} Fragen)",
+    quizFlowMeta: "Frage {current}/{total} · Beantwortet {answered}",
+    quizEmpty: "Fur diesen Filter sind keine Fragen verfugbar.",
+    quizPrevQuestionBtn: "Vorherige Frage",
+    quizNextQuestionBtn: "Nachste Frage",
+    quizNextUnansweredBtn: "Nachste unbeantwortete",
     quizQuestionHeadingPrompt: "Welches Konzept passt am besten zu diesem Punkt?",
     quizQuestionTextPrompt: "Welche Aussage beschreibt dieses Konzept am besten?",
     submitQuizBtn: "Quiz auswerten",
@@ -1348,6 +1363,7 @@ let currentLanguage = "en";
 let currentLectureKey = "l2";
 let currentQuizData = [];
 let currentQuizDifficulty = "all";
+let currentQuizQuestionIndex = 0;
 let completedLectures = new Set();
 
 function getContent() {
@@ -1733,11 +1749,100 @@ function updateQuizMeta(lectureKey = currentLectureKey) {
 
 function refreshQuizForLecture(lectureKey = currentLectureKey) {
   currentQuizData = buildUnitQuiz(lectureKey);
+  currentQuizQuestionIndex = 0;
   renderQuiz();
   resetQuiz();
   updateQuizMeta(lectureKey);
   updateQuizDifficultyControls(lectureKey);
   updateMetrics();
+}
+
+function countAnsweredQuestions() {
+  return currentQuizData.reduce((count, _question, idx) => {
+    const answered = document.querySelector(`input[name="q-${idx}"]:checked`);
+    return answered ? count + 1 : count;
+  }, 0);
+}
+
+function findNextUnansweredQuestion(startIndex = currentQuizQuestionIndex + 1) {
+  if (!currentQuizData.length) {
+    return -1;
+  }
+
+  for (let offset = 0; offset < currentQuizData.length; offset += 1) {
+    const index = (startIndex + offset) % currentQuizData.length;
+    const answered = document.querySelector(`input[name="q-${index}"]:checked`);
+    if (!answered) {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+function updateQuizFlowUi() {
+  const ui = getUi();
+  const total = currentQuizData.length;
+  const progressMeta = document.getElementById("quiz-progress-meta");
+  const progressBar = document.getElementById("quiz-progress-bar");
+  const prevButton = document.getElementById("quiz-prev-question");
+  const nextButton = document.getElementById("quiz-next-question");
+  const nextUnansweredButton = document.getElementById("quiz-next-unanswered");
+
+  if (!progressMeta || !progressBar || !prevButton || !nextButton || !nextUnansweredButton) {
+    return;
+  }
+
+  if (!total) {
+    progressMeta.textContent = ui.quizEmpty;
+    progressBar.style.width = "0%";
+    prevButton.disabled = true;
+    nextButton.disabled = true;
+    nextUnansweredButton.disabled = true;
+    return;
+  }
+
+  if (currentQuizQuestionIndex < 0) {
+    currentQuizQuestionIndex = 0;
+  } else if (currentQuizQuestionIndex > total - 1) {
+    currentQuizQuestionIndex = total - 1;
+  }
+
+  document.querySelectorAll(".quiz-item[data-quiz]").forEach((item, idx) => {
+    item.classList.toggle("active", idx === currentQuizQuestionIndex);
+  });
+
+  const answered = countAnsweredQuestions();
+  const progressPercent = Math.round((answered / total) * 100);
+  progressBar.style.width = `${progressPercent}%`;
+  progressMeta.textContent = formatTemplate(ui.quizFlowMeta, {
+    current: currentQuizQuestionIndex + 1,
+    total,
+    answered,
+  });
+
+  prevButton.disabled = currentQuizQuestionIndex <= 0;
+  nextButton.disabled = currentQuizQuestionIndex >= total - 1;
+  nextUnansweredButton.disabled = answered >= total;
+
+  document.querySelectorAll(".quiz-chip").forEach((chip) => {
+    const chipIndex = Number(chip.dataset.quizJump);
+    const selected = document.querySelector(`input[name="q-${chipIndex}"]:checked`);
+    chip.classList.toggle("active", chipIndex === currentQuizQuestionIndex);
+    chip.classList.toggle("answered", Boolean(selected));
+  });
+}
+
+function showQuizQuestion(index) {
+  currentQuizQuestionIndex = index;
+  updateQuizFlowUi();
+}
+
+function jumpToNextUnansweredQuestion() {
+  const nextIndex = findNextUnansweredQuestion();
+  if (nextIndex >= 0) {
+    showQuizQuestion(nextIndex);
+  }
 }
 
 function resetQuiz() {
@@ -1748,10 +1853,29 @@ function resetQuiz() {
     item.classList.remove("correct", "wrong");
   });
   document.getElementById("quiz-score").textContent = "";
+  currentQuizQuestionIndex = 0;
+  updateQuizFlowUi();
 }
 
 function renderQuiz() {
+  const ui = getUi();
   const container = document.getElementById("quiz-container");
+  const nav = document.getElementById("quiz-question-nav");
+  if (!container || !nav) {
+    return;
+  }
+
+  if (!currentQuizData.length) {
+    container.innerHTML = `
+      <article class="quiz-item active">
+        <p>${ui.quizEmpty}</p>
+      </article>
+    `;
+    nav.innerHTML = "";
+    updateQuizFlowUi();
+    return;
+  }
+
   container.innerHTML = currentQuizData
     .map(
       (q, idx) => `
@@ -1773,10 +1897,24 @@ function renderQuiz() {
     `
     )
     .join("");
+
+  nav.innerHTML = currentQuizData
+    .map(
+      (_question, idx) =>
+        `<button type="button" class="quiz-chip" data-quiz-jump="${idx}">${idx + 1}</button>`
+    )
+    .join("");
+
+  updateQuizFlowUi();
 }
 
 function gradeQuiz() {
   const ui = getUi();
+  if (!currentQuizData.length) {
+    document.getElementById("quiz-score").textContent = ui.quizEmpty;
+    return;
+  }
+
   let score = 0;
 
   currentQuizData.forEach((question, idx) => {
@@ -1802,6 +1940,7 @@ function gradeQuiz() {
     total: currentQuizData.length,
     percent,
   });
+  updateQuizFlowUi();
 }
 
 function shuffleQuiz() {
@@ -1970,6 +2109,10 @@ function setupKeyboardShortcuts() {
       navigateLecture(1);
     } else if (event.key === "p" || event.key === "P") {
       navigateLecture(-1);
+    } else if (event.key === "ArrowRight") {
+      showQuizQuestion(currentQuizQuestionIndex + 1);
+    } else if (event.key === "ArrowLeft") {
+      showQuizQuestion(currentQuizQuestionIndex - 1);
     }
   });
 }
@@ -1978,6 +2121,33 @@ function setupQuizActions() {
   document.getElementById("submit-quiz").addEventListener("click", gradeQuiz);
   document.getElementById("reset-quiz").addEventListener("click", resetQuiz);
   document.getElementById("shuffle-quiz").addEventListener("click", shuffleQuiz);
+  document.getElementById("quiz-prev-question").addEventListener("click", () => {
+    showQuizQuestion(currentQuizQuestionIndex - 1);
+  });
+  document.getElementById("quiz-next-question").addEventListener("click", () => {
+    showQuizQuestion(currentQuizQuestionIndex + 1);
+  });
+  document.getElementById("quiz-next-unanswered").addEventListener("click", jumpToNextUnansweredQuestion);
+
+  document.getElementById("quiz-question-nav").addEventListener("click", (event) => {
+    const chip = event.target.closest("[data-quiz-jump]");
+    if (!chip) {
+      return;
+    }
+    showQuizQuestion(Number(chip.dataset.quizJump));
+  });
+
+  document.getElementById("quiz-container").addEventListener("change", (event) => {
+    const input = event.target;
+    if (!(input instanceof HTMLInputElement) || input.type !== "radio") {
+      return;
+    }
+    const questionIndex = Number(input.name.replace("q-", ""));
+    if (Number.isFinite(questionIndex)) {
+      currentQuizQuestionIndex = questionIndex;
+    }
+    updateQuizFlowUi();
+  });
 }
 
 function updateQuizDifficultyControls(lectureKey = currentLectureKey) {

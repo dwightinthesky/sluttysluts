@@ -166,6 +166,29 @@
               <h2 data-i18n="quizTitle">Practice Quiz</h2>
               <p data-i18n="quizCopy">Check understanding with quick multiple-choice questions.</p>
               <p id="quiz-unit-meta" class="quiz-unit-meta">Current unit: Lecture 2 (0 questions)</p>
+              <div class="quiz-flow">
+                <div class="quiz-progress-track">
+                  <span id="quiz-progress-bar"></span>
+                </div>
+                <p id="quiz-progress-meta" class="quiz-progress-meta">Question 1/20 · Answered 0</p>
+                <div class="quiz-nav-buttons">
+                  <button id="quiz-prev-question" class="btn btn-ghost" type="button" data-i18n="quizPrevQuestionBtn">
+                    Previous Question
+                  </button>
+                  <button id="quiz-next-question" class="btn btn-ghost" type="button" data-i18n="quizNextQuestionBtn">
+                    Next Question
+                  </button>
+                  <button
+                    id="quiz-next-unanswered"
+                    class="btn btn-ghost"
+                    type="button"
+                    data-i18n="quizNextUnansweredBtn"
+                  >
+                    Next Unanswered
+                  </button>
+                </div>
+                <div id="quiz-question-nav" class="quiz-question-nav"></div>
+              </div>
               <div class="quiz-filter-row">
                 <label for="quiz-difficulty" class="tool-label" data-i18n="quizDifficultyLabel">Difficulty</label>
                 <select id="quiz-difficulty" class="quiz-difficulty-select">
