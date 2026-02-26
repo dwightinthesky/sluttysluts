@@ -1061,7 +1061,11 @@ const uiText = {
     markIncompleteBtn: "Mark lecture incomplete",
     resetProgressBtn: "Reset progress",
     completionMeta: "Completed {done}/{total} lectures",
+    overallProgressText: "Progress: {percent}%",
     lectureProgress: "{current} of {total} lectures active",
+    prevLectureBtn: "Previous Lecture",
+    nextLectureBtn: "Next Lecture",
+    shortcutsHint: "Shortcuts: N next lecture, P previous lecture, / focus search",
     formulaTitle: "Formula Flashcards",
     formulaCopy: "Click a card to reveal the formula and when to use it.",
     flashcardLabel: "Formula Card",
@@ -1149,7 +1153,11 @@ const uiText = {
     markIncompleteBtn: "取消完成標記",
     resetProgressBtn: "重置進度",
     completionMeta: "已完成 {done}/{total} 講",
+    overallProgressText: "完成率：{percent}%",
     lectureProgress: "目前第 {current} / {total} 講",
+    prevLectureBtn: "上一講",
+    nextLectureBtn: "下一講",
+    shortcutsHint: "快捷鍵：N 下一講、P 上一講、/ 聚焦搜尋",
     formulaTitle: "公式複習卡",
     formulaCopy: "點一下卡片即可顯示公式與用途。",
     flashcardLabel: "公式卡",
@@ -1235,7 +1243,11 @@ const uiText = {
     markIncompleteBtn: "Erledigt-Markierung entfernen",
     resetProgressBtn: "Fortschritt zurucksetzen",
     completionMeta: "Abgeschlossen: {done}/{total} Kapitel",
+    overallProgressText: "Fortschritt: {percent}%",
     lectureProgress: "{current} von {total} Kapiteln aktiv",
+    prevLectureBtn: "Vorheriges Kapitel",
+    nextLectureBtn: "Nachstes Kapitel",
+    shortcutsHint: "Shortcuts: N nachstes Kapitel, P vorheriges Kapitel, / Suche fokussieren",
     formulaTitle: "Formel Flashcards",
     formulaCopy: "Karte anklicken, um Formel und Anwendung zu sehen.",
     flashcardLabel: "Formelkarte",
@@ -1305,6 +1317,7 @@ const htmlLangByLanguage = {
 const lectureOrder = ["l2", "l3", "l4", "l5", "l6"];
 const LANGUAGE_KEY = "studyflow_language";
 const COMPLETED_KEY = "studyflow_completed_lectures";
+const LAST_LECTURE_KEY = "studyflow_last_lecture";
 
 let currentLanguage = "en";
 let currentLectureKey = "l2";
@@ -1365,6 +1378,20 @@ function saveCompletedLectures() {
   localStorage.setItem(COMPLETED_KEY, JSON.stringify(Array.from(completedLectures)));
 }
 
+function loadLastLecture() {
+  const stored = localStorage.getItem(LAST_LECTURE_KEY);
+  if (stored && lectureOrder.includes(stored)) {
+    return stored;
+  }
+  return "l2";
+}
+
+function saveLastLecture(lectureKey) {
+  if (lectureOrder.includes(lectureKey)) {
+    localStorage.setItem(LAST_LECTURE_KEY, lectureKey);
+  }
+}
+
 function applyStaticTranslations() {
   const ui = getUi();
   document.documentElement.lang = htmlLangByLanguage[currentLanguage] || "en";
@@ -1397,7 +1424,8 @@ function renderLectureNav() {
     .map((key) => {
       const activeClass = key === currentLectureKey ? "active" : "";
       const label = labels[key] || key.toUpperCase();
-      return `<button class=\"nav-item ${activeClass}\" data-lecture=\"${key}\">${label}</button>`;
+      const completedMark = completedLectures.has(key) ? "✓" : "";
+      return `<button class=\"nav-item ${activeClass}\" data-lecture=\"${key}\"><span class=\"nav-text\">${label}</span><span class=\"nav-status\">${completedMark}</span></button>`;
     })
     .join("");
 }
@@ -1406,13 +1434,21 @@ function updateCompletionWidgets() {
   const ui = getUi();
   const toggleBtn = document.getElementById("toggle-complete");
   const completionMeta = document.getElementById("completion-meta");
+  const overallProgressBar = document.getElementById("overall-progress-bar");
+  const overallProgressText = document.getElementById("overall-progress-text");
+  if (!toggleBtn || !completionMeta || !overallProgressBar || !overallProgressText) {
+    return;
+  }
   const isDone = completedLectures.has(currentLectureKey);
+  const percent = Math.round((completedLectures.size / lectureOrder.length) * 100);
 
   toggleBtn.textContent = isDone ? ui.markIncompleteBtn : ui.markCompleteBtn;
   completionMeta.textContent = formatTemplate(ui.completionMeta, {
     done: completedLectures.size,
     total: lectureOrder.length,
   });
+  overallProgressBar.style.width = `${percent}%`;
+  overallProgressText.textContent = formatTemplate(ui.overallProgressText, { percent });
 }
 
 function updateLectureStatus(lectureKey) {
@@ -1436,8 +1472,22 @@ function updateLectureStatus(lectureKey) {
   });
 }
 
+function updateLectureControlButtons() {
+  const index = lectureOrder.indexOf(currentLectureKey);
+  const prev = document.getElementById("prev-lecture");
+  const next = document.getElementById("next-lecture");
+
+  if (!prev || !next) {
+    return;
+  }
+
+  prev.disabled = index <= 0;
+  next.disabled = index >= lectureOrder.length - 1;
+}
+
 function renderLecture(lectureKey = currentLectureKey) {
   currentLectureKey = lectureKey;
+  saveLastLecture(lectureKey);
   const ui = getUi();
   const lecture = getContent().lectures[lectureKey];
   const title = document.getElementById("lecture-title");
@@ -1477,6 +1527,7 @@ function renderLecture(lectureKey = currentLectureKey) {
   renderLectureNav();
   updateLectureStatus(lectureKey);
   updateCompletionWidgets();
+  updateLectureControlButtons();
 }
 
 function setupLectureNav() {
@@ -1488,6 +1539,23 @@ function setupLectureNav() {
     }
     renderLecture(button.dataset.lecture);
   });
+}
+
+function navigateLecture(offset) {
+  const currentIndex = lectureOrder.indexOf(currentLectureKey);
+  const nextIndex = currentIndex + offset;
+  if (nextIndex < 0 || nextIndex >= lectureOrder.length) {
+    return;
+  }
+  renderLecture(lectureOrder[nextIndex]);
+}
+
+function setupLectureFlowControls() {
+  const prev = document.getElementById("prev-lecture");
+  const next = document.getElementById("next-lecture");
+
+  prev.addEventListener("click", () => navigateLecture(-1));
+  next.addEventListener("click", () => navigateLecture(1));
 }
 
 function renderFlashcards() {
@@ -1719,13 +1787,40 @@ function setupStudyTools() {
       completedLectures.add(currentLectureKey);
     }
     saveCompletedLectures();
+    renderLectureNav();
     updateCompletionWidgets();
   });
 
   resetProgressButton.addEventListener("click", () => {
     completedLectures = new Set();
     saveCompletedLectures();
+    renderLectureNav();
     updateCompletionWidgets();
+  });
+}
+
+function setupKeyboardShortcuts() {
+  document.addEventListener("keydown", (event) => {
+    const target = event.target;
+    const isTypingField =
+      target instanceof HTMLElement &&
+      (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable);
+
+    if (event.key === "/" && !isTypingField) {
+      event.preventDefault();
+      document.getElementById("lecture-search").focus();
+      return;
+    }
+
+    if (isTypingField) {
+      return;
+    }
+
+    if (event.key === "n" || event.key === "N") {
+      navigateLecture(1);
+    } else if (event.key === "p" || event.key === "P") {
+      navigateLecture(-1);
+    }
   });
 }
 
@@ -1738,13 +1833,16 @@ function setupQuizActions() {
 function bootstrap() {
   completedLectures = loadCompletedLectures();
   currentLanguage = loadLanguage();
+  currentLectureKey = loadLastLecture();
   currentQuizData = [...getContent().quiz];
 
   setupLectureNav();
+  setupLectureFlowControls();
   setupFlashcards();
   setupJumpButtons();
   setupLanguageSwitcher();
   setupStudyTools();
+  setupKeyboardShortcuts();
   setupQuizActions();
 
   document.getElementById("run-cvp").addEventListener("click", runCvp);

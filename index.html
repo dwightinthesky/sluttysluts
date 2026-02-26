@@ -101,6 +101,10 @@
             <p id="current-lecture-tag" class="progress-title">Lecture 2: Financial vs Managerial</p>
             <p id="lecture-progress" class="progress-meta">1 of 5 lectures active</p>
             <p id="completion-meta" class="progress-meta">Completed 0/5 lectures</p>
+            <div class="overall-progress">
+              <span id="overall-progress-bar"></span>
+            </div>
+            <p id="overall-progress-text" class="progress-meta">Progress: 0%</p>
           </section>
 
           <section class="study-tools" aria-label="Study tools">
@@ -121,6 +125,9 @@
                 Reset progress
               </button>
             </div>
+            <p id="shortcut-hint" class="shortcut-hint" data-i18n="shortcutsHint">
+              Shortcuts: N next lecture, P previous lecture, / focus search
+            </p>
           </section>
 
           <nav id="lecture-nav" aria-label="Lecture navigation"></nav>
@@ -134,6 +141,14 @@
                 Understand how accounting information serves external reporting
                 and internal decision-making.
               </p>
+            </div>
+            <div class="lecture-controls">
+              <button id="prev-lecture" class="btn btn-ghost" type="button" data-i18n="prevLectureBtn">
+                Previous Lecture
+              </button>
+              <button id="next-lecture" class="btn btn-ghost" type="button" data-i18n="nextLectureBtn">
+                Next Lecture
+              </button>
             </div>
             <div id="lecture-points" class="bullet-grid"></div>
           </section>
