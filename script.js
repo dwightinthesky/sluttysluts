@@ -65,27 +65,75 @@ const lectureData = {
   l3: {
     title: "Lecture 3: Cost Terms, Concepts, and Classifications",
     summary:
-      "Costs are grouped to support decisions and attached to a cost object such as a product, service, customer, or department.",
+      "Lecture 3 defines cost as a decision-support construct and shows how managers classify costs by behavior, traceability, and decision relevance.",
     points: [
       {
-        heading: "Manufacturing Costs",
-        text: "Direct materials, direct labor, and manufacturing overhead are product costs tied to production.",
+        heading: "What a Cost Means",
+        text: "A cost is an accounting construction created to support decisions. It represents resources consumed by a chosen object.",
       },
       {
-        heading: "Non-Manufacturing Costs",
-        text: "Selling and administrative costs are period costs and are expensed in the period incurred.",
+        heading: "Cost Object",
+        text: "A cost object is anything you want to measure: product, service, department, retail store, customer segment, or project.",
       },
       {
-        heading: "Direct vs Indirect",
-        text: "Direct costs trace easily to a cost object. Indirect costs require allocation (e.g., rent, utilities, supervisor salary).",
+        heading: "Three Classification Lenses",
+        text: "Costs are classified by behavior (variable/fixed), traceability (direct/indirect), and decision context (relevant, sunk, avoidable, etc.).",
       },
       {
-        heading: "Sunk Cost",
-        text: "A past cost that cannot be recovered should not affect current decision alternatives.",
+        heading: "Variable Costs (Behavior Lens)",
+        text: "Total variable cost changes proportionally with activity volume (units, miles, service hours, sales volume).",
+      },
+      {
+        heading: "Fixed Costs (Behavior Lens)",
+        text: "Total fixed cost stays constant within the relevant range, even if volume changes significantly or drops to zero.",
+      },
+      {
+        heading: "Direct Costs (Traceability Lens)",
+        text: "Direct costs can be traced clearly to one cost object, such as direct materials, direct labor, or dedicated equipment rental.",
+      },
+      {
+        heading: "Indirect Costs (Traceability Lens)",
+        text: "Indirect costs are shared across multiple cost objects and must be allocated, such as factory rent, utilities, supervision, and support labor.",
+      },
+      {
+        heading: "Direct Variable Example",
+        text: "Fuel used for one specific trip or raw material consumed per unit is both direct and variable.",
+      },
+      {
+        heading: "Direct Fixed Example",
+        text: "Annual insurance for one dedicated asset is direct to that asset but fixed over the policy period.",
+      },
+      {
+        heading: "Indirect Variable Example",
+        text: "Shared electricity can vary with usage but still be indirect if usage is not metered by cost object.",
+      },
+      {
+        heading: "Indirect Fixed Example",
+        text: "CEO salary and headquarters support costs are fixed and usually indirect to individual products.",
+      },
+      {
+        heading: "Sunk Cost (Decision Lens)",
+        text: "Past, unrecoverable spending is sunk and must be ignored in current decisions because it does not change across alternatives.",
+      },
+      {
+        heading: "Opportunity Cost (Decision Lens)",
+        text: "Opportunity cost is the benefit you give up by choosing one option over the best alternative option.",
       },
       {
         heading: "Avoidable and Relevant Costs",
         text: "Avoidable costs disappear if an activity stops. Relevant costs are expected future costs that differ between alternatives.",
+      },
+      {
+        heading: "Externality Costs",
+        text: "Some social or environmental costs may be unpaid now but become economically important later (e.g., carbon-related costs).",
+      },
+      {
+        heading: "Manufacturing Cost Structure",
+        text: "Total manufacturing cost = Direct Materials + Direct Labor + Manufacturing Overhead. Direct materials plus direct labor are prime costs.",
+      },
+      {
+        heading: "Period (Non-Manufacturing) Costs",
+        text: "Selling and administrative costs are period costs, such as office rent, office utilities, sales commissions, marketing, and admin salaries.",
       },
     ],
   },
