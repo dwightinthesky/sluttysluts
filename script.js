@@ -140,27 +140,91 @@ const lectureData = {
   l4: {
     title: "Lecture 4: Cost Behavior and the High-Low Method",
     summary:
-      "Cost behavior explains how total cost changes with activity level and helps separate mixed costs into fixed and variable elements.",
+      "Lecture 4 explains how cost behavior shapes business risk, margin potential, and forecasting, then shows how to split mixed costs with the high-low method.",
     points: [
       {
+        heading: "Why Cost Behavior Matters",
+        text: "Before simulating profit, managers must classify costs as variable or fixed. Cost structure strongly affects risk and operating outcomes.",
+      },
+      {
+        heading: "Cost Structure and Risk",
+        text: "In uncertain markets, firms often prefer a more variable-cost model to reduce downside exposure when volume drops.",
+      },
+      {
+        heading: "Cost Structure and Expansion",
+        text: "In stable growth phases, higher fixed-cost structures can increase profit leverage when sales scale up.",
+      },
+      {
+        heading: "Business Model Example",
+        text: "Platform models can stay capital-light by shifting vehicle ownership and maintenance to partners. If ownership shifts back, fixed assets and fixed costs jump.",
+      },
+      {
         heading: "Variable Cost Behavior",
-        text: "Total variable cost changes in proportion to activity, while variable cost per unit remains constant.",
+        text: "Total variable cost moves proportionally with activity (units, miles, service volume), while unit variable cost is assumed constant in the basic model.",
+      },
+      {
+        heading: "Typical Variable Cost Items",
+        text: "Examples include raw materials, overtime or temporary labor, sales commissions, packaging, and usage-based utility components.",
+      },
+      {
+        heading: "Real-World Deviation",
+        text: "Unit variable cost may change in practice due to commodity price swings, supplier terms, and market disruptions.",
+      },
+      {
+        heading: "Economies of Scale and Discounts",
+        text: "Bulk purchasing can lower unit input cost, but some pricing policies keep unit rates unchanged across package sizes.",
       },
       {
         heading: "Fixed Cost Behavior",
-        text: "Total fixed cost remains constant in the relevant range, while fixed cost per unit declines as volume increases.",
+        text: "Within a relevant range and time horizon, total fixed cost remains unchanged, even if production drops to zero.",
+      },
+      {
+        heading: "Unit Fixed Cost Declines with Volume",
+        text: "Because the same total fixed amount is spread across more units, fixed cost per unit falls as quantity rises.",
+      },
+      {
+        heading: "Critical MA Rule",
+        text: "For decision-making and profit analysis, treat fixed costs as a total amount. Avoid using unit fixed cost as a decision driver.",
+      },
+      {
+        heading: "Step Fixed Costs",
+        text: "Fixed costs move in steps when capacity expands or contracts, such as adding managers, offices, servers, or equipment.",
+      },
+      {
+        heading: "Capacity Shock Examples",
+        text: "Demand collapses can force fixed-cost cuts (layoffs, closures), while demand spikes can require new infrastructure and raise fixed costs.",
       },
       {
         heading: "Mixed Costs",
-        text: "Mixed cost includes both fixed and variable components, such as utilities with base fee plus usage charge.",
+        text: "Mixed costs include both fixed and variable parts, such as maintenance plans with a base fee plus usage-related expense.",
       },
       {
         heading: "High-Low Step 1",
-        text: "Select the periods with highest and lowest activity (not highest and lowest cost).",
+        text: "Use the highest and lowest activity levels, not the highest and lowest cost values.",
       },
       {
-        heading: "High-Low Step 2 and 3",
-        text: "Variable cost per unit = (Cost high - Cost low)/(Activity high - Activity low). Fixed cost = Total cost - (uVC × Activity).",
+        heading: "High-Low Step 2",
+        text: "Unit variable cost = (Cost at high activity - Cost at low activity) / (High activity - Low activity).",
+      },
+      {
+        heading: "High-Low Step 3",
+        text: "Fixed cost = Total cost - (Unit variable cost × Activity). Using either high or low point should give the same fixed estimate.",
+      },
+      {
+        heading: "Total Cost Equation",
+        text: "Total Cost = (uVC × Qty) + FC.",
+      },
+      {
+        heading: "EBIT Equation Forms",
+        text: "EBIT = Revenue - Cost = (SP × Qty) - (uVC × Qty) - FC = (SP - uVC) × Qty - FC.",
+      },
+      {
+        heading: "Seminar Application: Price-Cut Decision",
+        text: "When price drops and volume rises, compute the maximum fixed-cost increase that still keeps new EBIT at least equal to old EBIT.",
+      },
+      {
+        heading: "Seminar Application: Cost Classification",
+        text: "Practice separating direct materials, rent, salary-plus-commission, and mixed utilities into fixed and variable parts to estimate total production cost.",
       },
     ],
   },
