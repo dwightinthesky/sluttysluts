@@ -1025,6 +1025,158 @@ const contentByLanguage = {
   zhTW: { lectures: lectureDataZhTW, flashcards: flashcardDataZhTW, quiz: quizDataZhTW },
   de: { lectures: lectureDataDe, flashcards: flashcardDataDe, quiz: quizDataDe },
 };
+const lectureExamplesByLanguage = {
+  en: {
+    l2: [
+      "Example: Investors read annual statements, while product managers request product-level margin reports.",
+      "Example: A bank uses audited statements; a pricing team uses internal cost and demand data.",
+      "Example: Quarterly 10-Q reports are standardized; internal dashboards can update daily.",
+      "Example: Last year's profit is history; next quarter's budget is managerial planning.",
+      "Example: External reports summarize company totals; internal reports compare each product line.",
+      "Example: Make-or-buy analysis compares in-house cost versus supplier quotes.",
+      "Example: Income statement flow: Sales -> COGS -> Gross Profit -> EBIT -> Net Income.",
+    ],
+    l3: [
+      "Example: A launch team groups design, labor, and shipping costs to evaluate product viability.",
+      "Example: A cost object can be one SKU, one customer segment, or one branch.",
+      "Example: The same utility bill can be variable by usage and indirect by assignment.",
+      "Example: Packaging cost rises with units; monthly rent stays fixed within capacity range.",
+      "Example: Leather for one bag is direct; factory electricity is indirect and allocated.",
+      "Example: Past ad spend is sunk, but future outsourcing fees are relevant.",
+      "Example: Production cost includes DM, DL, overhead; office admin is period cost.",
+    ],
+    l4: [
+      "Example: Before pricing decisions, management separates fixed and variable costs.",
+      "Example: Startups often keep higher variable costs to reduce risk during uncertain demand.",
+      "Example: If each unit uses $12 material, total material doubles when volume doubles.",
+      "Example: Fixed rent of $10,000 stays flat from 2,000 to 8,000 units.",
+      "Example: Hiring an extra supervisor at higher volume creates a new fixed-cost step.",
+      "Example: Use fixed cost as a total in planning, not as a constant per-unit amount.",
+      "Example: High-low picks highest and lowest activity months to estimate variable rate.",
+      "Example: EBIT = (SP - uVC) x Qty - FC to test pricing and volume scenarios.",
+    ],
+    l5: [
+      "Example: If sales are $100k and variable costs are $60k, CM is $40k.",
+      "Example: Each extra unit contributes uCM first to fixed cost coverage, then to profit.",
+      "Example: SP $80 and uVC $50 gives uCM $30 per unit.",
+      "Example: CM ratio 37.5% means each $1 sales contributes $0.375 to FC and profit.",
+      "Example: EBIT can be computed quickly by uCM x units minus FC.",
+      "Example: At BEP, operating profit is zero because total CM exactly equals FC.",
+      "Example: If FC is $120k and uCM is $24, BEP is 5,000 units.",
+      "Example: In CVP charts, the break-even point is where revenue and total cost intersect.",
+    ],
+    l6: [
+      "Example: Target profit $50k with FC $150k and uCM $20 requires 10,000 units.",
+      "Example: If actual sales are $620k and BE sales are $500k, MOS is $120k.",
+      "Example: MOS ratio shows how much sales can drop before losses begin.",
+      "Example: Above BEP, each extra unit's uCM mostly turns into EBIT.",
+      "Example: With CM $300k and EBIT $100k, DOL is 3.0.",
+      "Example: High fixed-cost factories have stronger upside but sharper downside swings.",
+      "Example: Indifference point compares two cost structures at equal EBIT.",
+      "Example: In multi-product planning, use weighted-average CM based on sales mix.",
+    ],
+  },
+  zhTW: {
+    l2: [
+      "例子：投資人看年度財報；產品經理看產品別毛利分析表。",
+      "例子：銀行核貸看審計財報；營運主管看內部成本與需求預測。",
+      "例子：季報固定時點發布；內部報表可每天更新。",
+      "例子：去年的淨利是歷史資料；下季預算屬未來規劃。",
+      "例子：財報顯示公司總體，管會報告可比較 A/B 產品線。",
+      "例子：自製或外包會比較內製成本與供應商報價差異。",
+      "例子：損益表流程是 Sales -> COGS -> Gross Profit -> EBIT -> Net Income。",
+    ],
+    l3: [
+      "例子：新產品評估會把設計、人工、物流成本彙整後再決策。",
+      "例子：成本標的可以是一個 SKU、一個客群或一個分店。",
+      "例子：同一筆費用可能同時具有成本習性與可追溯性的分類差異。",
+      "例子：包材成本隨件數增加；租金在一定產能內固定。",
+      "例子：單一產品用料屬直接成本；全廠電費屬間接成本。",
+      "例子：過去廣告費是沉沒成本；未來委外費才是相關成本。",
+      "例子：生產成本含直接材料、直接人工、製造費用；行政費是期間成本。",
+    ],
+    l4: [
+      "例子：調價前先拆分固定/變動成本，才能估算利潤變化。",
+      "例子：需求不穩定時，公司常偏好高變動成本來降低固定負擔。",
+      "例子：每件原料 $12，產量翻倍時總原料成本也翻倍。",
+      "例子：月租 $10,000 在 2,000 到 8,000 件內都不變。",
+      "例子：產能擴張新增主管與機台，固定成本會跳階上升。",
+      "例子：規劃利潤時要用固定成本總額，不用單位固定成本。",
+      "例子：高低點法選最高與最低活動量月份估計變動率。",
+      "例子：EBIT = (SP - uVC) x Qty - FC 可快速比較不同方案。",
+    ],
+    l5: [
+      "例子：銷售 100 萬、變動成本 60 萬，邊際貢獻是 40 萬。",
+      "例子：每多賣一件，uCM 先補固定成本，再轉為利潤。",
+      "例子：SP=80、uVC=50，則 uCM=30。",
+      "例子：CM Ratio 37.5% 代表每 1 元營收有 0.375 元可用於 FC 與利潤。",
+      "例子：EBIT 可用 (uCM x Qty) - FC 快速試算。",
+      "例子：在損益兩平點，總邊際貢獻剛好等於固定成本。",
+      "例子：FC=120,000、uCM=24，BEP=5,000 單位。",
+      "例子：CVP 圖上收入線與總成本線交點就是損益兩平點。",
+    ],
+    l6: [
+      "例子：目標利潤 50,000、FC 150,000、uCM 20，需賣 10,000 件。",
+      "例子：實際銷售 620,000、損益兩平銷售 500,000，MOS 為 120,000。",
+      "例子：安全邊際率越高，通常代表可承受的銷售下滑空間越大。",
+      "例子：超過 BEP 後，每多賣一件的 uCM 幾乎直接貢獻 EBIT。",
+      "例子：CM 300,000、EBIT 100,000，DOL = 3.0。",
+      "例子：高固定成本工廠成長時獲利放大，但衰退時下行也更劇烈。",
+      "例子：無異點可比較兩種成本結構在同一銷量下誰更有利。",
+      "例子：多產品要先用銷售組合算加權平均邊際貢獻。",
+    ],
+  },
+  de: {
+    l2: [
+      "Beispiel: Investoren lesen den Jahresabschluss, Produktmanager brauchen Deckungsbeitrage je Produkt.",
+      "Beispiel: Banken nutzen geprufte Finanzberichte, interne Teams nutzen operative Kennzahlen.",
+      "Beispiel: Quartalsberichte sind fix terminiert, interne Reports konnen taglich laufen.",
+      "Beispiel: Vergangenheitsdaten zeigen Ist-Zustand, Budgets steuern die Zukunft.",
+      "Beispiel: Externe Berichte sind aggregiert, intern wird nach Bereich oder Produkt aufgeschlusselt.",
+      "Beispiel: Make-or-buy vergleicht Eigenfertigungskosten mit Lieferantenangeboten.",
+      "Beispiel: Income Statement: Sales -> COGS -> Gross Profit -> EBIT -> Net Income.",
+    ],
+    l3: [
+      "Beispiel: Fur eine neue Produktlinie werden Material, Lohn und Logistik als Kostenpaket bewertet.",
+      "Beispiel: Cost Object kann SKU, Kundengruppe oder Filiale sein.",
+      "Beispiel: Diesel ist oft variabel, Hallenmiete bleibt im relevanten Bereich fix.",
+      "Beispiel: Direkte Lederkosten je Tasche vs. indirekte Fabrikstromkosten.",
+      "Beispiel: Vergangene Kampagnenkosten sind sunk; zukunftige Optionen sind entscheidungsrelevant.",
+      "Beispiel: Manufacturing Cost umfasst DM, DL und Overhead.",
+      "Beispiel: Vertriebs- und Verwaltungskosten sind Period Costs.",
+      "Beispiel: Opportunity Cost ist der entgangene Nutzen der besten Alternative.",
+    ],
+    l4: [
+      "Beispiel: Vor Preisentscheidungen trennt man fixe und variable Kosten sauber.",
+      "Beispiel: In unsicheren Markten wird oft ein variableres Kostenmodell bevorzugt.",
+      "Beispiel: Verdoppelt sich die Menge, verdoppeln sich proportionale variable Gesamtkosten.",
+      "Beispiel: Fixmiete bleibt konstant, Stuckfixkosten sinken mit hoherem Volumen.",
+      "Beispiel: Neue Schicht oder neue Maschine erzeugt eine Fixkostensprungstufe.",
+      "Beispiel: Fixkosten in Entscheidungen als Summe betrachten, nicht als starre Stuckkosten.",
+      "Beispiel: High-Low nutzt Aktivitats-Hoch/Tief zur Schatzung der variablen Rate.",
+      "Beispiel: EBIT = (SP - uVC) x Qty - FC fur schnelle Szenarien.",
+    ],
+    l5: [
+      "Beispiel: Umsatz 100.000 minus variable Kosten 60.000 ergibt CM 40.000.",
+      "Beispiel: Jeder zusatzliche Verkauf liefert uCM zur Deckung von Fixkosten und Gewinn.",
+      "Beispiel: Bei SP 80 und uVC 50 ist uCM gleich 30.",
+      "Beispiel: Eine CM-Quote von 40% bedeutet 0,40 Beitrag je 1 Umsatz-Euro.",
+      "Beispiel: EBIT kann als (uCM x Menge) - FC berechnet werden.",
+      "Beispiel: Am Break-even gilt CM = FC und EBIT = 0.",
+      "Beispiel: FC 120.000 und uCM 24 ergeben 5.000 Break-even-Einheiten.",
+    ],
+    l6: [
+      "Beispiel: Zielgewinnrechnung bestimmt die benotigte Absatzmenge fur ein Profitziel.",
+      "Beispiel: MOS zeigt den Abstand zwischen Ist-Umsatz und Break-even-Umsatz.",
+      "Beispiel: Hohe MOS-Quote bedeutet groseren Puffer vor Verlusten.",
+      "Beispiel: Uber Break-even wird zusatzlicher uCM direkt zu EBIT.",
+      "Beispiel: DOL 3,0 bedeutet 10% Absatzplus fuhrt zu etwa 30% EBIT-Plus.",
+      "Beispiel: Hoher DOL verstarkt sowohl Aufwarts- als auch Abwartsbewegungen.",
+      "Beispiel: Indifference Point vergleicht zwei Kostenstrukturen bei gleichem EBIT.",
+      "Beispiel: Bei Mehrproduktmix nutzt man den gewichteten durchschnittlichen Beitrag.",
+    ],
+  },
+};
 const curatedQuestionBankZhTW = window.curatedQuestionBankZhTW || {};
 
 const uiText = {
@@ -1052,6 +1204,15 @@ const uiText = {
     quickFormula: "Formula Deck",
     quickQuiz: "Quiz Check",
     quickCvp: "CVP Lab",
+    navHome: "Home",
+    navLectures: "Concepts",
+    navFormulas: "Formulas",
+    navQuiz: "Quiz",
+    navToolkit: "Toolkit",
+    homeCardConcepts: "Read each concept with a short explanation and practical example.",
+    homeCardFormulas: "Memorize core formulas and quickly review where to apply each one.",
+    homeCardQuiz: "Practice by lecture and difficulty, then focus on unanswered items.",
+    homeCardToolkit: "Run break-even, target-profit, and high-low checks in one place.",
     lectureMapTitle: "Lecture Map",
     lectureMapCopy: "Move by chapter and review each concept block before doing the quiz.",
     progressLabel: "Current Focus",
@@ -1122,6 +1283,8 @@ const uiText = {
     },
     noSearchResultsTitle: "No matching points",
     noSearchResultsText: "Try another keyword or clear the search.",
+    pointExplainLabel: "Concept",
+    pointExampleLabel: "Example",
     scoreText: "Score: {score}/{total} ({percent}%)",
     calc: {
       invalidUcm: "Unit contribution margin must be positive (Selling Price > Unit Variable Cost).",
@@ -1164,6 +1327,15 @@ const uiText = {
     quickFormula: "公式卡片",
     quickQuiz: "測驗檢核",
     quickCvp: "CVP 實驗室",
+    navHome: "首頁",
+    navLectures: "概念",
+    navFormulas: "公式",
+    navQuiz: "測驗",
+    navToolkit: "工具箱",
+    homeCardConcepts: "每個觀念都附上簡潔說明與實際例子。",
+    homeCardFormulas: "快速記公式，並掌握每個公式的使用情境。",
+    homeCardQuiz: "可按章節與難度練習，並追蹤未作答題目。",
+    homeCardToolkit: "在同一頁完成損益兩平、目標利潤與高低點法試算。",
     lectureMapTitle: "章節導覽",
     lectureMapCopy: "依序切換章節，先掌握觀念再做測驗。",
     progressLabel: "目前焦點",
@@ -1232,6 +1404,8 @@ const uiText = {
     },
     noSearchResultsTitle: "沒有符合的重點",
     noSearchResultsText: "請嘗試其他關鍵字，或清空搜尋。",
+    pointExplainLabel: "概念說明",
+    pointExampleLabel: "實際舉例",
     scoreText: "得分：{score}/{total}（{percent}%）",
     calc: {
       invalidUcm: "單位邊際貢獻需為正值（單價必須大於單位變動成本）。",
@@ -1274,6 +1448,15 @@ const uiText = {
     quickFormula: "Formelkarten",
     quickQuiz: "Quiz Check",
     quickCvp: "CVP Labor",
+    navHome: "Start",
+    navLectures: "Konzepte",
+    navFormulas: "Formeln",
+    navQuiz: "Quiz",
+    navToolkit: "Toolkit",
+    homeCardConcepts: "Lese jedes Konzept mit kurzer Erklarung und praxisnahem Beispiel.",
+    homeCardFormulas: "Lerne Kernformeln und wann sie eingesetzt werden.",
+    homeCardQuiz: "Ube nach Kapitel und Schwierigkeitsgrad und bearbeite offene Fragen gezielt.",
+    homeCardToolkit: "Berechne Break-even, Zielgewinn und High-Low an einem Ort.",
     lectureMapTitle: "Kapitel-Navigation",
     lectureMapCopy: "Kapitel nacheinander bearbeiten und dann das Quiz nutzen.",
     progressLabel: "Aktueller Fokus",
@@ -1343,6 +1526,8 @@ const uiText = {
     },
     noSearchResultsTitle: "Keine passenden Punkte",
     noSearchResultsText: "Bitte anderen Begriff testen oder Suche leeren.",
+    pointExplainLabel: "Konzept",
+    pointExampleLabel: "Beispiel",
     scoreText: "Ergebnis: {score}/{total} ({percent}%)",
     calc: {
       invalidUcm: "uCM muss positiv sein (Verkaufspreis > variable Stuckkosten).",
@@ -1398,6 +1583,16 @@ function getUi() {
   return uiText[currentLanguage] || uiText.en;
 }
 
+function getLectureExample(lectureKey, pointIndex) {
+  const byLanguage = lectureExamplesByLanguage[currentLanguage] || lectureExamplesByLanguage.en || {};
+  const byEnglish = lectureExamplesByLanguage.en || {};
+  const examples = byLanguage[lectureKey] || byEnglish[lectureKey] || [];
+  if (!examples.length) {
+    return "";
+  }
+  return examples[pointIndex] || examples[examples.length - 1];
+}
+
 function formatTemplate(template, values) {
   return Object.entries(values).reduce((acc, [key, value]) => {
     return acc.replaceAll(`{${key}}`, String(value));
@@ -1438,28 +1633,34 @@ function activateWorkspacePanel(panelId, options = {}) {
     return;
   }
 
-  currentPanelId = panelId;
+  const panels = Array.from(document.querySelectorAll(".content .panel"));
+  if (!panels.length) {
+    return;
+  }
 
-  document.querySelectorAll(".content .panel").forEach((panel) => {
-    const isVisible = panel.id === panelId;
+  const resolvedPanelId = panels.some((panel) => panel.id === panelId) ? panelId : panels[0].id;
+  currentPanelId = resolvedPanelId;
+
+  panels.forEach((panel) => {
+    const isVisible = panel.id === resolvedPanelId;
     panel.classList.toggle("panel-visible", isVisible);
     panel.classList.toggle("panel-hidden", !isVisible);
     panel.setAttribute("aria-hidden", String(!isVisible));
   });
 
   document.querySelectorAll(".quick-item[data-jump]").forEach((button) => {
-    button.classList.toggle("active", button.dataset.jump === panelId);
+    button.classList.toggle("active", button.dataset.jump === resolvedPanelId);
   });
 
   if (scroll) {
-    const target = document.getElementById(panelId);
+    const target = document.getElementById(resolvedPanelId);
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }
 
   if (announce) {
-    showToast(formatTemplate(getUi().toastPanelOpened, { panel: getPanelLabel(panelId) }));
+    showToast(formatTemplate(getUi().toastPanelOpened, { panel: getPanelLabel(resolvedPanelId) }));
   }
 }
 
@@ -1538,13 +1739,26 @@ function updateMetrics() {
   const content = getContent();
   const lecture = content.lectures[currentLectureKey];
   const quizCount = currentQuizData.length || (lecture ? lecture.points.length * 2 : 0);
-  document.getElementById("metric-lectures-count").textContent = String(lectureOrder.length);
-  document.getElementById("metric-cards-count").textContent = String(content.flashcards.length);
-  document.getElementById("metric-quiz-count").textContent = String(quizCount);
+  const metricLectures = document.getElementById("metric-lectures-count");
+  const metricCards = document.getElementById("metric-cards-count");
+  const metricQuiz = document.getElementById("metric-quiz-count");
+
+  if (metricLectures) {
+    metricLectures.textContent = String(lectureOrder.length);
+  }
+  if (metricCards) {
+    metricCards.textContent = String(content.flashcards.length);
+  }
+  if (metricQuiz) {
+    metricQuiz.textContent = String(quizCount);
+  }
 }
 
 function renderLectureNav() {
   const nav = document.getElementById("lecture-nav");
+  if (!nav) {
+    return;
+  }
   const labels = getUi().navLabels;
 
   nav.innerHTML = lectureOrder
@@ -1618,15 +1832,18 @@ function renderLecture(lectureKey = currentLectureKey, options = {}) {
   saveLastLecture(lectureKey);
   const ui = getUi();
   const lecture = getContent().lectures[lectureKey];
+  if (!lecture) {
+    return;
+  }
+
   const title = document.getElementById("lecture-title");
   const summary = document.getElementById("lecture-summary");
   const points = document.getElementById("lecture-points");
-  const query = document.getElementById("lecture-search").value.trim().toLowerCase();
+  const searchInput = document.getElementById("lecture-search");
+  const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
 
-  title.textContent = lecture.title;
-  summary.textContent = lecture.summary;
-
-  const filteredPoints = lecture.points.filter((point) => {
+  const pointsWithIndex = lecture.points.map((point, index) => ({ ...point, _pointIndex: index }));
+  const filteredPoints = pointsWithIndex.filter((point) => {
     if (!query) {
       return true;
     }
@@ -1634,23 +1851,35 @@ function renderLecture(lectureKey = currentLectureKey, options = {}) {
     return combined.includes(query);
   });
 
-  points.innerHTML = filteredPoints.length
-    ? filteredPoints
-        .map(
-          (point) => `
+  if (title) {
+    title.textContent = lecture.title;
+  }
+  if (summary) {
+    summary.textContent = lecture.summary;
+  }
+
+  if (points) {
+    points.innerHTML = filteredPoints.length
+      ? filteredPoints
+          .map(
+            (point) => `
       <article class="point-card">
         <h3>${point.heading}</h3>
+        <p class="point-label">${ui.pointExplainLabel}</p>
         <p>${point.text}</p>
+        <p class="point-label point-example-label">${ui.pointExampleLabel}</p>
+        <p class="point-example">${getLectureExample(lectureKey, point._pointIndex)}</p>
       </article>
     `
-        )
-        .join("")
-    : `
+          )
+          .join("")
+      : `
       <article class="point-card">
         <h3>${ui.noSearchResultsTitle}</h3>
         <p>${ui.noSearchResultsText}</p>
       </article>
     `;
+  }
 
   renderLectureNav();
   updateLectureStatus(lectureKey);
@@ -1666,6 +1895,9 @@ function renderLecture(lectureKey = currentLectureKey, options = {}) {
 
 function setupLectureNav() {
   const nav = document.getElementById("lecture-nav");
+  if (!nav) {
+    return;
+  }
   nav.addEventListener("click", (event) => {
     const button = event.target.closest("[data-lecture]");
     if (!button) {
@@ -1687,6 +1919,9 @@ function navigateLecture(offset) {
 function setupLectureFlowControls() {
   const prev = document.getElementById("prev-lecture");
   const next = document.getElementById("next-lecture");
+  if (!prev || !next) {
+    return;
+  }
 
   prev.addEventListener("click", () => navigateLecture(-1));
   next.addEventListener("click", () => navigateLecture(1));
@@ -1696,6 +1931,9 @@ function renderFlashcards() {
   const ui = getUi();
   const cards = getContent().flashcards;
   const container = document.getElementById("flashcards");
+  if (!container) {
+    return;
+  }
   container.innerHTML = cards
     .map(
       (card, index) => `
@@ -1712,6 +1950,9 @@ function renderFlashcards() {
 
 function setupFlashcards() {
   const container = document.getElementById("flashcards");
+  if (!container) {
+    return;
+  }
   container.addEventListener("click", (event) => {
     const card = event.target.closest(".flashcard");
     if (!card) {
@@ -1944,13 +2185,19 @@ function jumpToNextUnansweredQuestion() {
 
 function resetQuiz(options = {}) {
   const { silent = false } = options;
+  const container = document.getElementById("quiz-container");
+  const score = document.getElementById("quiz-score");
+  if (!container || !score) {
+    return;
+  }
+
   document.querySelectorAll('#quiz-container input[type="radio"]').forEach((input) => {
     input.checked = false;
   });
   document.querySelectorAll(".quiz-item").forEach((item) => {
     item.classList.remove("correct", "wrong");
   });
-  document.getElementById("quiz-score").textContent = "";
+  score.textContent = "";
   currentQuizQuestionIndex = 0;
   updateQuizFlowUi();
   if (!silent) {
@@ -2011,8 +2258,13 @@ function renderQuiz() {
 
 function gradeQuiz() {
   const ui = getUi();
+  const scoreElement = document.getElementById("quiz-score");
+  if (!scoreElement) {
+    return;
+  }
+
   if (!currentQuizData.length) {
-    document.getElementById("quiz-score").textContent = ui.quizEmpty;
+    scoreElement.textContent = ui.quizEmpty;
     return;
   }
 
@@ -2021,6 +2273,9 @@ function gradeQuiz() {
   currentQuizData.forEach((question, idx) => {
     const block = document.querySelector(`[data-quiz="${idx}"]`);
     const selected = document.querySelector(`input[name="q-${idx}"]:checked`);
+    if (!block) {
+      return;
+    }
     block.classList.remove("correct", "wrong");
 
     if (!selected) {
@@ -2036,7 +2291,7 @@ function gradeQuiz() {
   });
 
   const percent = Math.round((score / currentQuizData.length) * 100);
-  document.getElementById("quiz-score").textContent = formatTemplate(ui.scoreText, {
+  scoreElement.textContent = formatTemplate(ui.scoreText, {
     score,
     total: currentQuizData.length,
     percent,
@@ -2061,12 +2316,21 @@ function safeNumber(value) {
 
 function runCvp() {
   const calcText = getUi().calc;
-  const sp = safeNumber(document.getElementById("sp").value);
-  const uvc = safeNumber(document.getElementById("uvc").value);
-  const fc = safeNumber(document.getElementById("fc").value);
-  const units = safeNumber(document.getElementById("units").value);
-  const targetProfit = safeNumber(document.getElementById("tp").value);
+  const spInput = document.getElementById("sp");
+  const uvcInput = document.getElementById("uvc");
+  const fcInput = document.getElementById("fc");
+  const unitsInput = document.getElementById("units");
+  const targetInput = document.getElementById("tp");
   const output = document.getElementById("cvp-output");
+  if (!spInput || !uvcInput || !fcInput || !unitsInput || !targetInput || !output) {
+    return;
+  }
+
+  const sp = safeNumber(spInput.value);
+  const uvc = safeNumber(uvcInput.value);
+  const fc = safeNumber(fcInput.value);
+  const units = safeNumber(unitsInput.value);
+  const targetProfit = safeNumber(targetInput.value);
 
   const ucm = sp - uvc;
   if (ucm <= 0 || sp <= 0) {
@@ -2099,11 +2363,19 @@ function runCvp() {
 
 function runHighLow() {
   const calcText = getUi().calc;
-  const highUnits = safeNumber(document.getElementById("high-units").value);
-  const highCost = safeNumber(document.getElementById("high-cost").value);
-  const lowUnits = safeNumber(document.getElementById("low-units").value);
-  const lowCost = safeNumber(document.getElementById("low-cost").value);
+  const highUnitsInput = document.getElementById("high-units");
+  const highCostInput = document.getElementById("high-cost");
+  const lowUnitsInput = document.getElementById("low-units");
+  const lowCostInput = document.getElementById("low-cost");
   const output = document.getElementById("high-low-output");
+  if (!highUnitsInput || !highCostInput || !lowUnitsInput || !lowCostInput || !output) {
+    return;
+  }
+
+  const highUnits = safeNumber(highUnitsInput.value);
+  const highCost = safeNumber(highCostInput.value);
+  const lowUnits = safeNumber(lowUnitsInput.value);
+  const lowCost = safeNumber(lowCostInput.value);
 
   if (highUnits === lowUnits) {
     output.textContent = calcText.highLowError;
@@ -2134,6 +2406,18 @@ function setupJumpButtons() {
   });
 }
 
+function setupWorkspaceLinks() {
+  const currentPath = window.location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll(".workspace-link").forEach((link) => {
+    const href = link.getAttribute("href");
+    if (!href) {
+      return;
+    }
+    const targetPath = href.split("/").pop();
+    link.classList.toggle("active", targetPath === currentPath);
+  });
+}
+
 function setLanguage(language, persist = true) {
   if (!contentByLanguage[language]) {
     return;
@@ -2158,6 +2442,9 @@ function setLanguage(language, persist = true) {
 
 function setupLanguageSwitcher() {
   const switcher = document.querySelector(".lang-switch");
+  if (!switcher) {
+    return;
+  }
   switcher.addEventListener("click", (event) => {
     const button = event.target.closest("[data-language]");
     if (!button) {
@@ -2172,32 +2459,38 @@ function setupStudyTools() {
   const toggleCompleteButton = document.getElementById("toggle-complete");
   const resetProgressButton = document.getElementById("reset-progress");
 
-  searchInput.addEventListener("input", () => {
-    renderLecture(currentLectureKey, { refreshQuiz: false });
-  });
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      renderLecture(currentLectureKey, { refreshQuiz: false });
+    });
+  }
 
-  toggleCompleteButton.addEventListener("click", () => {
-    const ui = getUi();
-    if (completedLectures.has(currentLectureKey)) {
-      completedLectures.delete(currentLectureKey);
-      showToast(ui.toastMarkedIncomplete);
-    } else {
-      completedLectures.add(currentLectureKey);
-      showToast(ui.toastMarkedComplete);
-    }
-    saveCompletedLectures();
-    renderLectureNav();
-    updateCompletionWidgets();
-  });
+  if (toggleCompleteButton) {
+    toggleCompleteButton.addEventListener("click", () => {
+      const ui = getUi();
+      if (completedLectures.has(currentLectureKey)) {
+        completedLectures.delete(currentLectureKey);
+        showToast(ui.toastMarkedIncomplete);
+      } else {
+        completedLectures.add(currentLectureKey);
+        showToast(ui.toastMarkedComplete);
+      }
+      saveCompletedLectures();
+      renderLectureNav();
+      updateCompletionWidgets();
+    });
+  }
 
-  resetProgressButton.addEventListener("click", () => {
-    const ui = getUi();
-    completedLectures = new Set();
-    saveCompletedLectures();
-    renderLectureNav();
-    updateCompletionWidgets();
-    showToast(ui.toastProgressReset);
-  });
+  if (resetProgressButton) {
+    resetProgressButton.addEventListener("click", () => {
+      const ui = getUi();
+      completedLectures = new Set();
+      saveCompletedLectures();
+      renderLectureNav();
+      updateCompletionWidgets();
+      showToast(ui.toastProgressReset);
+    });
+  }
 }
 
 function setupKeyboardShortcuts() {
@@ -2216,7 +2509,10 @@ function setupKeyboardShortcuts() {
 
     if (event.key === "/" && !isTypingField) {
       event.preventDefault();
-      document.getElementById("lecture-search").focus();
+      const searchInput = document.getElementById("lecture-search");
+      if (searchInput) {
+        searchInput.focus();
+      }
       return;
     }
 
@@ -2239,18 +2535,31 @@ function setupKeyboardShortcuts() {
 }
 
 function setupQuizActions() {
-  document.getElementById("submit-quiz").addEventListener("click", gradeQuiz);
-  document.getElementById("reset-quiz").addEventListener("click", () => resetQuiz());
-  document.getElementById("shuffle-quiz").addEventListener("click", shuffleQuiz);
-  document.getElementById("quiz-prev-question").addEventListener("click", () => {
+  const submit = document.getElementById("submit-quiz");
+  const reset = document.getElementById("reset-quiz");
+  const shuffle = document.getElementById("shuffle-quiz");
+  const prev = document.getElementById("quiz-prev-question");
+  const next = document.getElementById("quiz-next-question");
+  const nextUnanswered = document.getElementById("quiz-next-unanswered");
+  const questionNav = document.getElementById("quiz-question-nav");
+  const container = document.getElementById("quiz-container");
+
+  if (!submit || !reset || !shuffle || !prev || !next || !nextUnanswered || !questionNav || !container) {
+    return;
+  }
+
+  submit.addEventListener("click", gradeQuiz);
+  reset.addEventListener("click", () => resetQuiz());
+  shuffle.addEventListener("click", shuffleQuiz);
+  prev.addEventListener("click", () => {
     showQuizQuestion(currentQuizQuestionIndex - 1);
   });
-  document.getElementById("quiz-next-question").addEventListener("click", () => {
+  next.addEventListener("click", () => {
     showQuizQuestion(currentQuizQuestionIndex + 1);
   });
-  document.getElementById("quiz-next-unanswered").addEventListener("click", jumpToNextUnansweredQuestion);
+  nextUnanswered.addEventListener("click", jumpToNextUnansweredQuestion);
 
-  document.getElementById("quiz-question-nav").addEventListener("click", (event) => {
+  questionNav.addEventListener("click", (event) => {
     const chip = event.target.closest("[data-quiz-jump]");
     if (!chip) {
       return;
@@ -2258,7 +2567,7 @@ function setupQuizActions() {
     showQuizQuestion(Number(chip.dataset.quizJump));
   });
 
-  document.getElementById("quiz-container").addEventListener("change", (event) => {
+  container.addEventListener("change", (event) => {
     const input = event.target;
     if (!(input instanceof HTMLInputElement) || input.type !== "radio") {
       return;
@@ -2300,6 +2609,7 @@ function bootstrap() {
   currentLanguage = loadLanguage();
   currentLectureKey = loadLastLecture();
 
+  setupWorkspaceLinks();
   setupLectureNav();
   setupLectureFlowControls();
   setupFlashcards();
@@ -2310,8 +2620,14 @@ function bootstrap() {
   setupQuizActions();
   setupQuizDifficultyFilter();
 
-  document.getElementById("run-cvp").addEventListener("click", runCvp);
-  document.getElementById("run-high-low").addEventListener("click", runHighLow);
+  const runCvpButton = document.getElementById("run-cvp");
+  const runHighLowButton = document.getElementById("run-high-low");
+  if (runCvpButton) {
+    runCvpButton.addEventListener("click", runCvp);
+  }
+  if (runHighLowButton) {
+    runHighLowButton.addEventListener("click", runHighLow);
+  }
 
   setLanguage(currentLanguage, false);
   activateWorkspacePanel(currentPanelId, { scroll: false, announce: false });
