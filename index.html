@@ -16,102 +16,114 @@
     <div class="page-shell">
       <header class="topbar">
         <a href="#" class="brand">STUDYFLOW</a>
-        <p class="topbar-note">Managerial Accounting Studio</p>
-        <p class="topbar-kicker">Focused Revision Workspace</p>
+        <p class="topbar-note" data-i18n="topbarNote">Managerial Accounting Studio</p>
+        <div class="topbar-right">
+          <p class="topbar-kicker" data-i18n="topbarKicker">Focused Revision Workspace</p>
+          <div class="lang-switch" role="group" aria-label="Language switcher">
+            <button class="lang-btn active" type="button" data-language="en">ENG</button>
+            <button class="lang-btn" type="button" data-language="zhTW">Zh-TW</button>
+            <button class="lang-btn" type="button" data-language="de">DE</button>
+          </div>
+        </div>
       </header>
 
       <section class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">AC11 Midterm Intensive</p>
-          <h1>Learn the numbers. Read the risk. Make the decision.</h1>
-          <p class="subtitle">
-            WeWork-inspired learning interface for managerial accounting:
-            precise lecture notes, formula drills, quiz checks, and CVP tools
-            in one clean workspace.
+          <p class="eyebrow" data-i18n="heroEyebrow">AC11 Midterm Intensive</p>
+          <h1 data-i18n="heroTitle">Learn the numbers. Read the risk. Make the decision.</h1>
+          <p class="subtitle" data-i18n="heroSubtitle">
+            WeWork-inspired learning interface for managerial accounting: precise
+            lecture notes, formula drills, quiz checks, and CVP tools in one
+            clean workspace.
           </p>
           <div class="hero-actions">
-            <button class="btn btn-primary" data-jump="lecture-panel">
+            <button id="start-review-btn" class="btn btn-primary" data-jump="lecture-panel" data-i18n="startReviewBtn">
               Start Reviewing
             </button>
-            <button class="btn btn-ghost" data-jump="quiz-panel">
+            <button class="btn btn-ghost" data-jump="quiz-panel" data-i18n="practiceQuizBtn">
               Practice Quiz
             </button>
-            <button class="btn btn-ghost" data-jump="calculator-panel">
+            <button class="btn btn-ghost" data-jump="calculator-panel" data-i18n="openToolkitBtn">
               Open Toolkit
             </button>
           </div>
           <ul class="hero-metrics">
             <li>
-              <strong>5</strong>
-              <span>Lectures</span>
+              <strong id="metric-lectures-count">5</strong>
+              <span data-i18n="metricLectures">Lectures</span>
             </li>
             <li>
-              <strong>10</strong>
-              <span>Formula Cards</span>
+              <strong id="metric-cards-count">10</strong>
+              <span data-i18n="metricCards">Formula Cards</span>
             </li>
             <li>
-              <strong>8</strong>
-              <span>Quiz Questions</span>
+              <strong id="metric-quiz-count">8</strong>
+              <span data-i18n="metricQuiz">Quiz Questions</span>
             </li>
           </ul>
         </div>
 
         <aside class="hero-card">
-          <p class="hero-card-label">Sprint Plan</p>
-          <h2>15-minute high-retention flow</h2>
+          <p class="hero-card-label" data-i18n="sprintLabel">Sprint Plan</p>
+          <h2 data-i18n="sprintTitle">15-minute high-retention flow</h2>
           <ol>
-            <li>Scan lecture highlights by topic.</li>
-            <li>Flip formula cards and memorize core equations.</li>
-            <li>Run quiz and confirm weak areas.</li>
-            <li>Use CVP tools for quick numeric checks.</li>
+            <li data-i18n="sprint1">Scan lecture highlights by topic.</li>
+            <li data-i18n="sprint2">Flip formula cards and memorize core equations.</li>
+            <li data-i18n="sprint3">Run quiz and confirm weak areas.</li>
+            <li data-i18n="sprint4">Use CVP tools for quick numeric checks.</li>
           </ol>
           <div class="status-track">
             <span></span>
           </div>
-          <p class="hero-card-note">
+          <p class="hero-card-note" data-i18n="sprintTip">
             Tip: Re-run the quiz after each lecture for stronger retention.
           </p>
         </aside>
       </section>
 
       <section class="quick-nav" aria-label="Quick learning navigation">
-        <button class="quick-item" data-jump="lecture-panel">Lecture Notes</button>
-        <button class="quick-item" data-jump="formula-panel">Formula Deck</button>
-        <button class="quick-item" data-jump="quiz-panel">Quiz Check</button>
-        <button class="quick-item" data-jump="calculator-panel">CVP Lab</button>
+        <button class="quick-item" data-jump="lecture-panel" data-i18n="quickLecture">Lecture Notes</button>
+        <button class="quick-item" data-jump="formula-panel" data-i18n="quickFormula">Formula Deck</button>
+        <button class="quick-item" data-jump="quiz-panel" data-i18n="quickQuiz">Quiz Check</button>
+        <button class="quick-item" data-jump="calculator-panel" data-i18n="quickCvp">CVP Lab</button>
       </section>
 
       <main class="layout">
         <aside class="sidebar">
-          <h2>Lecture Map</h2>
-          <p class="sidebar-copy">
+          <h2 data-i18n="lectureMapTitle">Lecture Map</h2>
+          <p class="sidebar-copy" data-i18n="lectureMapCopy">
             Move by chapter and review each concept block before doing the
             quiz.
           </p>
+
           <section class="study-progress" aria-label="Current lecture status">
-            <p class="progress-label">Current Focus</p>
-            <p id="current-lecture-tag" class="progress-title">
-              Lecture 2: Financial vs Managerial
-            </p>
+            <p class="progress-label" data-i18n="progressLabel">Current Focus</p>
+            <p id="current-lecture-tag" class="progress-title">Lecture 2: Financial vs Managerial</p>
             <p id="lecture-progress" class="progress-meta">1 of 5 lectures active</p>
+            <p id="completion-meta" class="progress-meta">Completed 0/5 lectures</p>
           </section>
-          <nav id="lecture-nav" aria-label="Lecture navigation">
-            <button class="nav-item active" data-lecture="l2">
-              Lecture 2: Financial vs Managerial
-            </button>
-            <button class="nav-item" data-lecture="l3">
-              Lecture 3: Cost Terms and Classifications
-            </button>
-            <button class="nav-item" data-lecture="l4">
-              Lecture 4: Cost Behavior and High-Low
-            </button>
-            <button class="nav-item" data-lecture="l5">
-              Lecture 5: CVP and Break-Even
-            </button>
-            <button class="nav-item" data-lecture="l6">
-              Lecture 6: Target Profit, MOS, DOL
-            </button>
-          </nav>
+
+          <section class="study-tools" aria-label="Study tools">
+            <p class="progress-label" data-i18n="toolsLabel">Study Tools</p>
+            <label for="lecture-search" class="tool-label" data-i18n="searchLabel">Search in current lecture</label>
+            <input
+              id="lecture-search"
+              class="search-input"
+              type="search"
+              autocomplete="off"
+              placeholder="Type a keyword..."
+            />
+            <div class="tool-actions">
+              <button id="toggle-complete" type="button" class="btn btn-ghost" data-i18n="markCompleteBtn">
+                Mark lecture complete
+              </button>
+              <button id="reset-progress" type="button" class="btn btn-ghost" data-i18n="resetProgressBtn">
+                Reset progress
+              </button>
+            </div>
+          </section>
+
+          <nav id="lecture-nav" aria-label="Lecture navigation"></nav>
         </aside>
 
         <section class="content">
@@ -128,29 +140,30 @@
 
           <section id="formula-panel" class="panel reveal">
             <div class="panel-head">
-              <h2>Formula Flashcards</h2>
-              <p>Click a card to reveal the formula and when to use it.</p>
+              <h2 data-i18n="formulaTitle">Formula Flashcards</h2>
+              <p data-i18n="formulaCopy">Click a card to reveal the formula and when to use it.</p>
             </div>
             <div id="flashcards" class="flashcards"></div>
           </section>
 
           <section id="quiz-panel" class="panel reveal">
             <div class="panel-head">
-              <h2>Practice Quiz</h2>
-              <p>Check understanding with quick multiple-choice questions.</p>
+              <h2 data-i18n="quizTitle">Practice Quiz</h2>
+              <p data-i18n="quizCopy">Check understanding with quick multiple-choice questions.</p>
             </div>
             <div id="quiz-container"></div>
             <div class="quiz-actions">
-              <button id="submit-quiz" class="btn btn-primary">Submit Quiz</button>
-              <button id="reset-quiz" class="btn btn-ghost">Reset</button>
+              <button id="submit-quiz" class="btn btn-primary" data-i18n="submitQuizBtn">Submit Quiz</button>
+              <button id="reset-quiz" class="btn btn-ghost" data-i18n="resetBtn">Reset</button>
+              <button id="shuffle-quiz" class="btn btn-ghost" data-i18n="shuffleQuizBtn">Shuffle Quiz</button>
               <p id="quiz-score" class="quiz-score"></p>
             </div>
           </section>
 
           <section id="calculator-panel" class="panel reveal">
             <div class="panel-head">
-              <h2>CVP Toolkit</h2>
-              <p>
+              <h2 data-i18n="cvpTitle">CVP Toolkit</h2>
+              <p data-i18n="cvpCopy">
                 Calculate break-even, target profit volume, high-low estimates,
                 margin of safety, and operating leverage.
               </p>
@@ -158,50 +171,50 @@
 
             <div class="calculator-grid">
               <article class="calc-card">
-                <h3>CVP Core Calculator</h3>
+                <h3 data-i18n="cvpCoreTitle">CVP Core Calculator</h3>
                 <label>
-                  Selling Price per Unit
+                  <span data-i18n="calcSellingPrice">Selling Price per Unit</span>
                   <input id="sp" type="number" min="0" step="0.01" value="80" />
                 </label>
                 <label>
-                  Variable Cost per Unit
+                  <span data-i18n="calcVarCost">Variable Cost per Unit</span>
                   <input id="uvc" type="number" min="0" step="0.01" value="45" />
                 </label>
                 <label>
-                  Fixed Costs
+                  <span data-i18n="calcFixedCost">Fixed Costs</span>
                   <input id="fc" type="number" min="0" step="0.01" value="14000" />
                 </label>
                 <label>
-                  Actual Sales Units
+                  <span data-i18n="calcActualUnits">Actual Sales Units</span>
                   <input id="units" type="number" min="0" step="1" value="600" />
                 </label>
                 <label>
-                  Target Profit
+                  <span data-i18n="calcTargetProfit">Target Profit</span>
                   <input id="tp" type="number" step="0.01" value="8000" />
                 </label>
-                <button id="run-cvp" class="btn btn-primary">Run CVP</button>
+                <button id="run-cvp" class="btn btn-primary" data-i18n="runCvpBtn">Run CVP</button>
                 <div id="cvp-output" class="calc-output"></div>
               </article>
 
               <article class="calc-card">
-                <h3>High-Low Method</h3>
+                <h3 data-i18n="highLowTitle">High-Low Method</h3>
                 <label>
-                  High Activity Units
+                  <span data-i18n="highUnits">High Activity Units</span>
                   <input id="high-units" type="number" min="0" step="1" value="900" />
                 </label>
                 <label>
-                  Cost at High Activity
+                  <span data-i18n="highCost">Cost at High Activity</span>
                   <input id="high-cost" type="number" min="0" step="0.01" value="37000" />
                 </label>
                 <label>
-                  Low Activity Units
+                  <span data-i18n="lowUnits">Low Activity Units</span>
                   <input id="low-units" type="number" min="0" step="1" value="500" />
                 </label>
                 <label>
-                  Cost at Low Activity
+                  <span data-i18n="lowCost">Cost at Low Activity</span>
                   <input id="low-cost" type="number" min="0" step="0.01" value="25000" />
                 </label>
-                <button id="run-high-low" class="btn btn-primary">
+                <button id="run-high-low" class="btn btn-primary" data-i18n="runHighLowBtn">
                   Estimate Mixed Cost
                 </button>
                 <div id="high-low-output" class="calc-output"></div>
@@ -212,7 +225,7 @@
       </main>
 
       <footer class="footer">
-        <p>
+        <p data-i18n="footerCopy">
           Built for accounting revision: Financial vs managerial accounting,
           cost behavior, CVP, break-even, target profit, margin of safety, and
           DOL.
