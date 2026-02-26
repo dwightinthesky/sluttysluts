@@ -310,27 +310,83 @@ const lectureData = {
   l6: {
     title: "Lecture 6: Target Profit, Margin of Safety, and DOL",
     summary:
-      "This topic extends CVP to planning goals and understanding how sensitive operating profit is to sales volume changes.",
+      "Lecture 6 extends CVP from break-even into planning and risk management through target profit, margin of safety, and operating leverage.",
     points: [
       {
-        heading: "Target Profit Units",
+        heading: "Target Profit Concept",
+        text: "Managers do not stop at break-even. They estimate how much volume is needed to reach a chosen profit objective.",
+      },
+      {
+        heading: "Target Profit Assumption",
+        text: "The basic target-profit model assumes SP, uVC, and FC stay constant over the planning range.",
+      },
+      {
+        heading: "Target Profit in Units",
         text: "Required units = (FC + Target profit) / uCM.",
       },
       {
-        heading: "Margin of Safety (MOS)",
-        text: "MOS = Actual sales - Break-even sales. It measures how far sales can drop before losses begin.",
+        heading: "Target Profit in Sales Dollars",
+        text: "Required sales = (FC + Target profit) / CM ratio, or required units × SP.",
       },
       {
-        heading: "MOS Ratio",
-        text: "MOS ratio = MOS / Actual sales. A higher ratio means a stronger safety cushion.",
+        heading: "Margin of Safety Concept",
+        text: "MOS is the amount by which expected or actual sales exceed break-even sales; it is the cushion before losses start.",
       },
       {
-        heading: "Degree of Operating Leverage",
-        text: "DOL = Contribution margin / EBIT. It measures profit sensitivity to sales changes.",
+        heading: "Margin of Safety Formula",
+        text: "MOS (value or units) = Actual/Expected Sales - Break-Even Sales.",
       },
       {
-        heading: "Interpreting High vs Low DOL",
-        text: "High DOL means more fixed cost and greater upside/downside volatility. Low DOL means less EBIT sensitivity to sales swings.",
+        heading: "Margin of Safety Ratio",
+        text: "MOS ratio = MOS / Actual Sales. A larger percentage means lower short-term downside risk.",
+      },
+      {
+        heading: "MOS as a Risk KPI",
+        text: "Like break-even, MOS is a core risk indicator because it quantifies tolerance to sales decline.",
+      },
+      {
+        heading: "EBIT from MOS",
+        text: "Above break-even, each extra unit contribution becomes profit. So EBIT = MOS in units × uCM.",
+      },
+      {
+        heading: "Operating Leverage Meaning",
+        text: "Operating leverage measures how strongly EBIT reacts to sales-volume changes based on the fixed-vs-variable cost mix.",
+      },
+      {
+        heading: "DOL Formula",
+        text: "DOL = Contribution Margin / EBIT.",
+      },
+      {
+        heading: "DOL as Elasticity",
+        text: "DOL also equals % change in EBIT / % change in sales volume.",
+      },
+      {
+        heading: "Forecasting with DOL",
+        text: "Expected EBIT growth (%) = Expected sales growth (%) × DOL.",
+      },
+      {
+        heading: "High DOL Model",
+        text: "High fixed-cost structures (asset-heavy, in-house production) amplify both upside and downside once volume changes.",
+      },
+      {
+        heading: "Low DOL Model",
+        text: "Variable-cost-heavy models (outsourcing/platform structures) have lower profit volatility but less explosive upside.",
+      },
+      {
+        heading: "Seminar: Location Choice Logic",
+        text: "When comparing plants with different fixed and variable structures, evaluate BEP, MOS, and risk profile before selecting a site.",
+      },
+      {
+        heading: "Seminar: Indifference Point",
+        text: "Set both options' EBIT equal to find the volume where profits are identical: (uCM1 × Q - FC1) = (uCM2 × Q - FC2).",
+      },
+      {
+        heading: "Seminar: High DOL Proof",
+        text: "If DOL = 3.0, a 10% sales increase implies about 30% EBIT increase (and the same magnification works in declines).",
+      },
+      {
+        heading: "Seminar: Multi-Product Target Profit",
+        text: "For multi-product planning, use weighted-average contribution margin based on product mix to allocate required total units.",
       },
     ],
   },
