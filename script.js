@@ -1025,6 +1025,7 @@ const contentByLanguage = {
   zhTW: { lectures: lectureDataZhTW, flashcards: flashcardDataZhTW, quiz: quizDataZhTW },
   de: { lectures: lectureDataDe, flashcards: flashcardDataDe, quiz: quizDataDe },
 };
+const curatedQuestionBankZhTW = window.curatedQuestionBankZhTW || {};
 
 const uiText = {
   en: {
@@ -1071,6 +1072,11 @@ const uiText = {
     flashcardLabel: "Formula Card",
     quizTitle: "Practice Quiz",
     quizCopy: "Check understanding with quick multiple-choice questions.",
+    quizDifficultyLabel: "Difficulty",
+    quizDifficultyAll: "All",
+    quizDifficultyEasy: "Easy",
+    quizDifficultyMedium: "Medium",
+    quizDifficultyHard: "Hard",
     quizUnitMeta: "Current unit: {unit} ({count} questions)",
     quizQuestionHeadingPrompt: "Which concept best matches this key point?",
     quizQuestionTextPrompt: "Which statement best explains this concept?",
@@ -1166,6 +1172,11 @@ const uiText = {
     flashcardLabel: "公式卡",
     quizTitle: "練習測驗",
     quizCopy: "用選擇題快速確認理解程度。",
+    quizDifficultyLabel: "難度",
+    quizDifficultyAll: "全部",
+    quizDifficultyEasy: "簡單",
+    quizDifficultyMedium: "中等",
+    quizDifficultyHard: "困難",
     quizUnitMeta: "目前單元：{unit}（{count} 題）",
     quizQuestionHeadingPrompt: "以下重點最對應哪個概念？",
     quizQuestionTextPrompt: "以下概念最對應哪段敘述？",
@@ -1259,6 +1270,11 @@ const uiText = {
     flashcardLabel: "Formelkarte",
     quizTitle: "Praxis Quiz",
     quizCopy: "Verstandnis mit kurzen Multiple-Choice-Fragen prufen.",
+    quizDifficultyLabel: "Schwierigkeit",
+    quizDifficultyAll: "Alle",
+    quizDifficultyEasy: "Leicht",
+    quizDifficultyMedium: "Mittel",
+    quizDifficultyHard: "Schwer",
     quizUnitMeta: "Aktuelle Einheit: {unit} ({count} Fragen)",
     quizQuestionHeadingPrompt: "Welches Konzept passt am besten zu diesem Punkt?",
     quizQuestionTextPrompt: "Welche Aussage beschreibt dieses Konzept am besten?",
@@ -1331,6 +1347,7 @@ const LAST_LECTURE_KEY = "studyflow_last_lecture";
 let currentLanguage = "en";
 let currentLectureKey = "l2";
 let currentQuizData = [];
+let currentQuizDifficulty = "all";
 let completedLectures = new Set();
 
 function getContent() {
@@ -1421,7 +1438,7 @@ function applyStaticTranslations() {
 function updateMetrics() {
   const content = getContent();
   const lecture = content.lectures[currentLectureKey];
-  const quizCount = lecture ? lecture.points.length * 2 : 0;
+  const quizCount = currentQuizData.length || (lecture ? lecture.points.length * 2 : 0);
   document.getElementById("metric-lectures-count").textContent = String(lectureOrder.length);
   document.getElementById("metric-cards-count").textContent = String(content.flashcards.length);
   document.getElementById("metric-quiz-count").textContent = String(quizCount);
@@ -1624,7 +1641,46 @@ function buildMultipleChoiceOptions(correctOption, optionPool) {
   };
 }
 
-function buildUnitQuiz(lectureKey = currentLectureKey) {
+function getCuratedQuestionGroups(lectureKey = currentLectureKey) {
+  if (currentLanguage !== "zhTW") {
+    return null;
+  }
+  return curatedQuestionBankZhTW[lectureKey] || null;
+}
+
+function getSelectedCuratedItems(groups, difficulty = currentQuizDifficulty) {
+  if (!groups) {
+    return [];
+  }
+  if (difficulty === "easy" || difficulty === "medium" || difficulty === "hard") {
+    return [...(groups[difficulty] || [])];
+  }
+  return [...(groups.easy || []), ...(groups.medium || []), ...(groups.hard || [])];
+}
+
+function buildCuratedUnitQuiz(lectureKey = currentLectureKey) {
+  const groups = getCuratedQuestionGroups(lectureKey);
+  if (!groups) {
+    return [];
+  }
+
+  const selectedItems = getSelectedCuratedItems(groups, currentQuizDifficulty);
+  if (!selectedItems.length) {
+    return [];
+  }
+
+  const answerPool = getSelectedCuratedItems(groups, "all").map((item) => item.answer);
+  return selectedItems.map((item) => {
+    const choices = buildMultipleChoiceOptions(item.answer, answerPool);
+    return {
+      question: item.question,
+      options: choices.options,
+      correct: choices.correctIndex,
+    };
+  });
+}
+
+function buildGeneratedUnitQuiz(lectureKey = currentLectureKey) {
   const lecture = getContent().lectures[lectureKey];
   if (!lecture || !Array.isArray(lecture.points) || !lecture.points.length) {
     return [];
@@ -1654,6 +1710,14 @@ function buildUnitQuiz(lectureKey = currentLectureKey) {
   return shuffleArray(questions);
 }
 
+function buildUnitQuiz(lectureKey = currentLectureKey) {
+  const curatedQuiz = buildCuratedUnitQuiz(lectureKey);
+  if (curatedQuiz.length) {
+    return shuffleArray(curatedQuiz);
+  }
+  return buildGeneratedUnitQuiz(lectureKey);
+}
+
 function updateQuizMeta(lectureKey = currentLectureKey) {
   const meta = document.getElementById("quiz-unit-meta");
   const lecture = getContent().lectures[lectureKey];
@@ -1672,6 +1736,7 @@ function refreshQuizForLecture(lectureKey = currentLectureKey) {
   renderQuiz();
   resetQuiz();
   updateQuizMeta(lectureKey);
+  updateQuizDifficultyControls(lectureKey);
   updateMetrics();
 }
 
@@ -1915,6 +1980,27 @@ function setupQuizActions() {
   document.getElementById("shuffle-quiz").addEventListener("click", shuffleQuiz);
 }
 
+function updateQuizDifficultyControls(lectureKey = currentLectureKey) {
+  const select = document.getElementById("quiz-difficulty");
+  if (!select) {
+    return;
+  }
+  const hasCuratedQuiz = Boolean(getCuratedQuestionGroups(lectureKey));
+  select.disabled = !hasCuratedQuiz;
+  select.value = hasCuratedQuiz ? currentQuizDifficulty : "all";
+}
+
+function setupQuizDifficultyFilter() {
+  const select = document.getElementById("quiz-difficulty");
+  if (!select) {
+    return;
+  }
+  select.addEventListener("change", () => {
+    currentQuizDifficulty = select.value;
+    refreshQuizForLecture(currentLectureKey);
+  });
+}
+
 function bootstrap() {
   completedLectures = loadCompletedLectures();
   currentLanguage = loadLanguage();
@@ -1928,6 +2014,7 @@ function bootstrap() {
   setupStudyTools();
   setupKeyboardShortcuts();
   setupQuizActions();
+  setupQuizDifficultyFilter();
 
   document.getElementById("run-cvp").addEventListener("click", runCvp);
   document.getElementById("run-high-low").addEventListener("click", runHighLow);

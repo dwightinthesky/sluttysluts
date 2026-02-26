@@ -166,6 +166,15 @@
               <h2 data-i18n="quizTitle">Practice Quiz</h2>
               <p data-i18n="quizCopy">Check understanding with quick multiple-choice questions.</p>
               <p id="quiz-unit-meta" class="quiz-unit-meta">Current unit: Lecture 2 (0 questions)</p>
+              <div class="quiz-filter-row">
+                <label for="quiz-difficulty" class="tool-label" data-i18n="quizDifficultyLabel">Difficulty</label>
+                <select id="quiz-difficulty" class="quiz-difficulty-select">
+                  <option value="all" data-i18n="quizDifficultyAll">All</option>
+                  <option value="easy" data-i18n="quizDifficultyEasy">Easy</option>
+                  <option value="medium" data-i18n="quizDifficultyMedium">Medium</option>
+                  <option value="hard" data-i18n="quizDifficultyHard">Hard</option>
+                </select>
+              </div>
             </div>
             <div id="quiz-container"></div>
             <div class="quiz-actions">
@@ -249,6 +258,7 @@
       </footer>
     </div>
 
+    <script src="question-bank.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
