@@ -1066,7 +1066,7 @@ const uiText = {
     lectureProgress: "{current} of {total} lectures active",
     prevLectureBtn: "Previous Lecture",
     nextLectureBtn: "Next Lecture",
-    shortcutsHint: "Shortcuts: N next lecture, P previous lecture, / focus search, ←/→ quiz question",
+    shortcutsHint: "Shortcuts: 1-4 switch workspace, N/P lectures, / search, ←/→ quiz question",
     formulaTitle: "Formula Flashcards",
     formulaCopy: "Click a card to reveal the formula and when to use it.",
     flashcardLabel: "Formula Card",
@@ -1083,6 +1083,13 @@ const uiText = {
     quizPrevQuestionBtn: "Previous Question",
     quizNextQuestionBtn: "Next Question",
     quizNextUnansweredBtn: "Next Unanswered",
+    toastMarkedComplete: "Lecture marked complete.",
+    toastMarkedIncomplete: "Lecture marked incomplete.",
+    toastProgressReset: "Progress reset.",
+    toastQuizReset: "Quiz answers cleared.",
+    toastQuizShuffled: "Quiz shuffled.",
+    toastQuizSubmitted: "Quiz graded.",
+    toastPanelOpened: "Opened {panel}.",
     quizQuestionHeadingPrompt: "Which concept best matches this key point?",
     quizQuestionTextPrompt: "Which statement best explains this concept?",
     submitQuizBtn: "Submit Quiz",
@@ -1171,7 +1178,7 @@ const uiText = {
     lectureProgress: "目前第 {current} / {total} 講",
     prevLectureBtn: "上一講",
     nextLectureBtn: "下一講",
-    shortcutsHint: "快捷鍵：N 下一講、P 上一講、/ 聚焦搜尋、←/→ 測驗換題",
+    shortcutsHint: "快捷鍵：1-4 切換工作區、N/P 切章、/ 搜尋、←/→ 測驗換題",
     formulaTitle: "公式複習卡",
     formulaCopy: "點一下卡片即可顯示公式與用途。",
     flashcardLabel: "公式卡",
@@ -1188,6 +1195,13 @@ const uiText = {
     quizPrevQuestionBtn: "上一題",
     quizNextQuestionBtn: "下一題",
     quizNextUnansweredBtn: "下一題未作答",
+    toastMarkedComplete: "已標記本講完成。",
+    toastMarkedIncomplete: "已取消本講完成標記。",
+    toastProgressReset: "學習進度已重置。",
+    toastQuizReset: "測驗作答已清除。",
+    toastQuizShuffled: "題目順序已重排。",
+    toastQuizSubmitted: "測驗已批改。",
+    toastPanelOpened: "已切換到 {panel}。",
     quizQuestionHeadingPrompt: "以下重點最對應哪個概念？",
     quizQuestionTextPrompt: "以下概念最對應哪段敘述？",
     submitQuizBtn: "提交測驗",
@@ -1274,7 +1288,7 @@ const uiText = {
     lectureProgress: "{current} von {total} Kapiteln aktiv",
     prevLectureBtn: "Vorheriges Kapitel",
     nextLectureBtn: "Nachstes Kapitel",
-    shortcutsHint: "Shortcuts: N nachstes Kapitel, P vorheriges Kapitel, / Suche fokussieren, ←/→ Quizfrage",
+    shortcutsHint: "Shortcuts: 1-4 Bereich wechseln, N/P Kapitel, / Suche, ←/→ Quizfrage",
     formulaTitle: "Formel Flashcards",
     formulaCopy: "Karte anklicken, um Formel und Anwendung zu sehen.",
     flashcardLabel: "Formelkarte",
@@ -1291,6 +1305,13 @@ const uiText = {
     quizPrevQuestionBtn: "Vorherige Frage",
     quizNextQuestionBtn: "Nachste Frage",
     quizNextUnansweredBtn: "Nachste unbeantwortete",
+    toastMarkedComplete: "Kapitel als erledigt markiert.",
+    toastMarkedIncomplete: "Erledigt-Markierung entfernt.",
+    toastProgressReset: "Fortschritt zuruckgesetzt.",
+    toastQuizReset: "Quiz-Antworten geleert.",
+    toastQuizShuffled: "Quiz neu gemischt.",
+    toastQuizSubmitted: "Quiz ausgewertet.",
+    toastPanelOpened: "{panel} geoffnet.",
     quizQuestionHeadingPrompt: "Welches Konzept passt am besten zu diesem Punkt?",
     quizQuestionTextPrompt: "Welche Aussage beschreibt dieses Konzept am besten?",
     submitQuizBtn: "Quiz auswerten",
@@ -1355,6 +1376,7 @@ const htmlLangByLanguage = {
 };
 
 const lectureOrder = ["l2", "l3", "l4", "l5", "l6"];
+const workspacePanelOrder = ["lecture-panel", "formula-panel", "quiz-panel", "calculator-panel"];
 const LANGUAGE_KEY = "studyflow_language";
 const COMPLETED_KEY = "studyflow_completed_lectures";
 const LAST_LECTURE_KEY = "studyflow_last_lecture";
@@ -1364,6 +1386,8 @@ let currentLectureKey = "l2";
 let currentQuizData = [];
 let currentQuizDifficulty = "all";
 let currentQuizQuestionIndex = 0;
+let currentPanelId = "lecture-panel";
+let toastTimerId = null;
 let completedLectures = new Set();
 
 function getContent() {
@@ -1378,6 +1402,65 @@ function formatTemplate(template, values) {
   return Object.entries(values).reduce((acc, [key, value]) => {
     return acc.replaceAll(`{${key}}`, String(value));
   }, template);
+}
+
+function showToast(message) {
+  const toast = document.getElementById("app-toast");
+  if (!toast || !message) {
+    return;
+  }
+
+  if (toastTimerId) {
+    clearTimeout(toastTimerId);
+  }
+
+  toast.textContent = message;
+  toast.classList.add("show");
+  toastTimerId = setTimeout(() => {
+    toast.classList.remove("show");
+  }, 1600);
+}
+
+function getPanelLabel(panelId) {
+  const ui = getUi();
+  const panelLabels = {
+    "lecture-panel": ui.quickLecture,
+    "formula-panel": ui.quickFormula,
+    "quiz-panel": ui.quickQuiz,
+    "calculator-panel": ui.quickCvp,
+  };
+  return panelLabels[panelId] || panelId;
+}
+
+function activateWorkspacePanel(panelId, options = {}) {
+  const { scroll = true, announce = false } = options;
+  if (!workspacePanelOrder.includes(panelId)) {
+    return;
+  }
+
+  currentPanelId = panelId;
+
+  document.querySelectorAll(".content .panel").forEach((panel) => {
+    const isVisible = panel.id === panelId;
+    panel.classList.toggle("panel-visible", isVisible);
+    panel.classList.toggle("panel-hidden", !isVisible);
+    panel.setAttribute("aria-hidden", String(!isVisible));
+  });
+
+  document.querySelectorAll(".quick-item[data-jump]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.jump === panelId);
+  });
+
+  if (scroll) {
+    const target = document.getElementById(panelId);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  if (announce) {
+    showToast(formatTemplate(getUi().toastPanelOpened, { panel: getPanelLabel(panelId) }));
+  }
 }
 
 function getCurrencyFormatter() {
@@ -1765,7 +1848,7 @@ function refreshQuizForLecture(lectureKey = currentLectureKey) {
   currentQuizData = buildUnitQuiz(lectureKey);
   currentQuizQuestionIndex = 0;
   renderQuiz();
-  resetQuiz();
+  resetQuiz({ silent: true });
   updateQuizMeta(lectureKey);
   updateQuizDifficultyControls(lectureKey);
   updateMetrics();
@@ -1859,7 +1942,8 @@ function jumpToNextUnansweredQuestion() {
   }
 }
 
-function resetQuiz() {
+function resetQuiz(options = {}) {
+  const { silent = false } = options;
   document.querySelectorAll('#quiz-container input[type="radio"]').forEach((input) => {
     input.checked = false;
   });
@@ -1869,6 +1953,9 @@ function resetQuiz() {
   document.getElementById("quiz-score").textContent = "";
   currentQuizQuestionIndex = 0;
   updateQuizFlowUi();
+  if (!silent) {
+    showToast(getUi().toastQuizReset);
+  }
 }
 
 function renderQuiz() {
@@ -1955,13 +2042,16 @@ function gradeQuiz() {
     percent,
   });
   updateQuizFlowUi();
+  showToast(ui.toastQuizSubmitted);
 }
 
 function shuffleQuiz() {
+  const ui = getUi();
   currentQuizData = shuffleArray(currentQuizData);
   renderQuiz();
-  resetQuiz();
+  resetQuiz({ silent: true });
   updateQuizMeta(currentLectureKey);
+  showToast(ui.toastQuizShuffled);
 }
 
 function safeNumber(value) {
@@ -2035,8 +2125,11 @@ function runHighLow() {
 function setupJumpButtons() {
   document.querySelectorAll("[data-jump]").forEach((button) => {
     button.addEventListener("click", () => {
-      const target = document.getElementById(button.dataset.jump);
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      const targetPanel = button.dataset.jump;
+      activateWorkspacePanel(targetPanel, {
+        scroll: true,
+        announce: button.classList.contains("quick-item"),
+      });
     });
   });
 }
@@ -2084,10 +2177,13 @@ function setupStudyTools() {
   });
 
   toggleCompleteButton.addEventListener("click", () => {
+    const ui = getUi();
     if (completedLectures.has(currentLectureKey)) {
       completedLectures.delete(currentLectureKey);
+      showToast(ui.toastMarkedIncomplete);
     } else {
       completedLectures.add(currentLectureKey);
+      showToast(ui.toastMarkedComplete);
     }
     saveCompletedLectures();
     renderLectureNav();
@@ -2095,14 +2191,23 @@ function setupStudyTools() {
   });
 
   resetProgressButton.addEventListener("click", () => {
+    const ui = getUi();
     completedLectures = new Set();
     saveCompletedLectures();
     renderLectureNav();
     updateCompletionWidgets();
+    showToast(ui.toastProgressReset);
   });
 }
 
 function setupKeyboardShortcuts() {
+  const panelByShortcut = {
+    "1": "lecture-panel",
+    "2": "formula-panel",
+    "3": "quiz-panel",
+    "4": "calculator-panel",
+  };
+
   document.addEventListener("keydown", (event) => {
     const target = event.target;
     const isTypingField =
@@ -2119,13 +2224,15 @@ function setupKeyboardShortcuts() {
       return;
     }
 
-    if (event.key === "n" || event.key === "N") {
+    if (panelByShortcut[event.key]) {
+      activateWorkspacePanel(panelByShortcut[event.key], { announce: true });
+    } else if (event.key === "n" || event.key === "N") {
       navigateLecture(1);
     } else if (event.key === "p" || event.key === "P") {
       navigateLecture(-1);
-    } else if (event.key === "ArrowRight") {
+    } else if (event.key === "ArrowRight" && currentPanelId === "quiz-panel") {
       showQuizQuestion(currentQuizQuestionIndex + 1);
-    } else if (event.key === "ArrowLeft") {
+    } else if (event.key === "ArrowLeft" && currentPanelId === "quiz-panel") {
       showQuizQuestion(currentQuizQuestionIndex - 1);
     }
   });
@@ -2133,7 +2240,7 @@ function setupKeyboardShortcuts() {
 
 function setupQuizActions() {
   document.getElementById("submit-quiz").addEventListener("click", gradeQuiz);
-  document.getElementById("reset-quiz").addEventListener("click", resetQuiz);
+  document.getElementById("reset-quiz").addEventListener("click", () => resetQuiz());
   document.getElementById("shuffle-quiz").addEventListener("click", shuffleQuiz);
   document.getElementById("quiz-prev-question").addEventListener("click", () => {
     showQuizQuestion(currentQuizQuestionIndex - 1);
@@ -2207,6 +2314,7 @@ function bootstrap() {
   document.getElementById("run-high-low").addEventListener("click", runHighLow);
 
   setLanguage(currentLanguage, false);
+  activateWorkspacePanel(currentPanelId, { scroll: false, announce: false });
 }
 
 bootstrap();

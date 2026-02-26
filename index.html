@@ -82,10 +82,14 @@
       </section>
 
       <section class="quick-nav" aria-label="Quick learning navigation">
-        <button class="quick-item" data-jump="lecture-panel" data-i18n="quickLecture">Lecture Notes</button>
-        <button class="quick-item" data-jump="formula-panel" data-i18n="quickFormula">Formula Deck</button>
-        <button class="quick-item" data-jump="quiz-panel" data-i18n="quickQuiz">Quiz Check</button>
-        <button class="quick-item" data-jump="calculator-panel" data-i18n="quickCvp">CVP Lab</button>
+        <button class="quick-item active" type="button" data-jump="lecture-panel" data-i18n="quickLecture">
+          Lecture Notes
+        </button>
+        <button class="quick-item" type="button" data-jump="formula-panel" data-i18n="quickFormula">
+          Formula Deck
+        </button>
+        <button class="quick-item" type="button" data-jump="quiz-panel" data-i18n="quickQuiz">Quiz Check</button>
+        <button class="quick-item" type="button" data-jump="calculator-panel" data-i18n="quickCvp">CVP Lab</button>
       </section>
 
       <main class="layout">
@@ -134,7 +138,7 @@
         </aside>
 
         <section class="content">
-          <section id="lecture-panel" class="panel reveal">
+          <section id="lecture-panel" class="panel reveal panel-visible" aria-hidden="false">
             <div class="panel-head">
               <h2 id="lecture-title">Lecture 2: Financial vs Managerial Accounting</h2>
               <p id="lecture-summary">
@@ -153,7 +157,7 @@
             <div id="lecture-points" class="bullet-grid"></div>
           </section>
 
-          <section id="formula-panel" class="panel reveal">
+          <section id="formula-panel" class="panel reveal panel-hidden" aria-hidden="true">
             <div class="panel-head">
               <h2 data-i18n="formulaTitle">Formula Flashcards</h2>
               <p data-i18n="formulaCopy">Click a card to reveal the formula and when to use it.</p>
@@ -161,7 +165,7 @@
             <div id="flashcards" class="flashcards"></div>
           </section>
 
-          <section id="quiz-panel" class="panel reveal">
+          <section id="quiz-panel" class="panel reveal panel-hidden" aria-hidden="true">
             <div class="panel-head">
               <h2 data-i18n="quizTitle">Practice Quiz</h2>
               <p data-i18n="quizCopy">Check understanding with quick multiple-choice questions.</p>
@@ -208,7 +212,7 @@
             </div>
           </section>
 
-          <section id="calculator-panel" class="panel reveal">
+          <section id="calculator-panel" class="panel reveal panel-hidden" aria-hidden="true">
             <div class="panel-head">
               <h2 data-i18n="cvpTitle">CVP Toolkit</h2>
               <p data-i18n="cvpCopy">
@@ -279,6 +283,7 @@
           DOL.
         </p>
       </footer>
+      <div id="app-toast" class="app-toast" role="status" aria-live="polite"></div>
     </div>
 
     <script src="question-bank.js"></script>
