@@ -62,6 +62,10 @@
   - 賣家錢包摘要：`GET /v1/wallets/:sellerId/summary`
   - 提現申請：`POST /v1/wallets/:sellerId/withdrawals`
   - 提現審核：`POST /v1/withdrawals/:withdrawalId/approve|reject`
+- High-Risk 金流流程
+  - 建立待付款訂單（含拆帳欄位）：`POST /v1/orders`
+  - Hosted Checkout Webhook：`POST /v1/payments/webhooks/high-risk`
+  - 訂單欄位包含：`basePrice / buyerFee / sellerCommission / totalCharged / sellerEarnings / reserveHeld / payoutableAmount`
 - Chat Service
   - 建立會話：`POST /v1/chat/threads`
   - 會話列表：`GET /v1/chat/threads`
@@ -85,6 +89,7 @@ npm start
 - Ops: `ops-demo`
 
 所有受保護 API 需帶 `x-user-id` header。
+Webhook 需帶 `x-webhook-token`（預設 `dev-webhook-token`，可用環境變數 `HIGH_RISK_WEBHOOK_TOKEN` 覆寫）。
 
 ### 一鍵 smoke test
 先在另一個 terminal 啟動服務，再執行：
@@ -100,7 +105,8 @@ npm run smoke
 - 賣家上架
 - 購買促銷 + 點擊扣量
 - Explore 排序查詢
-- 買家下單
+- 買家下單（建立 pending + Hosted Checkout）
+- 模擬 PSP webhook 回傳 paid
 - 到貨確認
 - 管理員撥款
 - 錢包查詢 + 提現審核

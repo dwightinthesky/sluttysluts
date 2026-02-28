@@ -2,8 +2,10 @@
 
 create table if not exists users (
   id uuid primary key,
-  role text not null check (role in ('buyer', 'seller', 'admin', 'ops')),
+  role text not null check (role in ('buyer', 'seller', 'both', 'admin', 'ops')),
   email text not null unique,
+  wallet_balance numeric(12,2) not null default 0,
+  kyc_status text not null default 'pending' check (kyc_status in ('pending', 'approved', 'rejected', 'not_required')),
   status text not null default 'active',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -38,10 +40,21 @@ create table if not exists orders (
   seller_id uuid not null references users(id),
   listing_id uuid not null references listings(id),
   amount numeric(12,2) not null,
+  base_price numeric(12,2) not null,
+  buyer_fee numeric(12,2) not null,
+  buyer_fee_rate numeric(6,4) not null,
+  seller_commission numeric(12,2) not null,
+  seller_commission_rate numeric(6,4) not null,
+  total_charged numeric(12,2) not null,
+  seller_earnings numeric(12,2) not null,
+  reserve_held numeric(12,2) not null default 0,
+  reserve_rate numeric(6,4) not null default 0,
+  payoutable_amount numeric(12,2) not null,
   currency char(3) not null,
   status text not null check (
-    status in ('pending', 'authorized', 'paid', 'held', 'delivered', 'released', 'refunded', 'cancelled')
+    status in ('pending', 'authorized', 'paid', 'held', 'delivered', 'released', 'refunded', 'cancelled', 'disputed')
   ),
+  paid_at timestamptz,
   dispute_window_ends_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -74,6 +87,7 @@ create table if not exists payments (
   id uuid primary key,
   order_id uuid references orders(id),
   campaign_id uuid references promotions(id),
+  checkout_session_id text,
   payment_kind text not null check (payment_kind in ('order', 'promotion')),
   psp text not null,
   psp_txn_id text,
@@ -87,6 +101,26 @@ create table if not exists payments (
     or
     (payment_kind = 'promotion' and campaign_id is not null and order_id is null)
   )
+);
+
+create table if not exists checkout_sessions (
+  id uuid primary key,
+  order_id uuid not null references orders(id),
+  psp text not null,
+  checkout_url text not null,
+  expires_at timestamptz not null,
+  status text not null check (status in ('open', 'completed', 'closed', 'expired')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists payment_webhook_events (
+  id uuid primary key,
+  event_id text not null unique,
+  order_id uuid not null references orders(id),
+  payment_status text not null check (payment_status in ('paid', 'failed', 'chargeback')),
+  payload jsonb not null default '{}'::jsonb,
+  received_at timestamptz not null default now()
 );
 
 create table if not exists payouts (
@@ -106,7 +140,7 @@ create table if not exists wallet_ledger_entries (
   id uuid primary key,
   seller_id uuid not null references users(id),
   entry_type text not null check (entry_type in ('credit', 'debit')),
-  source_type text not null check (source_type in ('payout', 'withdrawal', 'adjustment')),
+  source_type text not null check (source_type in ('payout', 'withdrawal', 'reserve', 'adjustment')),
   source_id text not null,
   amount numeric(12,2) not null,
   currency char(3) not null,
@@ -196,6 +230,8 @@ create table if not exists audit_events (
 create index if not exists idx_orders_status on orders(status);
 create index if not exists idx_orders_seller_status on orders(seller_id, status);
 create index if not exists idx_payments_status on payments(status);
+create index if not exists idx_checkout_sessions_order on checkout_sessions(order_id, status);
+create index if not exists idx_payment_webhook_events_order on payment_webhook_events(order_id, received_at);
 create index if not exists idx_verification_cases_user on verification_cases(user_id);
 create index if not exists idx_promotions_listing_status on promotions(listing_id, status);
 create index if not exists idx_wallet_entries_seller_currency on wallet_ledger_entries(seller_id, currency);

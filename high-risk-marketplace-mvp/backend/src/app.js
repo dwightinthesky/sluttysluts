@@ -42,6 +42,26 @@ const PROMOTION_PLANS = [
   }
 ];
 
+function parseRate(name, fallback) {
+  const parsed = Number(process.env[name]);
+  if (!Number.isFinite(parsed)) return fallback;
+  if (parsed < 0) return 0;
+  if (parsed > 1) return 1;
+  return parsed;
+}
+
+function roundMoney(value) {
+  return Number(Number(value || 0).toFixed(2));
+}
+
+const BUYER_FEE_RATE = parseRate('BUYER_FEE_RATE', 0.05);
+const SELLER_COMMISSION_RATE = parseRate('SELLER_COMMISSION_RATE', 0.15);
+const ROLLING_RESERVE_RATE = parseRate('ROLLING_RESERVE_RATE', 0.1);
+const ROLLING_RESERVE_DAYS = Math.max(1, Number(process.env.ROLLING_RESERVE_DAYS || 120));
+const HIGH_RISK_WEBHOOK_TOKEN = process.env.HIGH_RISK_WEBHOOK_TOKEN || 'dev-webhook-token';
+const HOSTED_CHECKOUT_BASE_URL =
+  process.env.HOSTED_CHECKOUT_BASE_URL || 'https://checkout.highrisk-pay.example/session';
+
 const app = express();
 app.use(express.json({ limit: '1mb' }));
 
@@ -158,6 +178,32 @@ function calculateWalletSummary(db, sellerId, currency) {
 function canAccessThread(actor, thread) {
   if (isAdminLike(actor)) return true;
   return Boolean(actor && (actor.id === thread.buyerId || actor.id === thread.sellerId));
+}
+
+function calculateOrderPricing({ basePrice, sellerCommissionRate }) {
+  const buyerFee = roundMoney(basePrice * BUYER_FEE_RATE);
+  const sellerCommission = roundMoney(basePrice * sellerCommissionRate);
+  const sellerEarnings = roundMoney(basePrice - sellerCommission);
+  const reserveHeld = roundMoney(sellerEarnings * ROLLING_RESERVE_RATE);
+  const payoutableAmount = roundMoney(sellerEarnings - reserveHeld);
+  const totalCharged = roundMoney(basePrice + buyerFee);
+
+  return {
+    basePrice,
+    buyerFee,
+    buyerFeeRate: BUYER_FEE_RATE,
+    sellerCommission,
+    sellerCommissionRate,
+    sellerEarnings,
+    reserveHeld,
+    reserveRate: ROLLING_RESERVE_RATE,
+    payoutableAmount,
+    totalCharged
+  };
+}
+
+function findOrderPayment(db, orderId) {
+  return db.payments.find((item) => item.orderId === orderId && (!item.kind || item.kind === 'order')) || null;
 }
 
 app.get('/health', (_, res) => {
@@ -391,15 +437,10 @@ app.get('/v1/listings', (req, res) => {
 
 app.post('/v1/orders', (req, res) => {
   const payload = req.body || {};
-  const missing = requireFields(payload, ['buyerId', 'listingId', 'amount', 'currency']);
+  const missing = requireFields(payload, ['buyerId', 'listingId', 'currency']);
 
   if (missing.length) {
     return sendError(res, 400, 'VALIDATION_ERROR', 'Missing required fields', { missing });
-  }
-
-  const amount = asNumber(payload.amount);
-  if (!Number.isFinite(amount) || amount <= 0) {
-    return sendError(res, 400, 'VALIDATION_ERROR', 'amount must be a positive number');
   }
 
   return mutateDb((db) => {
@@ -425,20 +466,57 @@ app.post('/v1/orders', (req, res) => {
       return sendError(res, 409, 'SELF_PURCHASE_NOT_ALLOWED', 'Buyer cannot buy own listing');
     }
 
-    if (amount !== listing.price) {
-      return sendError(res, 400, 'AMOUNT_MISMATCH', 'Order amount must match listing price');
+    const currency = String(payload.currency).toUpperCase();
+    if (currency !== listing.currency) {
+      return sendError(res, 400, 'CURRENCY_MISMATCH', 'Order currency must match listing currency');
     }
 
-    const paymentResult = simulatePayment({ amount, currency: String(payload.currency).toUpperCase() });
+    const sellerHistoricalGross = db.orders
+      .filter((item) => item.sellerId === listing.sellerId)
+      .reduce((sum, item) => sum + Number(item.basePrice || item.amount || 0), 0);
+
+    const customCommissionRate = asNumber(payload.sellerCommissionRate);
+    const sellerCommissionRate =
+      Number.isFinite(customCommissionRate) && customCommissionRate >= 0 && customCommissionRate <= 1
+        ? customCommissionRate
+        : commissionRate(sellerHistoricalGross + listing.price);
+
+    const normalizedCommissionRate =
+      Number.isFinite(sellerCommissionRate) && sellerCommissionRate >= 0 && sellerCommissionRate <= 1
+        ? sellerCommissionRate
+        : SELLER_COMMISSION_RATE;
+
+    const pricing = calculateOrderPricing({
+      basePrice: listing.price,
+      sellerCommissionRate: normalizedCommissionRate
+    });
+
+    if (payload.expectedTotalCharged !== undefined) {
+      const expectedTotal = asNumber(payload.expectedTotalCharged);
+      if (!Number.isFinite(expectedTotal) || expectedTotal !== pricing.totalCharged) {
+        return sendError(res, 400, 'AMOUNT_MISMATCH', 'expectedTotalCharged does not match computed total', {
+          expectedTotalCharged: pricing.totalCharged
+        });
+      }
+    }
+
+    const paymentResult = simulatePayment({ amount: pricing.totalCharged, currency });
+    if (!paymentResult.success) {
+      return sendError(res, 422, 'PAYMENT_PRECHECK_FAILED', 'High-risk PSP pre-check failed', {
+        reason: paymentResult.reason,
+        psp: paymentResult.psp
+      });
+    }
 
     const order = {
       id: makeId('ord'),
       buyerId: payload.buyerId,
       sellerId: listing.sellerId,
       listingId: payload.listingId,
-      amount,
-      currency: String(payload.currency).toUpperCase(),
-      status: paymentResult.success ? 'held' : 'cancelled',
+      amount: pricing.totalCharged,
+      ...pricing,
+      currency,
+      status: 'pending',
       disputeWindowEndsAt: plusDaysIso(14),
       createdAt: nowIso(),
       updatedAt: nowIso()
@@ -449,32 +527,140 @@ app.post('/v1/orders', (req, res) => {
       orderId: order.id,
       kind: 'order',
       psp: paymentResult.psp,
-      pspTxnId: makeId('txn'),
-      amount,
+      pspTxnId: null,
+      amount: pricing.totalCharged,
       currency: order.currency,
-      status: paymentResult.status,
-      failureReason: paymentResult.reason,
+      status: 'initiated',
+      failureReason: null,
+      createdAt: nowIso(),
+      updatedAt: nowIso()
+    };
+
+    const checkoutSession = {
+      id: makeId('checkout'),
+      orderId: order.id,
+      psp: payment.psp,
+      checkoutUrl: `${HOSTED_CHECKOUT_BASE_URL}/${order.id}`,
+      expiresAt: plusDaysIso(1),
+      status: 'open',
       createdAt: nowIso(),
       updatedAt: nowIso()
     };
 
     db.orders.push(order);
     db.payments.push(payment);
-
-    if (paymentResult.success) {
-      listing.status = 'sold';
-      listing.updatedAt = nowIso();
-    }
+    db.checkoutSessions.push(checkoutSession);
 
     addAudit(db, 'order_created', 'order', order.id, actor.id, {
       paymentStatus: payment.status,
-      psp: payment.psp
+      psp: payment.psp,
+      checkoutSessionId: checkoutSession.id
     });
 
     return res.status(201).json({
       order,
       payment,
-      nextAction: paymentResult.success ? 'ship_item' : 'retry_payment'
+      checkout: checkoutSession,
+      nextAction: 'redirect_to_hosted_checkout'
+    });
+  });
+});
+
+app.post('/v1/payments/webhooks/high-risk', (req, res) => {
+  const payload = req.body || {};
+  const missing = requireFields(payload, ['eventId', 'orderId', 'paymentStatus']);
+
+  if (req.header('x-webhook-token') !== HIGH_RISK_WEBHOOK_TOKEN) {
+    return sendError(res, 401, 'UNAUTHORIZED', 'Invalid webhook token');
+  }
+
+  if (missing.length) {
+    return sendError(res, 400, 'VALIDATION_ERROR', 'Missing required fields', { missing });
+  }
+
+  const paymentStatus = String(payload.paymentStatus).toLowerCase();
+  const allowedStatuses = new Set(['paid', 'failed', 'chargeback']);
+  if (!allowedStatuses.has(paymentStatus)) {
+    return sendError(res, 400, 'VALIDATION_ERROR', 'Unsupported paymentStatus');
+  }
+
+  return mutateDb((db) => {
+    const duplicate = db.paymentWebhookEvents.find((event) => event.eventId === payload.eventId);
+    if (duplicate) {
+      return res.status(200).json({ message: 'Duplicate webhook ignored', eventId: payload.eventId });
+    }
+
+    const order = db.orders.find((item) => item.id === payload.orderId);
+    if (!order) {
+      return sendError(res, 404, 'ORDER_NOT_FOUND', 'Order not found');
+    }
+
+    const payment = findOrderPayment(db, order.id);
+    if (!payment) {
+      return sendError(res, 404, 'PAYMENT_NOT_FOUND', 'Payment not found for order');
+    }
+
+    const now = nowIso();
+    const webhookEvent = {
+      id: makeId('pwh'),
+      eventId: String(payload.eventId),
+      orderId: order.id,
+      paymentStatus,
+      receivedAt: now,
+      rawPayload: payload
+    };
+
+    if (paymentStatus === 'paid') {
+      if (order.status === 'pending') {
+        order.status = 'held';
+        order.paidAt = now;
+        order.updatedAt = now;
+        const listing = db.listings.find((item) => item.id === order.listingId);
+        if (listing && listing.status === 'active') {
+          listing.status = 'sold';
+          listing.updatedAt = now;
+        }
+      }
+
+      payment.status = 'captured';
+      payment.pspTxnId = payload.pspTxnId ? String(payload.pspTxnId) : payment.pspTxnId || makeId('txn');
+      payment.updatedAt = now;
+    } else if (paymentStatus === 'failed') {
+      if (order.status === 'pending') {
+        order.status = 'cancelled';
+        order.updatedAt = now;
+      }
+
+      payment.status = 'failed';
+      payment.failureReason = payload.failureReason ? String(payload.failureReason) : 'gateway_declined';
+      payment.pspTxnId = payload.pspTxnId ? String(payload.pspTxnId) : payment.pspTxnId;
+      payment.updatedAt = now;
+    } else if (paymentStatus === 'chargeback') {
+      order.status = 'disputed';
+      order.updatedAt = now;
+      payment.status = 'chargeback';
+      payment.failureReason = payload.failureReason ? String(payload.failureReason) : 'chargeback';
+      payment.pspTxnId = payload.pspTxnId ? String(payload.pspTxnId) : payment.pspTxnId;
+      payment.updatedAt = now;
+    }
+
+    const checkoutSession = db.checkoutSessions.find((item) => item.orderId === order.id && item.status === 'open');
+    if (checkoutSession) {
+      checkoutSession.status = paymentStatus === 'paid' ? 'completed' : 'closed';
+      checkoutSession.updatedAt = now;
+    }
+
+    db.paymentWebhookEvents.push(webhookEvent);
+
+    addAudit(db, 'payment_webhook_processed', 'order', order.id, null, {
+      eventId: payload.eventId,
+      paymentStatus
+    });
+
+    return res.status(202).json({
+      message: 'Webhook processed',
+      orderStatus: order.status,
+      paymentStatus: payment.status
     });
   });
 });
@@ -577,22 +763,34 @@ app.post('/v1/payouts/release', (req, res) => {
         continue;
       }
 
-      const sellerHistoricalGross = db.payouts
-        .filter((item) => item.sellerId === order.sellerId)
-        .reduce((sum, item) => sum + item.grossAmount, 0);
-
-      const rate = commissionRate(sellerHistoricalGross + order.amount);
-      const platformFee = Number((order.amount * rate).toFixed(2));
-      const netAmount = Number((order.amount - platformFee).toFixed(2));
+      const grossAmount = roundMoney(order.basePrice || order.amount || 0);
+      const feeRate =
+        Number.isFinite(order.sellerCommissionRate) && order.sellerCommissionRate >= 0
+          ? order.sellerCommissionRate
+          : SELLER_COMMISSION_RATE;
+      const platformFee = roundMoney(
+        Number.isFinite(order.sellerCommission) ? order.sellerCommission : grossAmount * feeRate
+      );
+      const sellerEarnings = roundMoney(
+        Number.isFinite(order.sellerEarnings) ? order.sellerEarnings : grossAmount - platformFee
+      );
+      const reserveHeld = roundMoney(
+        Number.isFinite(order.reserveHeld) ? order.reserveHeld : sellerEarnings * ROLLING_RESERVE_RATE
+      );
+      const payoutableNow = roundMoney(
+        Number.isFinite(order.payoutableAmount) ? order.payoutableAmount : sellerEarnings - reserveHeld
+      );
 
       const payout = {
         id: makeId('po'),
         sellerId: order.sellerId,
         orderId: order.id,
-        grossAmount: order.amount,
+        grossAmount,
         platformFee,
-        netAmount,
-        feeRate: rate,
+        sellerEarnings,
+        reserveHeld,
+        netAmount: payoutableNow,
+        feeRate,
         status: 'sent',
         createdAt: nowIso(),
         updatedAt: nowIso()
@@ -605,18 +803,38 @@ app.post('/v1/payouts/release', (req, res) => {
         type: 'credit',
         sourceType: 'payout',
         sourceId: payout.id,
-        amount: netAmount,
+        amount: payoutableNow,
         currency: order.currency,
         status: 'available',
         createdAt: nowIso(),
         updatedAt: nowIso()
       });
 
+      if (reserveHeld > 0) {
+        db.walletEntries.push({
+          id: makeId('wl'),
+          sellerId: order.sellerId,
+          type: 'credit',
+          sourceType: 'reserve',
+          sourceId: payout.id,
+          amount: reserveHeld,
+          currency: order.currency,
+          status: 'pending',
+          availableAt: plusDaysIso(ROLLING_RESERVE_DAYS),
+          createdAt: nowIso(),
+          updatedAt: nowIso()
+        });
+      }
+
       order.status = 'released';
       order.updatedAt = nowIso();
       released.push(payout);
 
-      addAudit(db, 'payout_released', 'payout', payout.id, actor.id, { orderId: order.id, feeRate: rate });
+      addAudit(db, 'payout_released', 'payout', payout.id, actor.id, {
+        orderId: order.id,
+        feeRate,
+        reserveHeld
+      });
     }
 
     return res.status(202).json({

@@ -15,6 +15,8 @@ const DEFAULT_DB = {
   listings: [],
   orders: [],
   payments: [],
+  checkoutSessions: [],
+  paymentWebhookEvents: [],
   payouts: [],
   promotions: [],
   walletEntries: [],
@@ -25,6 +27,18 @@ const DEFAULT_DB = {
   moderationEvents: [],
   auditEvents: []
 };
+
+function normalizeDb(db) {
+  const normalized = { ...db };
+
+  for (const [key, defaultValue] of Object.entries(DEFAULT_DB)) {
+    if (normalized[key] === undefined) {
+      normalized[key] = Array.isArray(defaultValue) ? [] : defaultValue;
+    }
+  }
+
+  return normalized;
+}
 
 function ensureStore() {
   if (!fs.existsSync(DATA_DIR)) {
@@ -39,7 +53,7 @@ function ensureStore() {
 function loadDb() {
   ensureStore();
   const raw = fs.readFileSync(DATA_FILE, 'utf8');
-  return JSON.parse(raw);
+  return normalizeDb(JSON.parse(raw));
 }
 
 function saveDb(db) {

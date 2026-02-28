@@ -1,9 +1,9 @@
 openapi: 3.1.0
 info:
   title: High-Risk Marketplace API
-  version: 0.2.0
+  version: 0.3.0
   description: |
-    Compliance-first marketplace API draft with promotion, wallet, and chat modules.
+    Compliance-first marketplace API draft with promotion, wallet, chat, and hosted checkout webhook flows.
 servers:
   - url: https://api.example.com
 security:
@@ -88,7 +88,7 @@ paths:
 
   /v1/orders:
     post:
-      summary: Place order and initiate payment
+      summary: Create pending order with fee breakdown and hosted checkout session
       requestBody:
         required: true
         content:
@@ -98,6 +98,25 @@ paths:
       responses:
         "201":
           description: Order created
+
+  /v1/payments/webhooks/high-risk:
+    post:
+      summary: Receive async hosted-checkout webhook callback
+      parameters:
+        - in: header
+          name: x-webhook-token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentWebhookRequest'
+      responses:
+        "202":
+          description: Webhook processed
 
   /v1/orders/{orderId}/delivery-confirmation:
     post:
@@ -381,18 +400,38 @@ components:
 
     CreateOrderRequest:
       type: object
-      required: [buyerId, listingId, amount, currency]
+      required: [buyerId, listingId, currency]
       properties:
         buyerId:
           type: string
         listingId:
           type: string
-        amount:
-          type: number
         currency:
           type: string
           minLength: 3
           maxLength: 3
+        expectedTotalCharged:
+          type: number
+        sellerCommissionRate:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    PaymentWebhookRequest:
+      type: object
+      required: [eventId, orderId, paymentStatus]
+      properties:
+        eventId:
+          type: string
+        orderId:
+          type: string
+        paymentStatus:
+          type: string
+          enum: [paid, failed, chargeback]
+        pspTxnId:
+          type: string
+        failureReason:
+          type: string
 
     CreateDisputeRequest:
       type: object
