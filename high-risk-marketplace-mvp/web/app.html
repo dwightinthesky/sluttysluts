@@ -12,17 +12,17 @@
     />
     <style>
       :root {
-        --bg: #f3f4ee;
+        --bg: #f7f7f5;
         --ink: #0f172a;
-        --muted: #5b6577;
-        --line: #d8e0ea;
+        --muted: #6b7280;
+        --line: #e5e7eb;
         --surface: #ffffff;
-        --brand: #0f766e;
-        --brand-soft: #ccfbf1;
-        --accent: #ea580c;
+        --brand: #be123c;
+        --brand-soft: #ffe4e6;
+        --accent: #1f2937;
         --danger: #b91c1c;
         --ok: #166534;
-        --shadow: 0 18px 44px rgba(15, 23, 42, 0.12);
+        --shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
       }
 
       * {
@@ -38,10 +38,7 @@
       body {
         font-family: 'Manrope', sans-serif;
         color: var(--ink);
-        background:
-          radial-gradient(circle at 100% 0%, rgba(15, 118, 110, 0.17), transparent 34%),
-          radial-gradient(circle at 0% 100%, rgba(251, 146, 60, 0.2), transparent 32%),
-          var(--bg);
+        background: var(--bg);
       }
 
       .shell {
@@ -74,7 +71,7 @@
         border-radius: 12px;
         display: grid;
         place-items: center;
-        background: linear-gradient(140deg, #0f766e, #14b8a6);
+        background: linear-gradient(140deg, #be123c, #e11d48);
         color: #fff;
         font: 800 0.92rem/1 'Sora', sans-serif;
       }
@@ -131,15 +128,15 @@
       }
 
       .btn.soft {
-        background: #f0fdfa;
-        border-color: #99f6e4;
-        color: #0f766e;
+        background: #fff1f2;
+        border-color: #fecdd3;
+        color: #9f1239;
       }
 
       .persona {
-        background: #fff7ed;
-        border: 1px solid #fed7aa;
-        color: #9a3412;
+        background: #fff1f2;
+        border: 1px solid #fecdd3;
+        color: #9f1239;
         border-radius: 999px;
         padding: 7px 12px;
         font-size: 0.84rem;
@@ -189,8 +186,8 @@
       }
 
       .nav-btn.active {
-        border-color: #99f6e4;
-        background: #f0fdfa;
+        border-color: #fecdd3;
+        background: #fff1f2;
       }
 
       .main {
@@ -266,41 +263,127 @@
       .listing-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
+        gap: 12px;
       }
 
       .listing {
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        padding: 12px;
+        border: 0;
+        border-radius: 14px;
+        padding: 0;
         background: #fff;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        transition: transform 0.22s ease, box-shadow 0.22s ease;
+      }
+
+      .listing:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.1);
+      }
+
+      .listing-media {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 4 / 5;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #f3f4f6;
+      }
+
+      .listing-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.35s ease;
+      }
+
+      .listing:hover .listing-media img {
+        transform: scale(1.05);
+      }
+
+      .listing-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 0 2px 2px;
+      }
+
+      .listing-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
       }
 
       .listing h4 {
         margin: 0;
-        font: 700 0.94rem/1.3 'Sora', sans-serif;
+        font: 600 0.92rem/1.25 'Sora', sans-serif;
       }
 
-      .listing p {
-        margin: 6px 0 0;
+      .listing-sub {
+        margin: 0;
         color: var(--muted);
-        font-size: 0.84rem;
+        font-size: 0.78rem;
+      }
+
+      .listing-seller {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .listing-meta {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+
+      .listing-price {
+        margin: 0;
+        font: 700 0.95rem/1.2 'Sora', sans-serif;
+      }
+
+      .listing-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin-top: 2px;
+      }
+
+      .listing .btn {
+        padding: 8px 10px;
+        font-size: 0.8rem;
       }
 
       .badge {
         display: inline-flex;
         border-radius: 999px;
-        padding: 3px 8px;
-        border: 1px solid #cbd5e1;
-        background: #f8fafc;
-        font-size: 0.73rem;
+        padding: 2px 8px;
+        border: 1px solid #d1d5db;
+        background: #fff;
+        font-size: 0.68rem;
         font-weight: 700;
       }
 
       .badge.promo {
-        border-color: #fdba74;
-        background: #fff7ed;
-        color: #9a3412;
+        border-color: #fecdd3;
+        background: rgba(255, 255, 255, 0.92);
+        color: #9f1239;
+      }
+
+      .badge.verified {
+        border-color: #bfdbfe;
+        background: #eff6ff;
+        color: #1d4ed8;
+      }
+
+      .badge-overlay {
+        position: absolute;
+        top: 8px;
+        left: 8px;
       }
 
       .table {
@@ -961,11 +1044,31 @@
         logs: []
       };
 
+      const LISTING_PLACEHOLDER_IMAGE = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+        `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000'>
+          <defs>
+            <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+              <stop offset='0%' stop-color='#f3f4f6'/>
+              <stop offset='100%' stop-color='#e5e7eb'/>
+            </linearGradient>
+          </defs>
+          <rect width='800' height='1000' fill='url(#g)'/>
+          <rect x='90' y='130' width='620' height='740' rx='28' fill='#ffffff' opacity='0.84'/>
+          <text x='400' y='510' text-anchor='middle' fill='#6b7280' font-family='Arial, Helvetica, sans-serif' font-size='38'>
+            Preview unavailable
+          </text>
+        </svg>`
+      )}`;
+
       const fallbackListings = [
         {
           id: 'sample-lst-001',
-          title: 'Premium Custom Package',
-          description: 'Verified creator, high conversion item.',
+          title: 'Premium Signature Bundle',
+          sellerName: 'Lina Atelier',
+          sellerVerified: true,
+          subtitle: 'Worn 3 days • Sealed package',
+          description: 'Hand-curated creator bundle with premium packaging and fast processing.',
+          imageUrl: 'https://picsum.photos/id/1025/900/1125',
           price: 120,
           currency: 'USD',
           isPromoted: true,
@@ -973,8 +1076,12 @@
         },
         {
           id: 'sample-lst-002',
-          title: 'Express Bundle',
-          description: 'Fast dispatch and compliance-safe content.',
+          title: 'Express Daily Drop',
+          sellerName: 'Maya Studio',
+          sellerVerified: true,
+          subtitle: 'Express dispatch • Tracking included',
+          description: 'Fast turnaround listing designed for repeat buyers and high satisfaction.',
+          imageUrl: 'https://picsum.photos/id/1062/900/1125',
           price: 95,
           currency: 'USD',
           isPromoted: false,
@@ -982,8 +1089,12 @@
         },
         {
           id: 'sample-lst-003',
-          title: 'Collector Tier Listing',
-          description: 'High ticket niche SKU with repeat demand.',
+          title: 'Collectors Edition Drop',
+          sellerName: 'Noir Archive',
+          sellerVerified: true,
+          subtitle: 'Limited quantity • Video proof',
+          description: 'High-ticket curated listing with limited stock and collector positioning.',
+          imageUrl: 'https://picsum.photos/id/1074/900/1125',
           price: 160,
           currency: 'USD',
           isPromoted: true,
@@ -1101,6 +1212,44 @@
         return data;
       }
 
+      function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, (char) => {
+          if (char === '&') return '&amp;';
+          if (char === '<') return '&lt;';
+          if (char === '>') return '&gt;';
+          if (char === '"') return '&quot;';
+          return '&#39;';
+        });
+      }
+
+      function resolveListingImage(item) {
+        const candidates = [
+          item.imageUrl,
+          item.image,
+          item.coverImage,
+          item.coverUrl,
+          item.thumbnailUrl,
+          item.mediaUrl,
+          Array.isArray(item.images) ? item.images[0] : null,
+          item.media && Array.isArray(item.media.images) ? item.media.images[0] : null
+        ];
+
+        for (const candidate of candidates) {
+          if (typeof candidate !== 'string') continue;
+          const trimmed = candidate.trim();
+          if (!trimmed) continue;
+          if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:image')) {
+            return trimmed;
+          }
+          if (trimmed.startsWith('/')) {
+            return `${apiBase()}${trimmed}`;
+          }
+          return trimmed;
+        }
+
+        return LISTING_PLACEHOLDER_IMAGE;
+      }
+
       function setPanel(panel) {
         state.activePanel = panel;
         Object.entries(el.panels).forEach(([key, panelEl]) => {
@@ -1154,7 +1303,7 @@
         const search = (el.searchInput.value || '').trim().toLowerCase();
         const filter = el.filterSelect.value;
         const rows = state.listings.filter((item) => {
-          const text = `${item.title || ''} ${item.description || ''}`.toLowerCase();
+          const text = `${item.title || ''} ${item.description || ''} ${item.sellerName || ''} ${item.subtitle || ''}`.toLowerCase();
           const bySearch = !search || text.includes(search) || String(item.id).toLowerCase().includes(search);
           const byFilter =
             filter === 'all' ||
@@ -1163,20 +1312,57 @@
           return bySearch && byFilter;
         });
 
+        if (!rows.length) {
+          el.listingGrid.innerHTML =
+            '<article class="card"><h4>No matching listings</h4><p>Try a different keyword or filter.</p></article>';
+          return;
+        }
+
         el.listingGrid.innerHTML = rows
-          .map(
-            (item) => `
-            <article class="listing">
-              <div class="row" style="justify-content: space-between; margin-bottom: 4px;">
-                <h4>${item.title || item.id}</h4>
-                <span class="badge ${item.isPromoted ? 'promo' : ''}">${item.isPromoted ? 'Promoted' : 'Organic'}</span>
-              </div>
-              <p>${item.description || 'No description'}</p>
-              <p><strong>${item.currency || 'USD'} ${Number(item.price || 0).toFixed(2)}</strong></p>
-              <button class="btn" data-select="${item.id}">Select</button>
-            </article>
-          `
-          )
+          .map((item) => {
+            const listingId = escapeHtml(item.id || 'unknown-listing');
+            const title = escapeHtml(item.title || item.id || 'Untitled Listing');
+            const sellerName = escapeHtml(item.sellerName || item.sellerId || 'Creator');
+            const subtitle = escapeHtml(item.subtitle || 'Curated listing');
+            const meta = escapeHtml(item.description || 'Secure checkout and verified fulfillment.');
+            const currency = escapeHtml(item.currency || 'USD');
+            const price = Number(item.price || 0).toFixed(2);
+            const imageUrl = escapeHtml(resolveListingImage(item));
+            const alt = escapeHtml(`${item.title || 'Listing'} preview`);
+            const isVerified =
+              item.sellerVerified === true ||
+              item.verified === true ||
+              item.kycStatus === 'approved' ||
+              item.kycStatus === 'verified';
+
+            return `
+              <article class="listing">
+                <div class="listing-media">
+                  <img src="${imageUrl}" alt="${alt}" loading="lazy" data-listing-image="1" data-fallback="${escapeHtml(
+                    LISTING_PLACEHOLDER_IMAGE
+                  )}" />
+                  ${item.isPromoted ? '<span class="badge promo badge-overlay">Promoted</span>' : ''}
+                </div>
+                <div class="listing-info">
+                  <div class="listing-head">
+                    <div>
+                      <h4>${title}</h4>
+                      <p class="listing-sub listing-seller">
+                        <span>${sellerName}</span>
+                        ${isVerified ? '<span class="badge verified">Verified</span>' : ''}
+                      </p>
+                    </div>
+                    <p class="listing-price">${currency} ${price}</p>
+                  </div>
+                  <p class="listing-meta">${meta}</p>
+                  <div class="listing-actions">
+                    <span class="listing-sub">${subtitle}</span>
+                    <button class="btn" data-select="${listingId}">Select</button>
+                  </div>
+                </div>
+              </article>
+            `;
+          })
           .join('');
 
         document.querySelectorAll('[data-select]').forEach((btn) => {
@@ -1184,6 +1370,15 @@
             el.selectedListing.value = btn.getAttribute('data-select');
             el.creatorListing.value = btn.getAttribute('data-select');
             writeConsole(el.customerConsole, 'Listing Selected', { listingId: btn.getAttribute('data-select') });
+          });
+        });
+
+        document.querySelectorAll('[data-listing-image]').forEach((img) => {
+          img.addEventListener('error', () => {
+            const fallback = img.getAttribute('data-fallback');
+            if (fallback && img.getAttribute('src') !== fallback) {
+              img.setAttribute('src', fallback);
+            }
           });
         });
       }
