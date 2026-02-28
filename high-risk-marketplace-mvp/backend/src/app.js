@@ -12,6 +12,36 @@ const {
   addAudit
 } = require('./utils');
 
+const PROMOTION_PLANS = [
+  {
+    id: 'top-24h',
+    name: 'Top Placement 24h',
+    billingModel: 'duration',
+    durationDays: 1,
+    clickQuota: null,
+    price: 19,
+    priorityWeight: 80
+  },
+  {
+    id: 'top-7d',
+    name: 'Top Placement 7d',
+    billingModel: 'duration',
+    durationDays: 7,
+    clickQuota: null,
+    price: 99,
+    priorityWeight: 60
+  },
+  {
+    id: 'boost-200-clicks',
+    name: 'Boost 200 Clicks',
+    billingModel: 'clicks',
+    durationDays: null,
+    clickQuota: 200,
+    price: 49,
+    priorityWeight: 70
+  }
+];
+
 const app = express();
 app.use(express.json({ limit: '1mb' }));
 
@@ -42,6 +72,92 @@ function requireActorRole(res, actor, allowedRoles) {
   }
 
   return true;
+}
+
+function isAdminLike(actor) {
+  return Boolean(actor && ['admin', 'ops'].includes(actor.role));
+}
+
+function getPromotionPlan(planId) {
+  return PROMOTION_PLANS.find((plan) => plan.id === planId) || null;
+}
+
+function isPromotionActive(promotion, nowTimeMs) {
+  if (!promotion || promotion.status !== 'active') return false;
+
+  const startMs = promotion.startAt ? new Date(promotion.startAt).getTime() : null;
+  const endMs = promotion.endAt ? new Date(promotion.endAt).getTime() : null;
+
+  if (Number.isFinite(startMs) && nowTimeMs < startMs) return false;
+  if (Number.isFinite(endMs) && nowTimeMs >= endMs) return false;
+
+  if (promotion.billingModel === 'clicks' && Number(promotion.remainingClicks) <= 0) {
+    return false;
+  }
+
+  return true;
+}
+
+function sellerReputationBoost(db, sellerId) {
+  const sellerOrders = db.orders.filter((item) => item.sellerId === sellerId);
+  if (!sellerOrders.length) return 5;
+
+  const successCount = sellerOrders.filter((item) => item.status === 'released').length;
+  const ratio = successCount / sellerOrders.length;
+  return Number((ratio * 10).toFixed(2));
+}
+
+function recencyBoost(createdAt) {
+  const createdMs = new Date(createdAt).getTime();
+  if (!Number.isFinite(createdMs)) return 0;
+  const days = Math.max(0, (Date.now() - createdMs) / (24 * 60 * 60 * 1000));
+  return Number(Math.max(0, 10 - days).toFixed(2));
+}
+
+function pickPromotionForListing(db, listingId, nowTimeMs) {
+  const candidates = db.promotions
+    .filter((item) => item.listingId === listingId)
+    .filter((item) => isPromotionActive(item, nowTimeMs))
+    .sort((a, b) => {
+      if (b.priorityWeight !== a.priorityWeight) return b.priorityWeight - a.priorityWeight;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+
+  return candidates[0] || null;
+}
+
+function calculateWalletSummary(db, sellerId, currency) {
+  const entries = db.walletEntries
+    .filter((entry) => entry.sellerId === sellerId)
+    .filter((entry) => !currency || entry.currency === currency);
+
+  const creditCompleted = entries
+    .filter((entry) => entry.type === 'credit' && ['available', 'completed'].includes(entry.status))
+    .reduce((sum, entry) => sum + entry.amount, 0);
+
+  const creditPending = entries
+    .filter((entry) => entry.type === 'credit' && entry.status === 'pending')
+    .reduce((sum, entry) => sum + entry.amount, 0);
+
+  const debitReservedOrDone = entries
+    .filter((entry) => entry.type === 'debit' && ['pending', 'completed'].includes(entry.status))
+    .reduce((sum, entry) => sum + entry.amount, 0);
+
+  const debitPending = entries
+    .filter((entry) => entry.type === 'debit' && entry.status === 'pending')
+    .reduce((sum, entry) => sum + entry.amount, 0);
+
+  return {
+    availableBalance: Number((creditCompleted - debitReservedOrDone).toFixed(2)),
+    pendingBalance: Number((creditPending - debitPending).toFixed(2)),
+    lifetimeCredits: Number((creditCompleted + creditPending).toFixed(2)),
+    lifetimeDebits: Number(debitReservedOrDone.toFixed(2))
+  };
+}
+
+function canAccessThread(actor, thread) {
+  if (isAdminLike(actor)) return true;
+  return Boolean(actor && (actor.id === thread.buyerId || actor.id === thread.sellerId));
 }
 
 app.get('/health', (_, res) => {
@@ -219,6 +335,7 @@ app.get('/v1/listings', (req, res) => {
   const minPrice = req.query.minPrice !== undefined ? asNumber(req.query.minPrice) : null;
   const maxPrice = req.query.maxPrice !== undefined ? asNumber(req.query.maxPrice) : null;
   const status = req.query.status ? String(req.query.status) : 'active';
+  const nowTimeMs = Date.now();
 
   let results = db.listings;
 
@@ -240,9 +357,35 @@ app.get('/v1/listings', (req, res) => {
     results = results.filter((item) => item.price <= maxPrice);
   }
 
+  const ranked = results
+    .map((item) => {
+      const promotion = pickPromotionForListing(db, item.id, nowTimeMs);
+      const promotionBoost = promotion ? promotion.priorityWeight : 0;
+      const reputation = sellerReputationBoost(db, item.sellerId);
+      const freshness = recencyBoost(item.createdAt);
+      const rankingScore = Number((promotionBoost + reputation + freshness).toFixed(2));
+
+      return {
+        ...item,
+        isPromoted: Boolean(promotion),
+        ranking: {
+          score: rankingScore,
+          promotionBoost,
+          reputationBoost: reputation,
+          recencyBoost: freshness,
+          promotionId: promotion ? promotion.id : null,
+          planId: promotion ? promotion.planId : null
+        }
+      };
+    })
+    .sort((a, b) => {
+      if (b.ranking.score !== a.ranking.score) return b.ranking.score - a.ranking.score;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+
   return res.json({
-    count: results.length,
-    listings: results
+    count: ranked.length,
+    listings: ranked
   });
 });
 
@@ -304,6 +447,7 @@ app.post('/v1/orders', (req, res) => {
     const payment = {
       id: makeId('pay'),
       orderId: order.id,
+      kind: 'order',
       psp: paymentResult.psp,
       pspTxnId: makeId('txn'),
       amount,
@@ -380,7 +524,7 @@ app.post('/v1/disputes', (req, res) => {
     if (!order) return sendError(res, 404, 'ORDER_NOT_FOUND', 'Order not found');
 
     const isParticipant = actor.id === order.buyerId || actor.id === order.sellerId;
-    if (!isParticipant && !['admin', 'ops'].includes(actor.role)) {
+    if (!isParticipant && !isAdminLike(actor)) {
       return sendError(res, 403, 'FORBIDDEN', 'Only participants can open disputes');
     }
 
@@ -455,6 +599,19 @@ app.post('/v1/payouts/release', (req, res) => {
       };
 
       db.payouts.push(payout);
+      db.walletEntries.push({
+        id: makeId('wl'),
+        sellerId: order.sellerId,
+        type: 'credit',
+        sourceType: 'payout',
+        sourceId: payout.id,
+        amount: netAmount,
+        currency: order.currency,
+        status: 'available',
+        createdAt: nowIso(),
+        updatedAt: nowIso()
+      });
+
       order.status = 'released';
       order.updatedAt = nowIso();
       released.push(payout);
@@ -468,6 +625,509 @@ app.post('/v1/payouts/release', (req, res) => {
       released,
       skipped
     });
+  });
+});
+
+app.get('/v1/promotions/plans', (_, res) => {
+  res.json({ plans: PROMOTION_PLANS });
+});
+
+app.post('/v1/promotions/purchase', (req, res) => {
+  const payload = req.body || {};
+  const missing = requireFields(payload, ['sellerId', 'listingId', 'planId', 'currency']);
+
+  if (missing.length) {
+    return sendError(res, 400, 'VALIDATION_ERROR', 'Missing required fields', { missing });
+  }
+
+  return mutateDb((db) => {
+    const actor = getActor(db, req);
+    if (!requireActorRole(res, actor, ['seller', 'admin', 'ops'])) return null;
+    if (actor.role === 'seller' && actor.id !== payload.sellerId) {
+      return sendError(res, 403, 'FORBIDDEN', 'Seller can only buy own promotion');
+    }
+
+    const listing = db.listings.find((item) => item.id === payload.listingId);
+    if (!listing) return sendError(res, 404, 'LISTING_NOT_FOUND', 'Listing not found');
+    if (listing.sellerId !== payload.sellerId) {
+      return sendError(res, 409, 'SELLER_LISTING_MISMATCH', 'Listing does not belong to seller');
+    }
+
+    const plan = getPromotionPlan(String(payload.planId));
+    if (!plan) return sendError(res, 404, 'PLAN_NOT_FOUND', 'Promotion plan not found');
+
+    const currency = String(payload.currency).toUpperCase();
+    const paymentResult = simulatePayment({ amount: plan.price, currency });
+
+    if (!paymentResult.success) {
+      return sendError(res, 422, 'PAYMENT_FAILED', 'Promotion payment failed', {
+        reason: paymentResult.reason,
+        psp: paymentResult.psp
+      });
+    }
+
+    const promotion = {
+      id: makeId('promo'),
+      sellerId: payload.sellerId,
+      listingId: payload.listingId,
+      planId: plan.id,
+      billingModel: plan.billingModel,
+      status: 'active',
+      price: plan.price,
+      currency,
+      priorityWeight: plan.priorityWeight,
+      clickQuota: plan.clickQuota,
+      remainingClicks: plan.clickQuota,
+      startAt: nowIso(),
+      endAt: plan.durationDays ? plusDaysIso(plan.durationDays) : null,
+      createdAt: nowIso(),
+      updatedAt: nowIso()
+    };
+
+    db.promotions.push(promotion);
+    db.payments.push({
+      id: makeId('pay'),
+      orderId: null,
+      kind: 'promotion',
+      campaignId: promotion.id,
+      psp: paymentResult.psp,
+      pspTxnId: makeId('txn'),
+      amount: plan.price,
+      currency,
+      status: paymentResult.status,
+      failureReason: paymentResult.reason,
+      createdAt: nowIso(),
+      updatedAt: nowIso()
+    });
+
+    addAudit(db, 'promotion_purchased', 'promotion', promotion.id, actor.id, {
+      listingId: payload.listingId,
+      planId: plan.id
+    });
+
+    return res.status(201).json({ promotion, plan });
+  });
+});
+
+app.get('/v1/sellers/:sellerId/promotions', (req, res) => {
+  const db = loadDb();
+  const actor = getActor(db, req);
+
+  if (!requireActorRole(res, actor, ['seller', 'admin', 'ops'])) return;
+  if (actor.role === 'seller' && actor.id !== req.params.sellerId) {
+    sendError(res, 403, 'FORBIDDEN', 'Seller can only view own promotions');
+    return;
+  }
+
+  const nowTimeMs = Date.now();
+  const promotions = db.promotions
+    .filter((item) => item.sellerId === req.params.sellerId)
+    .map((item) => ({
+      ...item,
+      activeNow: isPromotionActive(item, nowTimeMs),
+      consumedClicks:
+        item.clickQuota && Number.isFinite(item.remainingClicks)
+          ? Math.max(0, item.clickQuota - item.remainingClicks)
+          : null
+    }))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  const totalSpend = promotions.reduce((sum, item) => sum + item.price, 0);
+  const activeCount = promotions.filter((item) => item.activeNow).length;
+
+  res.json({
+    sellerId: req.params.sellerId,
+    summary: {
+      activeCount,
+      totalCampaigns: promotions.length,
+      totalSpend: Number(totalSpend.toFixed(2))
+    },
+    promotions
+  });
+});
+
+app.post('/v1/promotions/:promotionId/consume-click', (req, res) => {
+  return mutateDb((db) => {
+    const actor = getActor(db, req);
+    if (!requireActorRole(res, actor, ['buyer', 'seller', 'admin', 'ops'])) return null;
+
+    const promotion = db.promotions.find((item) => item.id === req.params.promotionId);
+    if (!promotion) return sendError(res, 404, 'PROMOTION_NOT_FOUND', 'Promotion not found');
+
+    if (promotion.billingModel !== 'clicks') {
+      return sendError(res, 409, 'NOT_CLICK_PLAN', 'Promotion is not click-based');
+    }
+
+    if (!isPromotionActive(promotion, Date.now())) {
+      promotion.status = 'expired';
+      promotion.updatedAt = nowIso();
+      return sendError(res, 409, 'PROMOTION_INACTIVE', 'Promotion is no longer active');
+    }
+
+    promotion.remainingClicks -= 1;
+    if (promotion.remainingClicks <= 0) {
+      promotion.remainingClicks = 0;
+      promotion.status = 'expired';
+      promotion.endAt = nowIso();
+    }
+
+    promotion.updatedAt = nowIso();
+    addAudit(db, 'promotion_click_consumed', 'promotion', promotion.id, actor.id, {
+      remainingClicks: promotion.remainingClicks
+    });
+
+    return res.status(202).json({
+      message: 'Click consumed',
+      promotion
+    });
+  });
+});
+
+app.get('/v1/wallets/:sellerId/summary', (req, res) => {
+  const db = loadDb();
+  const actor = getActor(db, req);
+
+  if (!requireActorRole(res, actor, ['seller', 'admin', 'ops'])) return;
+  if (actor.role === 'seller' && actor.id !== req.params.sellerId) {
+    sendError(res, 403, 'FORBIDDEN', 'Seller can only view own wallet');
+    return;
+  }
+
+  const currency = String(req.query.currency || 'USD').toUpperCase();
+  const summary = calculateWalletSummary(db, req.params.sellerId, currency);
+
+  res.json({
+    sellerId: req.params.sellerId,
+    currency,
+    ...summary
+  });
+});
+
+app.post('/v1/wallets/:sellerId/withdrawals', (req, res) => {
+  const payload = req.body || {};
+  const missing = requireFields(payload, ['amount', 'currency', 'payoutMethod']);
+
+  if (missing.length) {
+    return sendError(res, 400, 'VALIDATION_ERROR', 'Missing required fields', { missing });
+  }
+
+  const amount = asNumber(payload.amount);
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return sendError(res, 400, 'VALIDATION_ERROR', 'amount must be a positive number');
+  }
+
+  return mutateDb((db) => {
+    const actor = getActor(db, req);
+
+    if (!requireActorRole(res, actor, ['seller', 'admin', 'ops'])) return null;
+    if (actor.role === 'seller' && actor.id !== req.params.sellerId) {
+      return sendError(res, 403, 'FORBIDDEN', 'Seller can only withdraw from own wallet');
+    }
+
+    const currency = String(payload.currency).toUpperCase();
+    const summary = calculateWalletSummary(db, req.params.sellerId, currency);
+
+    if (summary.availableBalance < amount) {
+      return sendError(res, 409, 'INSUFFICIENT_BALANCE', 'Not enough available balance', {
+        availableBalance: summary.availableBalance
+      });
+    }
+
+    const withdrawal = {
+      id: makeId('wd'),
+      sellerId: req.params.sellerId,
+      amount,
+      currency,
+      payoutMethod: String(payload.payoutMethod),
+      note: payload.note ? String(payload.note) : '',
+      status: 'pending',
+      createdAt: nowIso(),
+      updatedAt: nowIso()
+    };
+
+    db.withdrawalRequests.push(withdrawal);
+    db.walletEntries.push({
+      id: makeId('wl'),
+      sellerId: req.params.sellerId,
+      type: 'debit',
+      sourceType: 'withdrawal',
+      sourceId: withdrawal.id,
+      amount,
+      currency,
+      status: 'pending',
+      createdAt: nowIso(),
+      updatedAt: nowIso()
+    });
+
+    addAudit(db, 'withdrawal_requested', 'withdrawal', withdrawal.id, actor.id, {
+      amount,
+      currency
+    });
+
+    return res.status(201).json({ withdrawal });
+  });
+});
+
+app.get('/v1/withdrawals', (req, res) => {
+  const db = loadDb();
+  const actor = getActor(db, req);
+
+  if (!requireActorRole(res, actor, ['seller', 'admin', 'ops'])) return;
+
+  const status = req.query.status ? String(req.query.status) : null;
+  const sellerFilter = req.query.sellerId ? String(req.query.sellerId) : null;
+
+  let rows = db.withdrawalRequests;
+
+  if (!isAdminLike(actor)) {
+    rows = rows.filter((item) => item.sellerId === actor.id);
+  } else if (sellerFilter) {
+    rows = rows.filter((item) => item.sellerId === sellerFilter);
+  }
+
+  if (status) {
+    rows = rows.filter((item) => item.status === status);
+  }
+
+  res.json({ count: rows.length, withdrawals: rows });
+});
+
+app.post('/v1/withdrawals/:withdrawalId/approve', (req, res) => {
+  return mutateDb((db) => {
+    const actor = getActor(db, req);
+
+    if (!requireActorRole(res, actor, ['admin', 'ops'])) return null;
+
+    const withdrawal = db.withdrawalRequests.find((item) => item.id === req.params.withdrawalId);
+    if (!withdrawal) return sendError(res, 404, 'WITHDRAWAL_NOT_FOUND', 'Withdrawal not found');
+    if (withdrawal.status !== 'pending') {
+      return sendError(res, 409, 'INVALID_STATUS', `Withdrawal status is ${withdrawal.status}`);
+    }
+
+    withdrawal.status = 'sent';
+    withdrawal.processedBy = actor.id;
+    withdrawal.processedAt = nowIso();
+    withdrawal.updatedAt = nowIso();
+
+    const ledgerEntry = db.walletEntries.find(
+      (item) => item.sourceType === 'withdrawal' && item.sourceId === withdrawal.id && item.status === 'pending'
+    );
+
+    if (ledgerEntry) {
+      ledgerEntry.status = 'completed';
+      ledgerEntry.updatedAt = nowIso();
+    }
+
+    addAudit(db, 'withdrawal_approved', 'withdrawal', withdrawal.id, actor.id);
+
+    return res.status(202).json({ withdrawal });
+  });
+});
+
+app.post('/v1/withdrawals/:withdrawalId/reject', (req, res) => {
+  return mutateDb((db) => {
+    const actor = getActor(db, req);
+
+    if (!requireActorRole(res, actor, ['admin', 'ops'])) return null;
+
+    const withdrawal = db.withdrawalRequests.find((item) => item.id === req.params.withdrawalId);
+    if (!withdrawal) return sendError(res, 404, 'WITHDRAWAL_NOT_FOUND', 'Withdrawal not found');
+    if (withdrawal.status !== 'pending') {
+      return sendError(res, 409, 'INVALID_STATUS', `Withdrawal status is ${withdrawal.status}`);
+    }
+
+    withdrawal.status = 'rejected';
+    withdrawal.processedBy = actor.id;
+    withdrawal.processedAt = nowIso();
+    withdrawal.updatedAt = nowIso();
+
+    const ledgerEntry = db.walletEntries.find(
+      (item) => item.sourceType === 'withdrawal' && item.sourceId === withdrawal.id && item.status === 'pending'
+    );
+
+    if (ledgerEntry) {
+      ledgerEntry.status = 'reversed';
+      ledgerEntry.updatedAt = nowIso();
+    }
+
+    addAudit(db, 'withdrawal_rejected', 'withdrawal', withdrawal.id, actor.id);
+
+    return res.status(202).json({ withdrawal });
+  });
+});
+
+app.post('/v1/chat/threads', (req, res) => {
+  const payload = req.body || {};
+  const missing = requireFields(payload, ['buyerId', 'sellerId']);
+
+  if (missing.length) {
+    return sendError(res, 400, 'VALIDATION_ERROR', 'Missing required fields', { missing });
+  }
+
+  return mutateDb((db) => {
+    const actor = getActor(db, req);
+
+    if (!requireActorRole(res, actor, ['buyer', 'seller', 'admin', 'ops'])) return null;
+
+    const buyer = findUser(db, payload.buyerId);
+    const seller = findUser(db, payload.sellerId);
+
+    if (!buyer || buyer.role !== 'buyer') return sendError(res, 404, 'BUYER_NOT_FOUND', 'Buyer not found');
+    if (!seller || seller.role !== 'seller') return sendError(res, 404, 'SELLER_NOT_FOUND', 'Seller not found');
+
+    if (!isAdminLike(actor) && actor.id !== payload.buyerId && actor.id !== payload.sellerId) {
+      return sendError(res, 403, 'FORBIDDEN', 'Actor must participate in thread');
+    }
+
+    if (payload.orderId) {
+      const order = db.orders.find((item) => item.id === payload.orderId);
+      if (!order) return sendError(res, 404, 'ORDER_NOT_FOUND', 'Order not found');
+      if (order.buyerId !== payload.buyerId || order.sellerId !== payload.sellerId) {
+        return sendError(res, 409, 'THREAD_PARTICIPANT_MISMATCH', 'Participants do not match order');
+      }
+    }
+
+    const thread = {
+      id: makeId('thr'),
+      buyerId: payload.buyerId,
+      sellerId: payload.sellerId,
+      orderId: payload.orderId || null,
+      listingId: payload.listingId || null,
+      status: 'open',
+      createdAt: nowIso(),
+      updatedAt: nowIso()
+    };
+
+    db.chatThreads.push(thread);
+    addAudit(db, 'chat_thread_created', 'chat_thread', thread.id, actor.id);
+
+    return res.status(201).json({ thread });
+  });
+});
+
+app.get('/v1/chat/threads', (req, res) => {
+  const db = loadDb();
+  const actor = getActor(db, req);
+
+  if (!requireActorRole(res, actor, ['buyer', 'seller', 'admin', 'ops'])) return;
+
+  const status = req.query.status ? String(req.query.status) : null;
+
+  let threads = db.chatThreads;
+  if (!isAdminLike(actor)) {
+    threads = threads.filter((item) => item.buyerId === actor.id || item.sellerId === actor.id);
+  }
+
+  if (status) {
+    threads = threads.filter((item) => item.status === status);
+  }
+
+  const enriched = threads.map((thread) => {
+    const messages = db.chatMessages.filter((message) => message.threadId === thread.id);
+    const last = messages[messages.length - 1] || null;
+
+    return {
+      ...thread,
+      messageCount: messages.length,
+      lastMessageAt: last ? last.createdAt : null
+    };
+  });
+
+  res.json({ count: enriched.length, threads: enriched });
+});
+
+app.get('/v1/chat/threads/:threadId/messages', (req, res) => {
+  const db = loadDb();
+  const actor = getActor(db, req);
+
+  if (!requireActorRole(res, actor, ['buyer', 'seller', 'admin', 'ops'])) return;
+
+  const thread = db.chatThreads.find((item) => item.id === req.params.threadId);
+  if (!thread) {
+    sendError(res, 404, 'THREAD_NOT_FOUND', 'Thread not found');
+    return;
+  }
+
+  if (!canAccessThread(actor, thread)) {
+    sendError(res, 403, 'FORBIDDEN', 'Actor cannot access this thread');
+    return;
+  }
+
+  const limit = Math.min(100, Math.max(1, Number(req.query.limit || 50)));
+  const messages = db.chatMessages
+    .filter((item) => item.threadId === thread.id)
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+    .slice(-limit);
+
+  res.json({ threadId: thread.id, count: messages.length, messages });
+});
+
+app.post('/v1/chat/threads/:threadId/messages', (req, res) => {
+  const payload = req.body || {};
+  const missing = requireFields(payload, ['senderId']);
+
+  if (missing.length) {
+    return sendError(res, 400, 'VALIDATION_ERROR', 'Missing required fields', { missing });
+  }
+
+  if (!payload.text && !payload.imageUrl) {
+    return sendError(res, 400, 'VALIDATION_ERROR', 'Either text or imageUrl is required');
+  }
+
+  return mutateDb((db) => {
+    const actor = getActor(db, req);
+
+    if (!requireActorRole(res, actor, ['buyer', 'seller', 'admin', 'ops'])) return null;
+
+    const thread = db.chatThreads.find((item) => item.id === req.params.threadId);
+    if (!thread) return sendError(res, 404, 'THREAD_NOT_FOUND', 'Thread not found');
+
+    if (!canAccessThread(actor, thread)) {
+      return sendError(res, 403, 'FORBIDDEN', 'Actor cannot access this thread');
+    }
+
+    if (!isAdminLike(actor) && actor.id !== payload.senderId) {
+      return sendError(res, 403, 'FORBIDDEN', 'Sender must match actor');
+    }
+
+    if (![thread.buyerId, thread.sellerId].includes(payload.senderId) && !isAdminLike(actor)) {
+      return sendError(res, 409, 'SENDER_NOT_PARTICIPANT', 'Sender is not a participant of this thread');
+    }
+
+    const moderation = moderateText(String(payload.text || ''));
+    if (moderation.action === 'block') {
+      return sendError(res, 422, 'CONTENT_BLOCKED', 'Message blocked by moderation', moderation);
+    }
+
+    const message = {
+      id: makeId('msg'),
+      threadId: thread.id,
+      senderId: String(payload.senderId),
+      text: payload.text ? String(payload.text) : '',
+      imageUrl: payload.imageUrl ? String(payload.imageUrl) : null,
+      status: moderation.action === 'review' ? 'flagged' : 'visible',
+      createdAt: nowIso()
+    };
+
+    db.chatMessages.push(message);
+
+    if (moderation.action === 'review') {
+      db.moderationEvents.push({
+        id: makeId('mod'),
+        entityType: 'chat_message',
+        entityId: message.id,
+        provider: 'internal_rule_engine',
+        riskScore: moderation.riskScore,
+        action: moderation.action,
+        reasons: moderation.reasons,
+        createdAt: nowIso()
+      });
+    }
+
+    thread.updatedAt = nowIso();
+    addAudit(db, 'chat_message_created', 'chat_message', message.id, actor.id, { threadId: thread.id });
+
+    return res.status(201).json({ message });
   });
 });
 

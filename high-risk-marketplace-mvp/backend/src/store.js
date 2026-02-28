@@ -16,6 +16,11 @@ const DEFAULT_DB = {
   orders: [],
   payments: [],
   payouts: [],
+  promotions: [],
+  walletEntries: [],
+  withdrawalRequests: [],
+  chatThreads: [],
+  chatMessages: [],
   disputes: [],
   moderationEvents: [],
   auditEvents: []

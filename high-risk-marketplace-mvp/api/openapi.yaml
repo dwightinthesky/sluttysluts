@@ -1,9 +1,9 @@
 openapi: 3.1.0
 info:
   title: High-Risk Marketplace API
-  version: 0.1.0
+  version: 0.2.0
   description: |
-    Compliance-first marketplace API draft.
+    Compliance-first marketplace API draft with promotion, wallet, and chat modules.
 servers:
   - url: https://api.example.com
 security:
@@ -44,6 +44,8 @@ paths:
                   type: string
                 providerCaseId:
                   type: string
+                provider:
+                  type: string
       responses:
         "202":
           description: KYC submitted
@@ -61,7 +63,7 @@ paths:
         "201":
           description: Listing created
     get:
-      summary: Search listings
+      summary: Search and rank listings for explore page
       parameters:
         - in: query
           name: q
@@ -75,6 +77,11 @@ paths:
           name: maxPrice
           schema:
             type: number
+        - in: query
+          name: status
+          schema:
+            type: string
+            default: active
       responses:
         "200":
           description: Listing results
@@ -121,9 +128,204 @@ paths:
   /v1/payouts/release:
     post:
       summary: Release eligible seller balances
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                force:
+                  type: boolean
+                  default: false
       responses:
         "202":
           description: Payout job started
+
+  /v1/promotions/plans:
+    get:
+      summary: List promotion plans
+      responses:
+        "200":
+          description: Available promotion plans
+
+  /v1/promotions/purchase:
+    post:
+      summary: Purchase a promotion plan for a listing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchasePromotionRequest'
+      responses:
+        "201":
+          description: Promotion purchased
+
+  /v1/sellers/{sellerId}/promotions:
+    get:
+      summary: List seller promotion campaigns and summary
+      parameters:
+        - in: path
+          name: sellerId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Seller promotions
+
+  /v1/promotions/{promotionId}/consume-click:
+    post:
+      summary: Consume one click from click-based promotion
+      parameters:
+        - in: path
+          name: promotionId
+          required: true
+          schema:
+            type: string
+      responses:
+        "202":
+          description: Click consumed
+
+  /v1/wallets/{sellerId}/summary:
+    get:
+      summary: Get seller wallet balances
+      parameters:
+        - in: path
+          name: sellerId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: currency
+          schema:
+            type: string
+            default: USD
+      responses:
+        "200":
+          description: Wallet summary
+
+  /v1/wallets/{sellerId}/withdrawals:
+    post:
+      summary: Request a seller withdrawal
+      parameters:
+        - in: path
+          name: sellerId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWithdrawalRequest'
+      responses:
+        "201":
+          description: Withdrawal requested
+
+  /v1/withdrawals:
+    get:
+      summary: List withdrawals by role and optional filters
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+        - in: query
+          name: sellerId
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Withdrawal list
+
+  /v1/withdrawals/{withdrawalId}/approve:
+    post:
+      summary: Approve pending withdrawal (admin or ops)
+      parameters:
+        - in: path
+          name: withdrawalId
+          required: true
+          schema:
+            type: string
+      responses:
+        "202":
+          description: Withdrawal approved
+
+  /v1/withdrawals/{withdrawalId}/reject:
+    post:
+      summary: Reject pending withdrawal (admin or ops)
+      parameters:
+        - in: path
+          name: withdrawalId
+          required: true
+          schema:
+            type: string
+      responses:
+        "202":
+          description: Withdrawal rejected
+
+  /v1/chat/threads:
+    post:
+      summary: Create buyer-seller chat thread
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChatThreadRequest'
+      responses:
+        "201":
+          description: Chat thread created
+    get:
+      summary: List chat threads visible to current actor
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Chat thread list
+
+  /v1/chat/threads/{threadId}/messages:
+    get:
+      summary: List chat messages in a thread
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+      responses:
+        "200":
+          description: Chat messages
+    post:
+      summary: Send chat message
+      parameters:
+        - in: path
+          name: threadId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChatMessageRequest'
+      responses:
+        "201":
+          description: Message created
 
   /v1/moderation/screen:
     post:
@@ -140,6 +342,8 @@ paths:
                   type: string
                   enum: [listing, chat_message, profile]
                 entityId:
+                  type: string
+                text:
                   type: string
       responses:
         "200":
@@ -174,6 +378,7 @@ components:
           type: array
           items:
             type: string
+
     CreateOrderRequest:
       type: object
       required: [buyerId, listingId, amount, currency]
@@ -188,6 +393,7 @@ components:
           type: string
           minLength: 3
           maxLength: 3
+
     CreateDisputeRequest:
       type: object
       required: [orderId, reason]
@@ -201,3 +407,59 @@ components:
           items:
             type: string
             format: uri
+
+    PurchasePromotionRequest:
+      type: object
+      required: [sellerId, listingId, planId, currency]
+      properties:
+        sellerId:
+          type: string
+        listingId:
+          type: string
+        planId:
+          type: string
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+
+    CreateWithdrawalRequest:
+      type: object
+      required: [amount, currency, payoutMethod]
+      properties:
+        amount:
+          type: number
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+        payoutMethod:
+          type: string
+        note:
+          type: string
+
+    CreateChatThreadRequest:
+      type: object
+      required: [buyerId, sellerId]
+      properties:
+        buyerId:
+          type: string
+        sellerId:
+          type: string
+        orderId:
+          type: string
+        listingId:
+          type: string
+
+    CreateChatMessageRequest:
+      type: object
+      required: [senderId]
+      properties:
+        senderId:
+          type: string
+        text:
+          type: string
+          maxLength: 4000
+        imageUrl:
+          type: string
+          format: uri

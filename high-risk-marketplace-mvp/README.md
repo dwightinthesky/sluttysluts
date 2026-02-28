@@ -11,6 +11,7 @@
 - 建立支付抽象層，支援多 PSP 路由與備援。
 - 建立匿名化物流資料流（不在平台長期保存不必要的可識別資訊）。
 - 落實內容審核與交易外流攔截（站內訊息合規）。
+- 建立 Promotion Center、Wallet 提現與站內 Chat 的最小可用實作。
 
 ## 不在 MVP 範圍
 - 自建持牌金融機構能力（改採持牌合作夥伴）。
@@ -51,6 +52,23 @@
 - `backend/src/app.js`
 - `backend/scripts/smoke-test.sh`
 
+### 已補完模組
+- Promotion Center
+  - 促銷方案列表：`GET /v1/promotions/plans`
+  - 購買置頂/點擊促銷：`POST /v1/promotions/purchase`
+  - 賣家活動查詢：`GET /v1/sellers/:sellerId/promotions`
+  - 點擊扣量：`POST /v1/promotions/:promotionId/consume-click`
+- Wallet / Withdraw
+  - 賣家錢包摘要：`GET /v1/wallets/:sellerId/summary`
+  - 提現申請：`POST /v1/wallets/:sellerId/withdrawals`
+  - 提現審核：`POST /v1/withdrawals/:withdrawalId/approve|reject`
+- Chat Service
+  - 建立會話：`POST /v1/chat/threads`
+  - 會話列表：`GET /v1/chat/threads`
+  - 訊息收發：`GET|POST /v1/chat/threads/:threadId/messages`
+- Explore 排序
+  - `GET /v1/listings` 會依 `promotionBoost + sellerReputation + recency` 排序。
+
 ### 快速啟動
 ```bash
 cd backend
@@ -80,9 +98,13 @@ npm run smoke
 - 買家年齡驗證
 - 賣家 KYC
 - 賣家上架
+- 購買促銷 + 點擊扣量
+- Explore 排序查詢
 - 買家下單
 - 到貨確認
 - 管理員撥款
+- 錢包查詢 + 提現審核
+- 建立聊天 + 訊息傳送
 
 ## 部署（Deployment）
 
