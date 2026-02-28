@@ -12,15 +12,15 @@
     />
     <style>
       :root {
-        --bg: #f5f5ef;
-        --ink: #0f172a;
-        --muted: #5b6577;
-        --line: #dbe2ea;
-        --surface: #ffffff;
-        --brand: #0f766e;
-        --brand-2: #14b8a6;
-        --accent: #ea580c;
-        --shadow: 0 22px 56px rgba(15, 23, 42, 0.12);
+        --bg: #09090b;
+        --ink: #f4f4f5;
+        --muted: #a1a1aa;
+        --line: rgba(244, 244, 245, 0.12);
+        --surface: rgba(24, 24, 27, 0.78);
+        --brand: #be123c;
+        --brand-2: #e11d48;
+        --accent: #f5c6a5;
+        --shadow: 0 26px 54px rgba(0, 0, 0, 0.34);
       }
 
       * {
@@ -37,8 +37,8 @@
         font-family: 'Manrope', sans-serif;
         color: var(--ink);
         background:
-          radial-gradient(circle at 100% 0%, rgba(20, 184, 166, 0.18), transparent 32%),
-          radial-gradient(circle at 0% 100%, rgba(251, 146, 60, 0.2), transparent 30%),
+          radial-gradient(circle at 82% 14%, rgba(190, 18, 60, 0.3), transparent 34%),
+          radial-gradient(circle at 20% 84%, rgba(120, 53, 15, 0.32), transparent 36%),
           var(--bg);
       }
 
@@ -47,10 +47,10 @@
         position: fixed;
         inset: 0;
         pointer-events: none;
-        background-image: linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+        background-image: linear-gradient(rgba(244, 244, 245, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(244, 244, 245, 0.035) 1px, transparent 1px);
         background-size: 34px 34px;
-        mask-image: radial-gradient(circle at center, black 40%, transparent 88%);
+        mask-image: radial-gradient(circle at center, black 38%, transparent 88%);
         z-index: -1;
       }
 
@@ -64,8 +64,8 @@
         top: 0;
         z-index: 50;
         backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(219, 226, 234, 0.75);
-        background: rgba(245, 245, 239, 0.82);
+        border-bottom: 1px solid rgba(244, 244, 245, 0.1);
+        background: rgba(9, 9, 11, 0.72);
       }
 
       .topbar {
@@ -90,7 +90,7 @@
         border-radius: 12px;
         display: grid;
         place-items: center;
-        background: linear-gradient(140deg, var(--brand), var(--brand-2));
+        background: linear-gradient(140deg, #7f1d1d, #be123c);
         color: #fff;
         font: 800 0.95rem/1 'Sora', sans-serif;
       }
@@ -103,7 +103,7 @@
       .brand-sub {
         margin: 1px 0 0;
         font-size: 0.83rem;
-        color: var(--muted);
+        color: #a1a1aa;
       }
 
       .top-links {
@@ -113,14 +113,14 @@
       }
 
       .top-links a {
-        color: #1e293b;
+        color: #d4d4d8;
         text-decoration: none;
         font-weight: 600;
         font-size: 0.92rem;
       }
 
       .top-links a:hover {
-        color: var(--brand);
+        color: #fda4af;
       }
 
       .controls {
@@ -140,7 +140,8 @@
       .select {
         min-width: 132px;
         padding: 10px 11px;
-        background: #fff;
+        background: rgba(39, 39, 42, 0.75);
+        color: #f4f4f5;
       }
 
       .btn {
@@ -158,9 +159,9 @@
       }
 
       .btn.creator {
-        background: #f0fdfa;
-        color: #0f766e;
-        border-color: #99f6e4;
+        background: #2a1718;
+        color: #fecdd3;
+        border-color: #9f1239;
       }
 
       .btn.customer {
@@ -170,8 +171,8 @@
       }
 
       .btn.ghost {
-        background: #fff;
-        color: #0f172a;
+        background: rgba(39, 39, 42, 0.7);
+        color: #f4f4f5;
       }
 
       .hero {
@@ -179,6 +180,21 @@
         display: grid;
         grid-template-columns: 1.08fr 0.92fr;
         gap: 14px;
+        position: relative;
+      }
+
+      .hero::before {
+        content: '';
+        position: absolute;
+        width: 520px;
+        height: 520px;
+        border-radius: 999px;
+        filter: blur(88px);
+        background: rgba(190, 18, 60, 0.28);
+        top: -110px;
+        left: -70px;
+        z-index: 0;
+        animation: glowPulse 6s ease-in-out infinite;
       }
 
       .hero-main,
@@ -187,6 +203,9 @@
         border: 1px solid var(--line);
         border-radius: 24px;
         box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+        position: relative;
+        z-index: 1;
       }
 
       .hero-main {
@@ -199,29 +218,99 @@
         border-radius: 999px;
         font: 700 0.77rem/1 'Sora', sans-serif;
         letter-spacing: 0.08em;
-        color: #0f766e;
-        border: 1px solid #99f6e4;
-        background: #f0fdfa;
+        color: #fda4af;
+        border: 1px solid rgba(253, 164, 175, 0.4);
+        background: rgba(190, 18, 60, 0.18);
       }
 
       .hero-title {
         margin: 14px 0 10px;
         font: 800 clamp(2rem, 3.8vw, 3.42rem) / 1.05 'Sora', sans-serif;
         letter-spacing: -0.02em;
+        min-height: 128px;
       }
 
       .hero-copy {
         margin: 0;
-        color: var(--muted);
+        color: #d4d4d8;
         max-width: 64ch;
         font-size: 1.03rem;
+        min-height: 72px;
+      }
+
+      .hero-switch {
+        margin-top: 18px;
+        width: fit-content;
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid rgba(244, 244, 245, 0.14);
+        background: rgba(24, 24, 27, 0.82);
+        border-radius: 999px;
+        padding: 4px;
+      }
+
+      .hero-switch-pill {
+        position: absolute;
+        top: 4px;
+        bottom: 4px;
+        left: 4px;
+        width: calc(50% - 4px);
+        border-radius: 999px;
+        background: rgba(244, 244, 245, 0.12);
+        transition: transform 0.35s ease;
+      }
+
+      .hero-switch[data-role='creator'] .hero-switch-pill {
+        transform: translateX(100%);
+      }
+
+      .hero-role {
+        position: relative;
+        z-index: 1;
+        appearance: none;
+        border: 0;
+        background: transparent;
+        color: #a1a1aa;
+        font: 600 0.86rem/1 'Manrope', sans-serif;
+        padding: 10px 18px;
+        cursor: pointer;
+        border-radius: 999px;
+        transition: color 0.25s ease;
+      }
+
+      .hero-role.active {
+        color: #f4f4f5;
       }
 
       .hero-actions {
-        margin-top: 19px;
+        margin-top: 15px;
         display: flex;
         flex-wrap: wrap;
         gap: 9px;
+      }
+
+      .hero-actions .btn {
+        padding-inline: 17px;
+      }
+
+      .hero-trust {
+        margin-top: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .trust-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border: 1px solid rgba(244, 244, 245, 0.12);
+        background: rgba(24, 24, 27, 0.75);
+        color: #d4d4d8;
+        border-radius: 999px;
+        padding: 6px 11px;
+        font-size: 0.77rem;
       }
 
       .hero-bar {
@@ -235,7 +324,7 @@
         border: 1px solid var(--line);
         border-radius: 14px;
         padding: 12px;
-        background: #f8fafc;
+        background: rgba(24, 24, 27, 0.76);
       }
 
       .hero-stat strong {
@@ -244,7 +333,7 @@
 
       .hero-stat p {
         margin: 5px 0 0;
-        color: var(--muted);
+        color: #a1a1aa;
         font-size: 0.88rem;
       }
 
@@ -258,7 +347,13 @@
         border-radius: 15px;
         border: 1px solid var(--line);
         padding: 15px;
-        background: #fff;
+        background: rgba(24, 24, 27, 0.76);
+        transition: border-color 0.22s ease, box-shadow 0.22s ease;
+      }
+
+      .card-mini:hover {
+        border-color: rgba(253, 164, 175, 0.42);
+        box-shadow: 0 0 0 1px rgba(253, 164, 175, 0.2), 0 10px 24px rgba(0, 0, 0, 0.28);
       }
 
       .card-mini h3 {
@@ -269,14 +364,14 @@
       .card-mini p {
         margin: 8px 0 0;
         font-size: 0.9rem;
-        color: var(--muted);
+        color: #a1a1aa;
       }
 
       .chart {
         margin-top: 10px;
         height: 92px;
         border-radius: 12px;
-        background: linear-gradient(180deg, rgba(20, 184, 166, 0.22), rgba(20, 184, 166, 0));
+        background: linear-gradient(180deg, rgba(190, 18, 60, 0.28), rgba(190, 18, 60, 0));
         position: relative;
         overflow: hidden;
       }
@@ -285,8 +380,8 @@
         content: '';
         position: absolute;
         inset: 12px 12px 16px;
-        border-left: 1px solid rgba(15, 23, 42, 0.15);
-        border-bottom: 1px solid rgba(15, 23, 42, 0.15);
+        border-left: 1px solid rgba(244, 244, 245, 0.16);
+        border-bottom: 1px solid rgba(244, 244, 245, 0.16);
       }
 
       .chart svg {
@@ -307,7 +402,7 @@
 
       .section-sub {
         margin: 8px 0 0;
-        color: var(--muted);
+        color: #a1a1aa;
       }
 
       .feature-grid {
@@ -318,7 +413,7 @@
       }
 
       .feature {
-        background: #fff;
+        background: rgba(24, 24, 27, 0.76);
         border: 1px solid var(--line);
         border-radius: 16px;
         padding: 16px;
@@ -332,7 +427,7 @@
 
       .feature p {
         margin: 8px 0 0;
-        color: var(--muted);
+        color: #a1a1aa;
       }
 
       .roles {
@@ -343,7 +438,7 @@
       }
 
       .role {
-        background: #fff;
+        background: rgba(24, 24, 27, 0.76);
         border: 1px solid var(--line);
         border-radius: 20px;
         padding: 20px;
@@ -357,13 +452,13 @@
 
       .role p {
         margin: 8px 0 0;
-        color: var(--muted);
+        color: #a1a1aa;
       }
 
       .role ul {
         margin: 10px 0 14px;
         padding-left: 18px;
-        color: #334155;
+        color: #d4d4d8;
       }
 
       .role li {
@@ -372,13 +467,14 @@
 
       .proof {
         margin-top: 12px;
-        background: #0f172a;
+        background: linear-gradient(120deg, #18181b, #27272a);
         border-radius: 22px;
-        color: #e2e8f0;
+        color: #f4f4f5;
         padding: 22px;
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 10px;
+        border: 1px solid rgba(244, 244, 245, 0.12);
       }
 
       .proof strong {
@@ -390,16 +486,16 @@
       .proof span {
         display: block;
         margin-top: 6px;
-        color: #93c5fd;
+        color: #d4d4d8;
         font-size: 0.86rem;
       }
 
       .cta {
         margin: 22px 0 36px;
-        background: linear-gradient(115deg, #0f766e, #0f172a);
+        background: linear-gradient(115deg, #7f1d1d, #18181b);
         color: #fff;
         border-radius: 24px;
-        border: 1px solid rgba(148, 163, 184, 0.3);
+        border: 1px solid rgba(244, 244, 245, 0.18);
         padding: 24px;
         display: flex;
         justify-content: space-between;
@@ -414,14 +510,35 @@
 
       .cta p {
         margin: 7px 0 0;
-        color: #dbeafe;
+        color: #e4e4e7;
       }
 
       .footer {
-        border-top: 1px solid var(--line);
-        color: var(--muted);
+        border-top: 1px solid rgba(244, 244, 245, 0.12);
+        color: #a1a1aa;
         font-size: 0.9rem;
         padding: 15px 0 28px;
+      }
+
+      body[data-hero-role='creator'] .hero::before {
+        background: rgba(225, 29, 72, 0.34);
+      }
+
+      body[data-hero-role='creator'] .btn.customer {
+        background: #e11d48;
+        border-color: #e11d48;
+      }
+
+      @keyframes glowPulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.9;
+        }
+        50% {
+          transform: scale(1.12);
+          opacity: 0.65;
+        }
       }
 
       .reveal {
@@ -492,6 +609,25 @@
           padding: 18px;
         }
 
+        .hero-title {
+          min-height: 0;
+        }
+
+        .hero-copy {
+          min-height: 0;
+        }
+
+        .hero-switch {
+          width: 100%;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .hero-role {
+          padding-inline: 8px;
+          text-align: center;
+        }
+
         .hero-bar {
           grid-template-columns: 1fr;
         }
@@ -509,7 +645,7 @@
           <span class="brand-mark">SS</span>
           <span>
             <h1 class="brand-title" data-i18n="brandTitle">SluttySluts Platform</h1>
-            <p class="brand-sub" data-i18n="brandSub">Enterprise-grade creator marketplace infrastructure</p>
+            <p class="brand-sub" data-i18n="brandSub">Private marketplace for curated creator commerce</p>
           </span>
         </a>
 
@@ -536,30 +672,39 @@
     <main class="container">
       <section id="hero" class="hero">
         <article class="hero-main reveal">
-          <span class="eyebrow" data-i18n="eyebrow">ENTERPRISE MARKETPLACE OS</span>
-          <h2 class="hero-title" data-i18n="heroTitle">Scale creator commerce with compliance, promotion, and payout control.</h2>
-          <p class="hero-copy" data-i18n="heroCopy">
-            A complete two-sided marketplace stack designed for high-risk payment workflows: role-based onboarding, hosted checkout,
-            reconciliation-ready ledgers, and promotion monetization in one surface.
-          </p>
+          <span class="eyebrow" data-i18n="eyebrow">PRIVATE CURATED MARKETPLACE</span>
+          <h2 id="heroDynamicTitle" class="hero-title">Discover the Unseen.</h2>
+          <p id="heroDynamicCopy" class="hero-copy">Explore curated listings in a discreet and secure buyer environment.</p>
+
+          <div id="heroSwitch" class="hero-switch" data-role="customer" aria-label="Role switcher">
+            <span class="hero-switch-pill" aria-hidden="true"></span>
+            <button class="hero-role active" type="button" data-hero-role="customer" data-i18n="toggleCustomer">I am a Customer</button>
+            <button class="hero-role" type="button" data-hero-role="creator" data-i18n="toggleCreator">I am a Creator</button>
+          </div>
+
           <div class="hero-actions">
-            <a class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroCustomer">Open Customer Workspace</a>
-            <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroCreator">Open Creator Workspace</a>
+            <a id="heroPrimaryLink" class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroCustomer">Open Customer Workspace</a>
             <a class="btn ghost" data-role-link="admin" href="./app.html?role=admin&lang=en" data-i18n="heroAdmin">Open Operations Console</a>
+          </div>
+
+          <div class="hero-trust">
+            <span class="trust-chip" data-i18n="trust1">Encrypted workspace</span>
+            <span class="trust-chip" data-i18n="trust2">Role-based routing</span>
+            <span class="trust-chip" data-i18n="trust3">Discreet checkout flow</span>
           </div>
 
           <div class="hero-bar">
             <div class="hero-stat">
-              <strong>99.95%</strong>
-              <p data-i18n="stat1">event-delivery reliability target</p>
+              <strong>4.9/5</strong>
+              <p data-i18n="stat1">average buyer trust score</p>
             </div>
             <div class="hero-stat">
-              <strong>120d</strong>
-              <p data-i18n="stat2">rolling reserve support window</p>
+              <strong>1h</strong>
+              <p data-i18n="stat2">typical creator reply time</p>
             </div>
             <div class="hero-stat">
-              <strong>4 roles</strong>
-              <p data-i18n="stat3">Customer, Creator, Admin, Ops</p>
+              <strong>24/7</strong>
+              <p data-i18n="stat3">protected payment monitoring</p>
             </div>
           </div>
         </article>
@@ -572,7 +717,7 @@
               <svg viewBox="0 0 320 120" preserveAspectRatio="none">
                 <polyline
                   fill="none"
-                  stroke="#0f766e"
+                  stroke="#f43f5e"
                   stroke-width="4"
                   points="12,96 56,80 90,84 128,60 168,56 210,44 244,52 282,30 312,24"
                 />
@@ -591,27 +736,27 @@
       </section>
 
       <section id="platform" class="section reveal">
-        <h3 class="section-title" data-i18n="platformTitle">Platform modules built for commercial discipline</h3>
-        <p class="section-sub" data-i18n="platformSub">Each capability is mapped to business KPIs and financial reconciliation readiness.</p>
+        <h3 class="section-title" data-i18n="platformTitle">Inside the private marketplace experience</h3>
+        <p class="section-sub" data-i18n="platformSub">Every module is designed for trust, conversion, and discreet fulfillment.</p>
         <div class="feature-grid">
           <article class="feature">
-            <h4 data-i18n="feature1Title">Two-sided transactions</h4>
-            <p data-i18n="feature1Copy">Hosted checkout creates pending orders first, then webhook confirms payment and unlocks fulfillment.</p>
+            <h4 data-i18n="feature1Title">Seamless buyer journey</h4>
+            <p data-i18n="feature1Copy">Customers browse, select, and transition into secure hosted checkout with transparent fees.</p>
           </article>
           <article class="feature">
-            <h4 data-i18n="feature2Title">Promotion monetization</h4>
-            <p data-i18n="feature2Copy">Creators can buy ranking plans (duration or click-based) directly from the dashboard.</p>
+            <h4 data-i18n="feature2Title">Creator growth tools</h4>
+            <p data-i18n="feature2Copy">Promotion plans help top creators win premium visibility without breaking the visual quality bar.</p>
           </article>
           <article class="feature">
-            <h4 data-i18n="feature3Title">Wallet and payouts</h4>
-            <p data-i18n="feature3Copy">Commission, reserve, and payoutable amounts are separated for audit-safe withdrawal operations.</p>
+            <h4 data-i18n="feature3Title">Payout confidence</h4>
+            <p data-i18n="feature3Copy">Wallet, reserve, and withdrawal states are clear so creators always know what is available.</p>
           </article>
         </div>
       </section>
 
       <section id="roles" class="section reveal">
-        <h3 class="section-title" data-i18n="rolesTitle">Role-first user journeys</h3>
-        <p class="section-sub" data-i18n="rolesSub">Top-right identity buttons route every user into the correct workspace immediately.</p>
+        <h3 class="section-title" data-i18n="rolesTitle">Choose your journey</h3>
+        <p class="section-sub" data-i18n="rolesSub">Switch identity instantly and land in the workflow built for your role.</p>
         <div class="roles">
           <article class="role">
             <h4 data-i18n="creatorTitle">Creator Workspace</h4>
@@ -637,8 +782,8 @@
       </section>
 
       <section id="security" class="section reveal">
-        <h3 class="section-title" data-i18n="securityTitle">Operational confidence at scale</h3>
-        <p class="section-sub" data-i18n="securitySub">Designed to align product behavior with real-world high-risk payment constraints.</p>
+        <h3 class="section-title" data-i18n="securityTitle">Trust signals built in</h3>
+        <p class="section-sub" data-i18n="securitySub">The platform keeps compliance and payment safety in the background, not in the user flow.</p>
         <div class="proof">
           <div>
             <strong>Idempotent</strong>
@@ -661,8 +806,8 @@
 
       <section class="cta reveal">
         <div>
-          <h3 data-i18n="ctaTitle">Move from concept to production operations.</h3>
-          <p data-i18n="ctaCopy">Select role, choose language, and enter the workspace aligned to your operational responsibility.</p>
+          <h3 data-i18n="ctaTitle">Enter the private marketplace.</h3>
+          <p data-i18n="ctaCopy">Pick your role, choose your language, and continue in the workspace that fits you.</p>
         </div>
         <div class="controls">
           <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroCreator">Open Creator Workspace</a>
@@ -671,7 +816,7 @@
       </section>
 
       <footer class="footer">
-        <span data-i18n="footer">SluttySluts Marketplace Platform. Enterprise UI revamp with role-based entry and multilingual navigation.</span>
+        <span data-i18n="footer">SluttySluts Marketplace Platform. Premium role-based entry with multilingual navigation.</span>
       </footer>
     </main>
 
@@ -679,39 +824,45 @@
       const translations = {
         en: {
           brandTitle: 'SluttySluts Platform',
-          brandSub: 'Enterprise-grade creator marketplace infrastructure',
+          brandSub: 'Private marketplace for curated creator commerce',
           navPlatform: 'Platform',
           navRoles: 'Workspaces',
           navSecurity: 'Security',
           navStart: 'Getting Started',
           btnCreator: 'Creator',
           btnCustomer: 'Customer',
-          eyebrow: 'ENTERPRISE MARKETPLACE OS',
-          heroTitle: 'Scale creator commerce with compliance, promotion, and payout control.',
-          heroCopy:
-            'A complete two-sided marketplace stack designed for high-risk payment workflows: role-based onboarding, hosted checkout, reconciliation-ready ledgers, and promotion monetization in one surface.',
+          eyebrow: 'PRIVATE CURATED MARKETPLACE',
+          heroTitleCustomer: 'Discover the Unseen.',
+          heroCopyCustomer: 'Explore curated listings in a discreet and secure buyer environment.',
+          heroTitleCreator: 'Monetize Your Influence.',
+          heroCopyCreator: 'Launch premium offers with promotion controls, wallet visibility, and trusted payouts.',
+          toggleCustomer: 'I am a Customer',
+          toggleCreator: 'I am a Creator',
           heroCustomer: 'Open Customer Workspace',
           heroCreator: 'Open Creator Workspace',
           heroAdmin: 'Open Operations Console',
-          stat1: 'event-delivery reliability target',
-          stat2: 'rolling reserve support window',
-          stat3: 'Customer, Creator, Admin, Ops',
+          trust1: 'Encrypted workspace',
+          trust2: 'Role-based routing',
+          trust3: 'Discreet checkout flow',
+          stat1: 'average buyer trust score',
+          stat2: 'typical creator reply time',
+          stat3: 'protected payment monitoring',
           asideTitle1: 'Revenue Stack',
           asideCopy1: 'Buyer fee + creator commission + promotion inventory unified in one ledgered model.',
           asideTitle2: 'Operational Controls',
           asideCopy2: 'Role-based entry points with language-aware onboarding and workflow-specific dashboards.',
           asideTitle3: 'Compliance by Design',
           asideCopy3: 'KYC gates, moderation events, webhook idempotency, dispute and payout state transitions.',
-          platformTitle: 'Platform modules built for commercial discipline',
-          platformSub: 'Each capability is mapped to business KPIs and financial reconciliation readiness.',
-          feature1Title: 'Two-sided transactions',
-          feature1Copy: 'Hosted checkout creates pending orders first, then webhook confirms payment and unlocks fulfillment.',
-          feature2Title: 'Promotion monetization',
-          feature2Copy: 'Creators can buy ranking plans (duration or click-based) directly from the dashboard.',
-          feature3Title: 'Wallet and payouts',
-          feature3Copy: 'Commission, reserve, and payoutable amounts are separated for audit-safe withdrawal operations.',
-          rolesTitle: 'Role-first user journeys',
-          rolesSub: 'Top-right identity buttons route every user into the correct workspace immediately.',
+          platformTitle: 'Inside the private marketplace experience',
+          platformSub: 'Every module is designed for trust, conversion, and discreet fulfillment.',
+          feature1Title: 'Seamless buyer journey',
+          feature1Copy: 'Customers browse, select, and transition into secure hosted checkout with transparent fees.',
+          feature2Title: 'Creator growth tools',
+          feature2Copy: 'Promotion plans help top creators win premium visibility without breaking the visual quality bar.',
+          feature3Title: 'Payout confidence',
+          feature3Copy: 'Wallet, reserve, and withdrawal states are clear so creators always know what is available.',
+          rolesTitle: 'Choose your journey',
+          rolesSub: 'Switch identity instantly and land in the workflow built for your role.',
           creatorTitle: 'Creator Workspace',
           creatorCopy: 'For supply-side operators managing products, promotion budget, and payout flow.',
           creatorPoint1: 'Catalog and price management',
@@ -722,51 +873,57 @@
           customerPoint1: 'Explore promoted and organic listings',
           customerPoint2: 'Create pending orders with transparent fee breakdown',
           customerPoint3: 'Track order, dispute, and delivery states',
-          securityTitle: 'Operational confidence at scale',
-          securitySub: 'Designed to align product behavior with real-world high-risk payment constraints.',
+          securityTitle: 'Trust signals built in',
+          securitySub: 'The platform keeps compliance and payment safety in the background, not in the user flow.',
           proof1: 'webhook event processing',
           proof2: 'ledger-style financial records',
           proof3: 'customer fee + creator commission',
           proof4: 'available vs pending wallet balance',
-          ctaTitle: 'Move from concept to production operations.',
-          ctaCopy: 'Select role, choose language, and enter the workspace aligned to your operational responsibility.',
-          footer: 'SluttySluts Marketplace Platform. Enterprise UI revamp with role-based entry and multilingual navigation.'
+          ctaTitle: 'Enter the private marketplace.',
+          ctaCopy: 'Pick your role, choose your language, and continue in the workspace that fits you.',
+          footer: 'SluttySluts Marketplace Platform. Premium role-based entry with multilingual navigation.'
         },
         'zh-TW': {
           brandTitle: 'SluttySluts 平台',
-          brandSub: '企業級 Creator Marketplace 基礎設施',
+          brandSub: '高質感私密選品市集',
           navPlatform: '平台能力',
           navRoles: '工作台',
           navSecurity: '風控合規',
           navStart: '快速開始',
           btnCreator: 'Creator',
           btnCustomer: 'Customer',
-          eyebrow: 'ENTERPRISE MARKETPLACE OS',
-          heroTitle: '以合規、推廣與撥款控制，擴展 Creator 商業模式。',
-          heroCopy:
-            '這是一套完整雙邊市場堆疊，專為高風險支付流程設計：角色導向導流、Hosted Checkout、可對帳 Ledger 與推廣變現在同一個操作面。',
+          eyebrow: '私密精選市集',
+          heroTitleCustomer: '探索只屬於你的私密選品。',
+          heroCopyCustomer: '在安全且隱私保護的環境中，瀏覽精選賣家與高信任度商品。',
+          heroTitleCreator: '把影響力轉換成穩定收入。',
+          heroCopyCreator: '用推廣、錢包與撥款控制，打造高價值且可持續的創作者商業模式。',
+          toggleCustomer: '我是 Customer',
+          toggleCreator: '我是 Creator',
           heroCustomer: '進入 Customer 工作台',
           heroCreator: '進入 Creator 工作台',
           heroAdmin: '進入營運 Console',
-          stat1: '事件投遞可靠度目標',
-          stat2: '保留金支援天數',
-          stat3: 'Customer、Creator、Admin、Ops',
+          trust1: '加密工作空間',
+          trust2: '角色導向分流',
+          trust3: '隱私結帳流程',
+          stat1: '買家平均信任分數',
+          stat2: '賣家平均回覆時間',
+          stat3: '全天候支付監控',
           asideTitle1: '營收結構',
           asideCopy1: '買家手續費、Creator 佣金與推廣費統一進入同一套記帳模型。',
           asideTitle2: '營運控制',
           asideCopy2: '角色入口與語言導流，讓每一種使用者進到對應流程。',
           asideTitle3: '合規內建',
           asideCopy3: 'KYC 關卡、內容審核、webhook 去重、爭議與撥款狀態機。',
-          platformTitle: '對齊商業紀律的平台模組',
-          platformSub: '每個能力都直接對應 KPI 與財務對帳需求。',
-          feature1Title: '雙邊交易引擎',
-          feature1Copy: '先建 pending 訂單，再由 webhook 回寫付款成功並推進履約。',
-          feature2Title: '推廣變現模組',
-          feature2Copy: 'Creator 可在後台購買置頂方案（天數或點擊式）。',
-          feature3Title: '錢包與撥款',
-          feature3Copy: '佣金、保留金、可撥款金額分離，提現流程可稽核。',
-          rolesTitle: '角色優先的使用旅程',
-          rolesSub: '右上角身份入口可直接把使用者導到正確工作台。',
+          platformTitle: '私密市集的核心體驗',
+          platformSub: '每個模組都圍繞信任感、轉換率與隱私履約而設計。',
+          feature1Title: '流暢的買家旅程',
+          feature1Copy: '從探索到安全 Hosted Checkout 的流程自然且透明，費用拆解清楚可見。',
+          feature2Title: 'Creator 成長工具',
+          feature2Copy: '透過推廣方案提高曝光，同時維持首頁的高質感視覺標準。',
+          feature3Title: '可預期的撥款體驗',
+          feature3Copy: '錢包、保留金與可提現金額一目了然，降低營運不確定性。',
+          rolesTitle: '選擇你的使用旅程',
+          rolesSub: '即時切換身份，直接進入對應角色最需要的流程。',
           creatorTitle: 'Creator 工作台',
           creatorCopy: '供給側營運者管理商品、推廣預算與撥款。',
           creatorPoint1: '商品與價格管理',
@@ -777,35 +934,41 @@
           customerPoint1: '瀏覽置頂與一般商品',
           customerPoint2: '建立含費用拆解的待付款訂單',
           customerPoint3: '追蹤訂單、爭議與交付狀態',
-          securityTitle: '可規模化的營運信心',
-          securitySub: '產品行為與高風險金流現實條件對齊。',
+          securityTitle: '內建信任與安全感',
+          securitySub: '合規與支付風險控制在背景運作，不打斷前台體驗。',
           proof1: 'webhook 事件處理',
           proof2: '帳本式財務紀錄',
           proof3: '雙向費率模型',
           proof4: 'available / pending 錢包餘額',
-          ctaTitle: '從概念直接走到可營運。',
-          ctaCopy: '選角色、選語言，直接進入對應責任工作台。',
-          footer: 'SluttySluts Marketplace Platform，企業級改版，支援角色導流與多語系。'
+          ctaTitle: '現在就進入私密市集。',
+          ctaCopy: '選擇角色與語言，立刻進入最符合你需求的工作台。',
+          footer: 'SluttySluts Marketplace Platform，精品風格改版，支援角色導流與多語系。'
         },
         hu: {
           brandTitle: 'SluttySluts Platform',
-          brandSub: 'Vallalati szintu Creator marketplace infrastruktura',
+          brandSub: 'Private curated creator marketplace',
           navPlatform: 'Platform',
           navRoles: 'Workspacek',
           navSecurity: 'Biztonsag',
           navStart: 'Gyors kezdes',
           btnCreator: 'Creator',
           btnCustomer: 'Customer',
-          eyebrow: 'ENTERPRISE MARKETPLACE OS',
-          heroTitle: 'Skalazd a creator commerce modellt compliance es payout kontrollal.',
-          heroCopy:
-            'Komplett ketoldalu marketplace stack high-risk payment workflow-hoz: szerepalapu belepes, hosted checkout, egyeztetheto ledger es promotion monetizacio egy feluleten.',
+          eyebrow: 'PRIVATE CURATED MARKETPLACE',
+          heroTitleCustomer: 'Discover the Unseen.',
+          heroCopyCustomer: 'Explore curated listings in a discreet and secure buyer environment.',
+          heroTitleCreator: 'Monetize Your Influence.',
+          heroCopyCreator: 'Launch premium offers with promotion controls, wallet visibility, and trusted payouts.',
+          toggleCustomer: 'I am a Customer',
+          toggleCreator: 'I am a Creator',
           heroCustomer: 'Customer Workspace megnyitasa',
           heroCreator: 'Creator Workspace megnyitasa',
           heroAdmin: 'Operations Console megnyitasa',
-          stat1: 'esemeny kezbesitesi megbizhatosag cel',
-          stat2: 'rolling reserve tamogatasi idoszak',
-          stat3: 'Customer, Creator, Admin, Ops',
+          trust1: 'Encrypted workspace',
+          trust2: 'Role-based routing',
+          trust3: 'Discreet checkout flow',
+          stat1: 'average buyer trust score',
+          stat2: 'typical creator reply time',
+          stat3: 'protected payment monitoring',
           asideTitle1: 'Revenue Stack',
           asideCopy1: 'Buyer fee + creator jutalek + promotion inventory egy ledger modellben.',
           asideTitle2: 'Operational Controls',
@@ -840,27 +1003,33 @@
           proof4: 'elerheto es pending wallet egyenleg',
           ctaTitle: 'Lepj a koncepciotol az uzemszeru mukodesig.',
           ctaCopy: 'Valassz szerepet es nyelvet, majd lepj be a megfelelo workspace-be.',
-          footer: 'SluttySluts Marketplace Platform vallalati UI frissites szerepalapu belepessel es tobbnyelvu navigacioval.'
+          footer: 'SluttySluts Marketplace Platform premium UI szerepalapu belepessel es tobbnyelvu navigacioval.'
         },
         fr: {
           brandTitle: 'SluttySluts Platform',
-          brandSub: 'Infrastructure marketplace Creator niveau entreprise',
+          brandSub: 'Marketplace prive et curateur pour creators',
           navPlatform: 'Plateforme',
           navRoles: 'Workspaces',
           navSecurity: 'Securite',
           navStart: 'Demarrage',
           btnCreator: 'Creator',
           btnCustomer: 'Customer',
-          eyebrow: 'ENTERPRISE MARKETPLACE OS',
-          heroTitle: 'Scalez le commerce creator avec controle compliance, promotion et payouts.',
-          heroCopy:
-            'Stack marketplace bi-face complet pour flux high-risk payment: entree par role, hosted checkout, ledger reconciliable et monetisation promotion dans une seule surface.',
+          eyebrow: 'PRIVATE CURATED MARKETPLACE',
+          heroTitleCustomer: 'Discover the Unseen.',
+          heroCopyCustomer: 'Explore curated listings in a discreet and secure buyer environment.',
+          heroTitleCreator: 'Monetize Your Influence.',
+          heroCopyCreator: 'Launch premium offers with promotion controls, wallet visibility, and trusted payouts.',
+          toggleCustomer: 'I am a Customer',
+          toggleCreator: 'I am a Creator',
           heroCustomer: 'Ouvrir Customer Workspace',
           heroCreator: 'Ouvrir Creator Workspace',
           heroAdmin: 'Ouvrir Console Operations',
-          stat1: 'objectif fiabilite de livraison des evenements',
-          stat2: 'fenetre de support rolling reserve',
-          stat3: 'Customer, Creator, Admin, Ops',
+          trust1: 'Encrypted workspace',
+          trust2: 'Role-based routing',
+          trust3: 'Discreet checkout flow',
+          stat1: 'average buyer trust score',
+          stat2: 'typical creator reply time',
+          stat3: 'protected payment monitoring',
           asideTitle1: 'Revenue Stack',
           asideCopy1: 'Buyer fee + commission creator + promotion inventory unifies dans un modele ledger.',
           asideTitle2: 'Operational Controls',
@@ -895,12 +1064,50 @@
           proof4: 'soldes wallet available vs pending',
           ctaTitle: 'Passez du concept aux operations de production.',
           ctaCopy: 'Selectionnez role et langue, puis entrez dans le workspace correspondant.',
-          footer: 'SluttySluts Marketplace Platform. Refonte UI entreprise avec entree par role et navigation multilingue.'
+          footer: 'SluttySluts Marketplace Platform. Refonte UI premium avec entree par role et navigation multilingue.'
         }
       };
 
       function normalizedLang(raw) {
         return Object.prototype.hasOwnProperty.call(translations, raw) ? raw : 'en';
+      }
+
+      let heroRole = 'customer';
+
+      function copyFor(dict, key) {
+        if (dict && typeof dict[key] === 'string') return dict[key];
+        return translations.en[key] || '';
+      }
+
+      function renderHeroRole(lang) {
+        const chosen = normalizedLang(lang || document.documentElement.lang || 'en');
+        const dict = translations[chosen];
+        const isCreator = heroRole === 'creator';
+        const role = isCreator ? 'creator' : 'customer';
+
+        document.getElementById('heroDynamicTitle').textContent = copyFor(
+          dict,
+          isCreator ? 'heroTitleCreator' : 'heroTitleCustomer'
+        );
+        document.getElementById('heroDynamicCopy').textContent = copyFor(
+          dict,
+          isCreator ? 'heroCopyCreator' : 'heroCopyCustomer'
+        );
+
+        const primary = document.getElementById('heroPrimaryLink');
+        primary.classList.remove('customer', 'creator');
+        primary.classList.add(role);
+        primary.textContent = copyFor(dict, isCreator ? 'heroCreator' : 'heroCustomer');
+        primary.setAttribute('data-role-link', role);
+        primary.setAttribute('href', `./app.html?role=${encodeURIComponent(role)}&lang=${encodeURIComponent(chosen)}`);
+
+        const switchEl = document.getElementById('heroSwitch');
+        switchEl.setAttribute('data-role', role);
+        document.querySelectorAll('[data-hero-role]').forEach((button) => {
+          button.classList.toggle('active', button.getAttribute('data-hero-role') === role);
+        });
+
+        document.body.setAttribute('data-hero-role', role);
       }
 
       function applyLang(lang) {
@@ -918,6 +1125,7 @@
           node.setAttribute('href', `./app.html?role=${encodeURIComponent(role)}&lang=${encodeURIComponent(chosen)}`);
         });
 
+        renderHeroRole(chosen);
         document.getElementById('langSelect').value = chosen;
         localStorage.setItem('siteLang', chosen);
       }
@@ -942,6 +1150,16 @@
 
       const langSelect = document.getElementById('langSelect');
       langSelect.addEventListener('change', (event) => applyLang(event.target.value));
+
+      document.querySelectorAll('[data-hero-role]').forEach((button) => {
+        button.addEventListener('click', () => {
+          heroRole = button.getAttribute('data-hero-role') === 'creator' ? 'creator' : 'customer';
+          renderHeroRole(document.documentElement.lang);
+        });
+      });
+
+      const queryRole = new URLSearchParams(window.location.search).get('role');
+      if (queryRole === 'creator') heroRole = 'creator';
 
       const savedLang = localStorage.getItem('siteLang') || 'en';
       applyLang(savedLang);
