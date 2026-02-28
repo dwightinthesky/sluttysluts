@@ -1,0 +1,13 @@
+{
+  "name": "compliance-commerce-saas-backend",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "smoke": "./scripts/smoke.sh"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

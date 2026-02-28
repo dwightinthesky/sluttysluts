@@ -46,6 +46,13 @@ jobs:
           cp high-risk-marketplace-mvp/README.md _site/high-risk-marketplace-mvp/
           cp high-risk-marketplace-mvp/index.html _site/high-risk-marketplace-mvp/
 
+          # New SaaS project bundle
+          mkdir -p _site/saas-compliance-marketplace
+          cp -R saas-compliance-marketplace/frontend _site/saas-compliance-marketplace/
+          cp -R saas-compliance-marketplace/deploy _site/saas-compliance-marketplace/
+          cp saas-compliance-marketplace/README.md _site/saas-compliance-marketplace/
+          cp saas-compliance-marketplace/index.html _site/saas-compliance-marketplace/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
