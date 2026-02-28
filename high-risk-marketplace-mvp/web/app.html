@@ -359,9 +359,32 @@
         gap: 8px;
       }
 
+      .listing-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
       .listing-price {
         margin: 0;
         font: 700 0.95rem/1.2 'Sora', sans-serif;
+        color: #111827;
+      }
+
+      .listing-view {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 9px;
+        border-radius: 999px;
+        font: 600 0.7rem/1 'Sora', sans-serif;
+        border: 1px solid #e5e7eb;
+        color: #4b5563;
+        background: #ffffff;
+        text-decoration: none;
+      }
+
+      .listing-view:hover {
+        border-color: #cbd5e1;
         color: #111827;
       }
 
@@ -1404,7 +1427,12 @@
                   <p class="listing-sub truncate-1">${subtitle}</p>
                   <div class="listing-bottom">
                     <p class="listing-price">${currency} ${price}</p>
-                    <span class="listing-select">${isSelected ? 'Selected' : 'Select'}</span>
+                    <div class="listing-cta">
+                      <a class="listing-view" data-view="1" href="./product-detail.html?listing=${encodeURIComponent(
+                        item.id || ''
+                      )}&lang=${encodeURIComponent(state.lang)}">View</a>
+                      <span class="listing-select">${isSelected ? 'Selected' : 'Select'}</span>
+                    </div>
                   </div>
                 </div>
               </article>
@@ -1413,7 +1441,8 @@
           .join('');
 
         document.querySelectorAll('.listing[data-select]').forEach((card) => {
-          card.addEventListener('click', () => {
+          card.addEventListener('click', (event) => {
+            if (event.target.closest('[data-view]')) return;
             const listingId = card.getAttribute('data-select') || '';
             state.selectedListingId = listingId;
             el.selectedListing.value = listingId;
@@ -1423,6 +1452,7 @@
           });
 
           card.addEventListener('keydown', (event) => {
+            if (event.target.closest('[data-view]')) return;
             if (event.key !== 'Enter' && event.key !== ' ') return;
             event.preventDefault();
             const listingId = card.getAttribute('data-select') || '';

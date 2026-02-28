@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Detail | SluttySluts Marketplace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f7f7f5;
+        --ink: #111827;
+        --muted: #6b7280;
+        --line: #e5e7eb;
+        --surface: #ffffff;
+        --brand: #be123c;
+        --brand-soft: #fff1f2;
+        --shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Manrope', sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
+
+      .container {
+        width: min(1180px, calc(100% - 28px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        margin-top: 14px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #be123c, #e11d48);
+        color: #fff;
+        font: 800 0.88rem/1 'Sora', sans-serif;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font: 700 1.02rem/1.2 'Sora', sans-serif;
+      }
+
+      .brand p {
+        margin: 2px 0 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .controls {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .btn,
+      .select {
+        border-radius: 11px;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: #111827;
+        text-decoration: none;
+        font: 600 0.86rem/1 'Manrope', sans-serif;
+        padding: 10px 12px;
+      }
+
+      .btn.primary {
+        border-color: var(--brand);
+        background: var(--brand);
+        color: #fff;
+      }
+
+      .btn.soft {
+        border-color: #fecdd3;
+        background: #fff1f2;
+        color: #9f1239;
+      }
+
+      .crumbs {
+        margin: 14px 0 10px;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .crumbs a {
+        color: #4b5563;
+        text-decoration: none;
+      }
+
+      .detail {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .gallery,
+      .buybox {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+      }
+
+      .gallery {
+        padding: 14px;
+      }
+
+      .hero-image {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        background: #f3f4f6;
+        aspect-ratio: 4 / 5;
+      }
+
+      .hero-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .badge {
+        position: absolute;
+        top: 11px;
+        left: 11px;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        border: 1px solid #fecdd3;
+        background: rgba(255, 255, 255, 0.92);
+        color: #9f1239;
+        padding: 4px 10px;
+        font: 700 0.68rem/1 'Sora', sans-serif;
+      }
+
+      .thumbs {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .thumb {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+        background: #f3f4f6;
+        aspect-ratio: 4 / 5;
+        cursor: pointer;
+      }
+
+      .thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .thumb.active {
+        border-color: #fb7185;
+      }
+
+      .buybox {
+        padding: 18px;
+      }
+
+      .title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .title-row h2 {
+        margin: 0;
+        font: 700 clamp(1.45rem, 2.5vw, 2rem) / 1.12 'Sora', sans-serif;
+      }
+
+      .title-row p {
+        margin: 8px 0 0;
+        color: var(--muted);
+      }
+
+      .price {
+        margin: 0;
+        font: 700 2rem/1 'Sora', sans-serif;
+      }
+
+      .trust {
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .seller {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .seller-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 999px;
+        object-fit: cover;
+        border: 1px solid var(--line);
+      }
+
+      .seller-name {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font: 700 0.95rem/1.2 'Sora', sans-serif;
+      }
+
+      .verified {
+        width: 15px;
+        height: 15px;
+        color: #3b82f6;
+      }
+
+      .seller-meta {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+
+      .desc {
+        margin-top: 14px;
+      }
+
+      .desc h3 {
+        margin: 0;
+        font: 700 0.87rem/1.2 'Sora', sans-serif;
+      }
+
+      .desc p {
+        margin: 8px 0 0;
+        color: #4b5563;
+        line-height: 1.65;
+      }
+
+      .chips {
+        margin-top: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .chip {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 6px 10px;
+        font: 600 0.72rem/1 'Sora', sans-serif;
+        color: #4b5563;
+        background: #fff;
+      }
+
+      .actions {
+        margin-top: 18px;
+        display: grid;
+        gap: 9px;
+      }
+
+      .actions .btn {
+        width: 100%;
+        padding: 13px 14px;
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .secure-note {
+        margin-top: 8px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 0.77rem;
+      }
+
+      .toast {
+        margin-top: 11px;
+        border-radius: 10px;
+        border: 1px solid #fecdd3;
+        background: #fff1f2;
+        color: #9f1239;
+        padding: 9px 10px;
+        font-size: 0.8rem;
+        display: none;
+      }
+
+      .toast.show {
+        display: block;
+      }
+
+      @media (max-width: 980px) {
+        .detail {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 700px) {
+        .container {
+          width: calc(100% - 16px);
+        }
+
+        .topbar {
+          margin-top: 8px;
+          padding: 10px;
+        }
+
+        .controls {
+          width: 100%;
+        }
+
+        .btn,
+        .select {
+          flex: 1;
+          min-width: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="topbar">
+        <a class="brand" href="./index.html" aria-label="Back to landing">
+          <span class="brand-mark">SS</span>
+          <span>
+            <h1 id="brandTitle">Product Detail</h1>
+            <p id="brandSub">Premium listing and seller trust panel</p>
+          </span>
+        </a>
+
+        <div class="controls">
+          <a id="linkLanding" class="btn" href="./index.html">Landing</a>
+          <a id="linkExplore" class="btn" href="./app.html?role=customer&lang=en">Explore</a>
+          <a id="linkCheckout" class="btn soft" href="./checkout.html?lang=en">Checkout</a>
+          <select id="langSelect" class="select" aria-label="Language selector">
+            <option value="en">Eng</option>
+            <option value="zh-TW">Zh-TW</option>
+            <option value="hu">Hungarian</option>
+            <option value="fr">French</option>
+          </select>
+        </div>
+      </header>
+
+      <p class="crumbs">
+        <a id="crumbExplore" href="./app.html?role=customer&lang=en">Explore</a>
+        <span> / </span>
+        <span id="crumbCurrent">Listing detail</span>
+      </p>
+
+      <main class="detail">
+        <section class="gallery">
+          <div class="hero-image">
+            <img id="heroImage" src="" alt="Listing image" />
+            <span id="promoBadge" class="badge" hidden>Promoted</span>
+          </div>
+          <div id="thumbs" class="thumbs"></div>
+        </section>
+
+        <section class="buybox">
+          <div class="title-row">
+            <div>
+              <h2 id="title">Premium Listing</h2>
+              <p id="subtitle">High-trust private marketplace item</p>
+            </div>
+            <p id="price" class="price">USD 0.00</p>
+          </div>
+
+          <div class="trust">
+            <div class="seller">
+              <img id="sellerAvatar" class="seller-avatar" src="" alt="Seller avatar" />
+              <div>
+                <p class="seller-name">
+                  <span id="sellerName">Creator</span>
+                  <svg id="verifiedIcon" class="verified" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                  </svg>
+                </p>
+                <p id="sellerMeta" class="seller-meta">4.9 (120 reviews) - Replies in 1 hour</p>
+              </div>
+            </div>
+            <button id="messageBtn" class="btn" type="button">Message</button>
+          </div>
+
+          <div class="desc">
+            <h3 id="descTitle">Item Description</h3>
+            <p id="description"></p>
+          </div>
+
+          <div id="chips" class="chips"></div>
+
+          <div class="actions">
+            <button id="addToCartBtn" class="btn primary" type="button">Add to Cart</button>
+            <button id="buyNowBtn" class="btn soft" type="button">Continue to Checkout</button>
+          </div>
+
+          <p id="secureNote" class="secure-note">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <span id="secureNoteText">Secure and discreet checkout</span>
+          </p>
+
+          <div id="toast" class="toast" role="status" aria-live="polite"></div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const I18N = {
+        en: {
+          brandTitle: 'Product Detail',
+          brandSub: 'Premium listing and seller trust panel',
+          landing: 'Landing',
+          explore: 'Explore',
+          checkout: 'Checkout',
+          crumbCurrent: 'Listing detail',
+          promoted: 'Promoted',
+          message: 'Message',
+          descTitle: 'Item Description',
+          addToCart: 'Add to Cart',
+          buyNow: 'Continue to Checkout',
+          secure: 'Secure and discreet checkout',
+          toastAdded: 'Item added to cart.',
+          toastMessage: 'Message channel opened (demo).',
+          replies: 'Replies in',
+          hour: '1 hour'
+        },
+        'zh-TW': {
+          brandTitle: '商品詳情',
+          brandSub: '高信任度商品與賣家面板',
+          landing: 'Landing',
+          explore: 'Explore',
+          checkout: '結帳',
+          crumbCurrent: '商品詳情',
+          promoted: '置頂',
+          message: '私訊',
+          descTitle: '商品描述',
+          addToCart: '加入購物車',
+          buyNow: '前往結帳',
+          secure: '安全且隱私保護的結帳流程',
+          toastAdded: '已加入購物車。',
+          toastMessage: '私訊視窗已開啟（示意）。',
+          replies: '平均回覆',
+          hour: '1 小時'
+        },
+        hu: {
+          brandTitle: 'Termek reszletek',
+          brandSub: 'Premium listing es seller trust panel',
+          landing: 'Landing',
+          explore: 'Explore',
+          checkout: 'Checkout',
+          crumbCurrent: 'Listing reszletek',
+          promoted: 'Promoted',
+          message: 'Uzenet',
+          descTitle: 'Leiras',
+          addToCart: 'Kosarba',
+          buyNow: 'Tovabb a checkoutra',
+          secure: 'Biztonsagos es diszkret checkout',
+          toastAdded: 'A termek a kosarba kerult.',
+          toastMessage: 'Uzenet csatorna megnyitva (demo).',
+          replies: 'Valaszido',
+          hour: '1 ora'
+        },
+        fr: {
+          brandTitle: 'Detail produit',
+          brandSub: 'Listing premium avec panneau de confiance vendeur',
+          landing: 'Landing',
+          explore: 'Explore',
+          checkout: 'Checkout',
+          crumbCurrent: 'Detail du listing',
+          promoted: 'Promu',
+          message: 'Message',
+          descTitle: 'Description',
+          addToCart: 'Ajouter au panier',
+          buyNow: 'Continuer vers checkout',
+          secure: 'Checkout securise et discret',
+          toastAdded: 'Article ajoute au panier.',
+          toastMessage: 'Canal message ouvert (demo).',
+          replies: 'Repond en',
+          hour: '1 heure'
+        }
+      };
+
+      const CATALOG = {
+        'sample-lst-001': {
+          id: 'sample-lst-001',
+          title: 'Premium Signature Bundle',
+          subtitle: 'Worn 3 days - high intensity training set',
+          price: 120,
+          currency: 'USD',
+          promoted: true,
+          description:
+            'Premium cotton set prepared immediately after training sessions and stored in sealed packaging. Discreet handling and private support included from checkout to delivery.',
+          chips: ['Sealed package', 'Discreet shipping', 'Video confirmation available'],
+          images: [
+            'https://picsum.photos/id/1025/900/1125',
+            'https://picsum.photos/id/1027/900/1125',
+            'https://picsum.photos/id/1035/900/1125',
+            'https://picsum.photos/id/1040/900/1125'
+          ],
+          seller: {
+            name: 'Lina Atelier',
+            verified: true,
+            rating: 4.9,
+            reviews: 120,
+            replyHours: 1,
+            avatar: 'https://i.pravatar.cc/150?img=47'
+          },
+          shipping: 5,
+          platformFeeRate: 0.1
+        },
+        'sample-lst-002': {
+          id: 'sample-lst-002',
+          title: 'Express Daily Drop',
+          subtitle: 'Fast dispatch - tracking included',
+          price: 95,
+          currency: 'USD',
+          promoted: false,
+          description:
+            'Curated everyday listing with priority packing and express handoff. Optimized for repeat buyers who value predictable quality and quick confirmation.',
+          chips: ['Express dispatch', 'Tracked shipping', 'Repeat-buyer favorite'],
+          images: [
+            'https://picsum.photos/id/1062/900/1125',
+            'https://picsum.photos/id/1067/900/1125',
+            'https://picsum.photos/id/1069/900/1125',
+            'https://picsum.photos/id/1070/900/1125'
+          ],
+          seller: {
+            name: 'Maya Studio',
+            verified: true,
+            rating: 4.8,
+            reviews: 89,
+            replyHours: 1,
+            avatar: 'https://i.pravatar.cc/150?img=33'
+          },
+          shipping: 5,
+          platformFeeRate: 0.1
+        },
+        'sample-lst-003': {
+          id: 'sample-lst-003',
+          title: 'Collectors Edition Drop',
+          subtitle: 'Limited quantity - premium tier',
+          price: 160,
+          currency: 'USD',
+          promoted: true,
+          description:
+            'Limited collector listing with premium handling workflow, clear communication milestones, and authenticity-focused delivery flow for high-value orders.',
+          chips: ['Limited release', 'Priority support', 'Collector tier'],
+          images: [
+            'https://picsum.photos/id/1074/900/1125',
+            'https://picsum.photos/id/1080/900/1125',
+            'https://picsum.photos/id/1081/900/1125',
+            'https://picsum.photos/id/1082/900/1125'
+          ],
+          seller: {
+            name: 'Noir Archive',
+            verified: true,
+            rating: 5,
+            reviews: 56,
+            replyHours: 1,
+            avatar: 'https://i.pravatar.cc/150?img=32'
+          },
+          shipping: 7,
+          platformFeeRate: 0.1
+        }
+      };
+
+      const state = {
+        lang: 'en',
+        listingId: 'sample-lst-001',
+        activeImageIndex: 0
+      };
+
+      function safeLang(raw) {
+        return Object.prototype.hasOwnProperty.call(I18N, raw) ? raw : 'en';
+      }
+
+      function getQuery() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+          lang: params.get('lang'),
+          listing: params.get('listing')
+        };
+      }
+
+      function formatPrice(currency, value) {
+        return `${currency} ${Number(value || 0).toFixed(2)}`;
+      }
+
+      function getCurrentListing() {
+        return CATALOG[state.listingId] || CATALOG['sample-lst-001'];
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        window.clearTimeout(showToast.timer);
+        showToast.timer = window.setTimeout(() => toast.classList.remove('show'), 2200);
+      }
+
+      function saveCart() {
+        const listing = getCurrentListing();
+        const payload = {
+          listingId: listing.id,
+          title: listing.title,
+          sellerName: listing.seller.name,
+          imageUrl: listing.images[state.activeImageIndex] || listing.images[0],
+          price: listing.price,
+          currency: listing.currency,
+          shipping: listing.shipping,
+          platformFeeRate: listing.platformFeeRate,
+          savedAt: new Date().toISOString()
+        };
+        localStorage.setItem('saas_cart_v1', JSON.stringify(payload));
+      }
+
+      function renderThumbs() {
+        const listing = getCurrentListing();
+        const holder = document.getElementById('thumbs');
+        holder.innerHTML = listing.images
+          .map(
+            (url, index) => `
+              <button class="thumb ${index === state.activeImageIndex ? 'active' : ''}" type="button" data-index="${index}">
+                <img src="${url}" alt="Gallery image ${index + 1}" loading="lazy" />
+              </button>
+            `
+          )
+          .join('');
+
+        holder.querySelectorAll('[data-index]').forEach((button) => {
+          button.addEventListener('click', () => {
+            state.activeImageIndex = Number(button.getAttribute('data-index') || 0);
+            document.getElementById('heroImage').src = listing.images[state.activeImageIndex] || listing.images[0];
+            renderThumbs();
+          });
+        });
+      }
+
+      function renderLinks() {
+        const lang = state.lang;
+        const listing = encodeURIComponent(state.listingId);
+        document.getElementById('linkLanding').setAttribute('href', `./index.html?lang=${encodeURIComponent(lang)}`);
+        document.getElementById('linkExplore').setAttribute('href', `./app.html?role=customer&lang=${encodeURIComponent(lang)}`);
+        document.getElementById('linkCheckout').setAttribute('href', `./checkout.html?lang=${encodeURIComponent(lang)}`);
+        document.getElementById('crumbExplore').setAttribute('href', `./app.html?role=customer&lang=${encodeURIComponent(lang)}`);
+        document.getElementById('buyNowBtn').setAttribute('data-checkout', `./checkout.html?lang=${encodeURIComponent(lang)}&listing=${listing}`);
+      }
+
+      function renderI18n() {
+        const dict = I18N[state.lang] || I18N.en;
+        document.documentElement.lang = state.lang;
+        document.getElementById('brandTitle').textContent = dict.brandTitle;
+        document.getElementById('brandSub').textContent = dict.brandSub;
+        document.getElementById('linkLanding').textContent = dict.landing;
+        document.getElementById('linkExplore').textContent = dict.explore;
+        document.getElementById('linkCheckout').textContent = dict.checkout;
+        document.getElementById('crumbCurrent').textContent = dict.crumbCurrent;
+        document.getElementById('promoBadge').textContent = dict.promoted;
+        document.getElementById('messageBtn').textContent = dict.message;
+        document.getElementById('descTitle').textContent = dict.descTitle;
+        document.getElementById('addToCartBtn').textContent = dict.addToCart;
+        document.getElementById('buyNowBtn').textContent = dict.buyNow;
+        document.getElementById('secureNoteText').textContent = dict.secure;
+      }
+
+      function renderListing() {
+        const dict = I18N[state.lang] || I18N.en;
+        const listing = getCurrentListing();
+        document.getElementById('title').textContent = listing.title;
+        document.getElementById('subtitle').textContent = listing.subtitle;
+        document.getElementById('price').textContent = formatPrice(listing.currency, listing.price);
+        document.getElementById('description').textContent = listing.description;
+        document.getElementById('heroImage').src = listing.images[state.activeImageIndex] || listing.images[0];
+        document.getElementById('heroImage').alt = `${listing.title} image`;
+
+        const promoBadge = document.getElementById('promoBadge');
+        promoBadge.hidden = !listing.promoted;
+
+        document.getElementById('sellerAvatar').src = listing.seller.avatar;
+        document.getElementById('sellerName').textContent = listing.seller.name;
+        document.getElementById('verifiedIcon').hidden = !listing.seller.verified;
+        document.getElementById('sellerMeta').textContent = `⭐ ${listing.seller.rating} (${listing.seller.reviews} reviews) - ${dict.replies} ${dict.hour}`;
+
+        const chips = document.getElementById('chips');
+        chips.innerHTML = listing.chips.map((chip) => `<span class="chip">${chip}</span>`).join('');
+
+        renderThumbs();
+      }
+
+      function bindEvents() {
+        document.getElementById('langSelect').addEventListener('change', (event) => {
+          state.lang = safeLang(event.target.value);
+          localStorage.setItem('siteLang', state.lang);
+          renderI18n();
+          renderLinks();
+        });
+
+        document.getElementById('messageBtn').addEventListener('click', () => {
+          const dict = I18N[state.lang] || I18N.en;
+          showToast(dict.toastMessage);
+        });
+
+        document.getElementById('addToCartBtn').addEventListener('click', () => {
+          const dict = I18N[state.lang] || I18N.en;
+          saveCart();
+          showToast(dict.toastAdded);
+        });
+
+        document.getElementById('buyNowBtn').addEventListener('click', () => {
+          saveCart();
+          const target = document.getElementById('buyNowBtn').getAttribute('data-checkout') || './checkout.html';
+          window.location.href = target;
+        });
+      }
+
+      function boot() {
+        const query = getQuery();
+        state.lang = safeLang(query.lang || localStorage.getItem('siteLang') || 'en');
+        state.listingId = CATALOG[query.listing] ? query.listing : 'sample-lst-001';
+
+        document.getElementById('langSelect').value = state.lang;
+        renderI18n();
+        renderLinks();
+        renderListing();
+        bindEvents();
+      }
+
+      boot();
+    </script>
+  </body>
+</html>

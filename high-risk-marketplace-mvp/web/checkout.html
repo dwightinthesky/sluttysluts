@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout | SluttySluts Marketplace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f7f7f5;
+        --ink: #111827;
+        --muted: #6b7280;
+        --line: #e5e7eb;
+        --surface: #ffffff;
+        --brand: #111827;
+        --brand-soft: #fff1f2;
+        --shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Manrope', sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
+
+      .container {
+        width: min(1120px, calc(100% - 28px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        margin-top: 14px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #111827, #374151);
+        color: #fff;
+        font: 800 0.88rem/1 'Sora', sans-serif;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font: 700 1.02rem/1.2 'Sora', sans-serif;
+      }
+
+      .brand p {
+        margin: 2px 0 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .btn,
+      .select,
+      .input {
+        border-radius: 11px;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: #111827;
+        text-decoration: none;
+        font: 600 0.86rem/1 'Manrope', sans-serif;
+      }
+
+      .btn {
+        padding: 10px 12px;
+        cursor: pointer;
+      }
+
+      .btn.primary {
+        border-color: #111827;
+        background: #111827;
+        color: #fff;
+      }
+
+      .btn.soft {
+        border-color: #fecdd3;
+        background: #fff1f2;
+        color: #9f1239;
+      }
+
+      .select {
+        padding: 10px 12px;
+      }
+
+      .page-title {
+        margin: 18px 0 10px;
+        font: 700 clamp(1.5rem, 2.4vw, 2.1rem) / 1.15 'Sora', sans-serif;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 16px;
+        align-items: start;
+        padding-bottom: 30px;
+      }
+
+      .card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+
+      .card h2 {
+        margin: 0;
+        font: 700 1.08rem/1.2 'Sora', sans-serif;
+      }
+
+      .form-grid {
+        margin-top: 12px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 6px;
+        color: #374151;
+        font: 600 0.75rem/1 'Sora', sans-serif;
+      }
+
+      .input {
+        width: 100%;
+        padding: 10px 11px;
+        font: 500 0.9rem/1.2 'Manrope', sans-serif;
+      }
+
+      .privacy {
+        margin-top: 8px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #f9fafb;
+        padding: 10px;
+        display: flex;
+        gap: 8px;
+      }
+
+      .privacy input {
+        margin-top: 2px;
+      }
+
+      .privacy strong {
+        display: block;
+        font: 700 0.84rem/1.2 'Sora', sans-serif;
+      }
+
+      .privacy p {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+
+      .summary {
+        position: sticky;
+        top: 10px;
+      }
+
+      .item {
+        margin-top: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .item-media {
+        width: 62px;
+        aspect-ratio: 4 / 5;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f3f4f6;
+        border: 1px solid var(--line);
+      }
+
+      .item-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .item-info {
+        flex: 1;
+      }
+
+      .item-title {
+        margin: 0;
+        font: 700 0.86rem/1.2 'Sora', sans-serif;
+      }
+
+      .item-seller {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+
+      .item-price {
+        margin: 0;
+        font: 700 0.88rem/1 'Sora', sans-serif;
+      }
+
+      .rows {
+        margin-top: 12px;
+        display: grid;
+        gap: 8px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+
+      .row strong {
+        color: #111827;
+        font-weight: 700;
+      }
+
+      .total {
+        margin: 12px 0 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .total strong {
+        font: 700 1.7rem/1 'Sora', sans-serif;
+      }
+
+      .pay-btn {
+        width: 100%;
+        padding: 13px 14px;
+        border-radius: 12px;
+      }
+
+      .hint {
+        margin: 8px 0 0;
+        text-align: center;
+        color: #9ca3af;
+        font-size: 0.76rem;
+      }
+
+      .status {
+        margin-top: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        background: #f9fafb;
+        color: #334155;
+        padding: 9px 10px;
+        font-size: 0.8rem;
+        display: none;
+      }
+
+      .status.show {
+        display: block;
+      }
+
+      @media (max-width: 960px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .summary {
+          position: static;
+        }
+      }
+
+      @media (max-width: 700px) {
+        .container {
+          width: calc(100% - 16px);
+        }
+
+        .topbar {
+          margin-top: 8px;
+          padding: 10px;
+        }
+
+        .controls {
+          width: 100%;
+        }
+
+        .btn,
+        .select {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="topbar">
+        <a class="brand" href="./index.html" aria-label="Back to landing">
+          <span class="brand-mark">SS</span>
+          <span>
+            <h1 id="brandTitle">Checkout</h1>
+            <p id="brandSub">Transparent fees and secure payment handoff</p>
+          </span>
+        </a>
+
+        <div class="controls">
+          <a id="linkLanding" class="btn" href="./index.html">Landing</a>
+          <a id="linkDetail" class="btn" href="./product-detail.html?lang=en">Product</a>
+          <a id="linkExplore" class="btn soft" href="./app.html?role=customer&lang=en">Explore</a>
+          <select id="langSelect" class="select" aria-label="Language selector">
+            <option value="en">Eng</option>
+            <option value="zh-TW">Zh-TW</option>
+            <option value="hu">Hungarian</option>
+            <option value="fr">French</option>
+          </select>
+        </div>
+      </header>
+
+      <h2 id="pageTitle" class="page-title">Checkout</h2>
+
+      <main class="layout">
+        <section class="card">
+          <h2 id="shippingTitle">Shipping Details</h2>
+          <form class="form-grid" onsubmit="return false;">
+            <div class="grid-2">
+              <div>
+                <label id="labelFirst" for="firstName">First Name</label>
+                <input id="firstName" class="input" type="text" autocomplete="given-name" />
+              </div>
+              <div>
+                <label id="labelLast" for="lastName">Last Name</label>
+                <input id="lastName" class="input" type="text" autocomplete="family-name" />
+              </div>
+            </div>
+
+            <div>
+              <label id="labelEmail" for="email">Email Address</label>
+              <input id="email" class="input" type="email" autocomplete="email" />
+            </div>
+
+            <div>
+              <label id="labelAddress" for="address">Shipping Address</label>
+              <input id="address" class="input" type="text" autocomplete="street-address" />
+            </div>
+
+            <div class="privacy">
+              <input id="discreet" type="checkbox" checked />
+              <div>
+                <strong id="privacyTitle">Discreet Packaging Requested</strong>
+                <p id="privacySub">Item ships in plain packaging with no platform branding.</p>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <aside class="card summary">
+          <h2 id="summaryTitle">Order Summary</h2>
+
+          <div class="item">
+            <div class="item-media">
+              <img id="itemImage" src="" alt="Cart item" />
+            </div>
+            <div class="item-info">
+              <p id="itemTitle" class="item-title">Premium Listing</p>
+              <p id="itemSeller" class="item-seller">Seller: Creator</p>
+            </div>
+            <p id="itemPrice" class="item-price">USD 0.00</p>
+          </div>
+
+          <div class="rows">
+            <div class="row">
+              <span id="rowSubtotal">Subtotal</span>
+              <strong id="subtotalValue">USD 0.00</strong>
+            </div>
+            <div class="row">
+              <span id="rowShipping">Shipping</span>
+              <strong id="shippingValue">USD 0.00</strong>
+            </div>
+            <div class="row">
+              <span id="rowPlatform">Platform Fee</span>
+              <strong id="platformValue">USD 0.00</strong>
+            </div>
+          </div>
+
+          <div class="total">
+            <span id="totalLabel">Total</span>
+            <strong id="totalValue">USD 0.00</strong>
+          </div>
+
+          <button id="payBtn" class="btn primary pay-btn" type="button">Continue to Secure Payment</button>
+          <p id="payHint" class="hint">You will be redirected to a hosted payment gateway.</p>
+          <div id="statusBox" class="status" role="status" aria-live="polite"></div>
+        </aside>
+      </main>
+    </div>
+
+    <script>
+      const I18N = {
+        en: {
+          brandTitle: 'Checkout',
+          brandSub: 'Transparent fees and secure payment handoff',
+          landing: 'Landing',
+          detail: 'Product',
+          explore: 'Explore',
+          pageTitle: 'Checkout',
+          shippingTitle: 'Shipping Details',
+          first: 'First Name',
+          last: 'Last Name',
+          email: 'Email Address',
+          address: 'Shipping Address',
+          privacyTitle: 'Discreet Packaging Requested',
+          privacySub: 'Item ships in plain packaging with no platform branding.',
+          summaryTitle: 'Order Summary',
+          seller: 'Seller',
+          subtotal: 'Subtotal',
+          shipping: 'Shipping',
+          platform: 'Platform Fee',
+          total: 'Total',
+          pay: 'Continue to Secure Payment',
+          hint: 'You will be redirected to a hosted payment gateway.',
+          validating: 'Creating pending order...',
+          success: 'Order created. Opened hosted checkout in a new tab.',
+          fallback: 'API unavailable. Demo order generated locally: ',
+          validationError: 'Please fill in first name, email, and shipping address.'
+        },
+        'zh-TW': {
+          brandTitle: '結帳',
+          brandSub: '透明費用與安全支付跳轉',
+          landing: 'Landing',
+          detail: '商品頁',
+          explore: 'Explore',
+          pageTitle: '結帳',
+          shippingTitle: '收件資訊',
+          first: '名字',
+          last: '姓氏',
+          email: 'Email',
+          address: '收件地址',
+          privacyTitle: '需要隱私包裝',
+          privacySub: '將使用無品牌的外包裝寄送。',
+          summaryTitle: '訂單摘要',
+          seller: '賣家',
+          subtotal: '小計',
+          shipping: '運費',
+          platform: '平台手續費',
+          total: '總計',
+          pay: '前往安全支付',
+          hint: '你將跳轉到 Hosted Payment 頁面完成付款。',
+          validating: '正在建立待付款訂單...',
+          success: '訂單建立成功，已在新分頁開啟付款頁。',
+          fallback: 'API 無法使用，已建立本地示範訂單：',
+          validationError: '請先填寫名字、Email 與收件地址。'
+        },
+        hu: {
+          brandTitle: 'Checkout',
+          brandSub: 'Atlatheto dijak es biztonsagos fizetesi atadas',
+          landing: 'Landing',
+          detail: 'Termek',
+          explore: 'Explore',
+          pageTitle: 'Checkout',
+          shippingTitle: 'Szallitasi adatok',
+          first: 'Keresztnev',
+          last: 'Vezeteknev',
+          email: 'Email',
+          address: 'Szallitasi cim',
+          privacyTitle: 'Diszkret csomagolas',
+          privacySub: 'A csomag jeloles nelkuli kulsovel erkezik.',
+          summaryTitle: 'Rendeles osszegzes',
+          seller: 'Elado',
+          subtotal: 'Reszosszeg',
+          shipping: 'Szallitas',
+          platform: 'Platform dij',
+          total: 'Vegosszeg',
+          pay: 'Tovabb a biztonsagos fizeteshez',
+          hint: 'Hosted payment gateway oldalra iranyitunk.',
+          validating: 'Pending rendeles letrehozasa...',
+          success: 'Rendeles kesz, hosted checkout uj lapon megnyitva.',
+          fallback: 'API nem elerheto. Demo rendeles azonositó: ',
+          validationError: 'Toltsd ki a keresztnev, email es cim mezoket.'
+        },
+        fr: {
+          brandTitle: 'Checkout',
+          brandSub: 'Frais transparents et redirection paiement securise',
+          landing: 'Landing',
+          detail: 'Produit',
+          explore: 'Explore',
+          pageTitle: 'Checkout',
+          shippingTitle: 'Informations de livraison',
+          first: 'Prenom',
+          last: 'Nom',
+          email: 'Email',
+          address: 'Adresse de livraison',
+          privacyTitle: 'Emballage discret demande',
+          privacySub: 'Le colis est expedie sans branding plateforme.',
+          summaryTitle: 'Resume de commande',
+          seller: 'Vendeur',
+          subtotal: 'Sous-total',
+          shipping: 'Livraison',
+          platform: 'Frais plateforme',
+          total: 'Total',
+          pay: 'Continuer vers paiement securise',
+          hint: 'Vous serez redirige vers une page de paiement hebergee.',
+          validating: 'Creation de commande pending...',
+          success: 'Commande creee, checkout heberge ouvert dans un nouvel onglet.',
+          fallback: 'API indisponible. Commande demo creee: ',
+          validationError: 'Renseignez prenom, email et adresse de livraison.'
+        }
+      };
+
+      const FALLBACK_CART = {
+        listingId: 'sample-lst-001',
+        title: 'Premium Signature Bundle',
+        sellerName: 'Lina Atelier',
+        imageUrl: 'https://picsum.photos/id/1025/900/1125',
+        price: 120,
+        currency: 'USD',
+        shipping: 5,
+        platformFeeRate: 0.1
+      };
+
+      const state = {
+        lang: 'en',
+        cart: FALLBACK_CART
+      };
+
+      function safeLang(raw) {
+        return Object.prototype.hasOwnProperty.call(I18N, raw) ? raw : 'en';
+      }
+
+      function getQuery() {
+        const p = new URLSearchParams(window.location.search);
+        return {
+          lang: p.get('lang')
+        };
+      }
+
+      function formatPrice(currency, value) {
+        return `${currency} ${Number(value || 0).toFixed(2)}`;
+      }
+
+      function readCart() {
+        try {
+          const raw = localStorage.getItem('saas_cart_v1');
+          if (!raw) return FALLBACK_CART;
+          const parsed = JSON.parse(raw);
+          if (!parsed || typeof parsed !== 'object') return FALLBACK_CART;
+          return {
+            ...FALLBACK_CART,
+            ...parsed
+          };
+        } catch (_error) {
+          return FALLBACK_CART;
+        }
+      }
+
+      function updateLinks() {
+        const lang = encodeURIComponent(state.lang);
+        document.getElementById('linkLanding').setAttribute('href', `./index.html?lang=${lang}`);
+        document.getElementById('linkExplore').setAttribute('href', `./app.html?role=customer&lang=${lang}`);
+        document.getElementById('linkDetail').setAttribute(
+          'href',
+          `./product-detail.html?listing=${encodeURIComponent(state.cart.listingId || 'sample-lst-001')}&lang=${lang}`
+        );
+      }
+
+      function renderI18n() {
+        const dict = I18N[state.lang] || I18N.en;
+        document.documentElement.lang = state.lang;
+        document.getElementById('brandTitle').textContent = dict.brandTitle;
+        document.getElementById('brandSub').textContent = dict.brandSub;
+        document.getElementById('linkLanding').textContent = dict.landing;
+        document.getElementById('linkDetail').textContent = dict.detail;
+        document.getElementById('linkExplore').textContent = dict.explore;
+        document.getElementById('pageTitle').textContent = dict.pageTitle;
+        document.getElementById('shippingTitle').textContent = dict.shippingTitle;
+        document.getElementById('labelFirst').textContent = dict.first;
+        document.getElementById('labelLast').textContent = dict.last;
+        document.getElementById('labelEmail').textContent = dict.email;
+        document.getElementById('labelAddress').textContent = dict.address;
+        document.getElementById('privacyTitle').textContent = dict.privacyTitle;
+        document.getElementById('privacySub').textContent = dict.privacySub;
+        document.getElementById('summaryTitle').textContent = dict.summaryTitle;
+        document.getElementById('rowSubtotal').textContent = dict.subtotal;
+        document.getElementById('rowShipping').textContent = dict.shipping;
+        document.getElementById('rowPlatform').textContent = dict.platform;
+        document.getElementById('totalLabel').textContent = dict.total;
+        document.getElementById('payBtn').textContent = dict.pay;
+        document.getElementById('payHint').textContent = dict.hint;
+      }
+
+      function renderSummary() {
+        const dict = I18N[state.lang] || I18N.en;
+        const cart = state.cart;
+        const currency = cart.currency || 'USD';
+        const subtotal = Number(cart.price || 0);
+        const shipping = Number(cart.shipping || 0);
+        const platformFee = subtotal * Number(cart.platformFeeRate || 0.1);
+        const total = subtotal + shipping + platformFee;
+
+        document.getElementById('itemImage').src = cart.imageUrl || FALLBACK_CART.imageUrl;
+        document.getElementById('itemTitle').textContent = cart.title || FALLBACK_CART.title;
+        document.getElementById('itemSeller').textContent = `${dict.seller}: ${cart.sellerName || FALLBACK_CART.sellerName}`;
+        document.getElementById('itemPrice').textContent = formatPrice(currency, subtotal);
+        document.getElementById('subtotalValue').textContent = formatPrice(currency, subtotal);
+        document.getElementById('shippingValue').textContent = formatPrice(currency, shipping);
+        document.getElementById('platformValue').textContent = formatPrice(currency, platformFee);
+        document.getElementById('totalValue').textContent = formatPrice(currency, total);
+      }
+
+      function showStatus(message) {
+        const box = document.getElementById('statusBox');
+        box.textContent = message;
+        box.classList.add('show');
+      }
+
+      async function createPendingOrder() {
+        const dict = I18N[state.lang] || I18N.en;
+
+        const firstName = document.getElementById('firstName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const address = document.getElementById('address').value.trim();
+
+        if (!firstName || !email || !address) {
+          showStatus(dict.validationError);
+          return;
+        }
+
+        const button = document.getElementById('payBtn');
+        button.disabled = true;
+        showStatus(dict.validating);
+
+        const cart = state.cart;
+        const base = (localStorage.getItem('saas_api_base') || 'http://localhost:8080').replace(/\/$/, '');
+
+        try {
+          const response = await fetch(`${base}/v1/orders`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-user-id': 'buyer-demo'
+            },
+            body: JSON.stringify({
+              buyerId: 'buyer-demo',
+              listingId: cart.listingId || 'sample-lst-001',
+              currency: cart.currency || 'USD',
+              customerContext: {
+                firstName,
+                email,
+                address,
+                discreetPackaging: document.getElementById('discreet').checked
+              }
+            })
+          });
+
+          const raw = await response.text();
+          const data = raw ? JSON.parse(raw) : {};
+          if (!response.ok) {
+            throw new Error(`${response.status}`);
+          }
+
+          const checkoutUrl =
+            data.checkoutUrl ||
+            (data.order && data.order.hostedCheckoutUrl) ||
+            (data.order && data.order.checkoutUrl) ||
+            '';
+
+          if (checkoutUrl) {
+            window.open(checkoutUrl, '_blank', 'noopener');
+          }
+
+          showStatus(dict.success + (data.order && data.order.id ? ` (${data.order.id})` : ''));
+        } catch (_error) {
+          const fakeId = `ord_demo_${Date.now()}`;
+          showStatus(dict.fallback + fakeId);
+        } finally {
+          button.disabled = false;
+        }
+      }
+
+      function bindEvents() {
+        document.getElementById('langSelect').addEventListener('change', (event) => {
+          state.lang = safeLang(event.target.value);
+          localStorage.setItem('siteLang', state.lang);
+          renderI18n();
+          renderSummary();
+          updateLinks();
+        });
+
+        document.getElementById('payBtn').addEventListener('click', createPendingOrder);
+      }
+
+      function boot() {
+        const query = getQuery();
+        state.lang = safeLang(query.lang || localStorage.getItem('siteLang') || 'en');
+        state.cart = readCart();
+
+        document.getElementById('langSelect').value = state.lang;
+        renderI18n();
+        renderSummary();
+        updateLinks();
+        bindEvents();
+      }
+
+      boot();
+    </script>
+  </body>
+</html>
