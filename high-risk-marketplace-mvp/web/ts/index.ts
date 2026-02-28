@@ -1,4 +1,3 @@
-// @ts-nocheck
       const translations = {
         en: {
           brandTitle: 'SluttySluts Platform',
@@ -314,7 +313,7 @@
       const desktopQuery = window.matchMedia('(min-width: 981px)');
       const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-      let activeRole = 'customer';
+      let activeRole: 'customer' | 'creator' = 'customer';
       let pendingMouseX = null;
       let fluidFrame = 0;
 
@@ -329,7 +328,7 @@
         heroElement.style.removeProperty('--hero-right');
       }
 
-      function setActiveRole(role, options = {}) {
+      function setActiveRole(role, options: { keepFluid?: boolean } = {}) {
         activeRole = role === 'creator' ? 'creator' : 'customer';
         document.body.setAttribute('data-active-role', activeRole);
 
@@ -369,7 +368,7 @@
           node.setAttribute('href', `./app.html?role=${encodeURIComponent(role)}&lang=${encodeURIComponent(chosen)}`);
         });
 
-        const langSelect = document.getElementById('langSelect');
+        const langSelect = document.getElementById('langSelect') as HTMLSelectElement | null;
         if (langSelect) langSelect.value = chosen;
 
         localStorage.setItem('siteLang', chosen);
@@ -387,14 +386,15 @@
           { threshold: 0.18 }
         );
 
-        document.querySelectorAll('.reveal').forEach((el, idx) => {
+        document.querySelectorAll<HTMLElement>('.reveal').forEach((el, idx) => {
           el.style.transitionDelay = `${Math.min(280, idx * 70)}ms`;
           observer.observe(el);
         });
       }
 
-      document.getElementById('langSelect').addEventListener('change', (event) => {
-        applyLang(event.target.value);
+      const langSelect = document.getElementById('langSelect') as HTMLSelectElement | null;
+      langSelect?.addEventListener('change', (event) => {
+        applyLang((event.currentTarget as HTMLSelectElement).value);
       });
 
       document.querySelectorAll('[data-role-panel]').forEach((panel) => {
@@ -404,7 +404,7 @@
           }
         });
 
-        panel.addEventListener('mousemove', (event) => {
+        panel.addEventListener('mousemove', (event: MouseEvent) => {
           if (!desktopQuery.matches || reduceMotionQuery.matches) return;
           pendingMouseX = event.clientX;
           if (!fluidFrame) fluidFrame = requestAnimationFrame(updateFluidSplit);
@@ -415,7 +415,7 @@
         });
       });
 
-      heroElement.addEventListener('mouseleave', () => {
+      heroElement?.addEventListener('mouseleave', () => {
         pendingMouseX = null;
         clearFluidSplit();
         setActiveRole(activeRole);

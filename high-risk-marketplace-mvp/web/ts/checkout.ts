@@ -1,4 +1,3 @@
-// @ts-nocheck
       const I18N = {
         en: {
           brandTitle: 'Secure Checkout',
@@ -224,7 +223,7 @@
         const platformFee = subtotal * Number(cart.platformFeeRate || 0.1);
         const total = subtotal + shipping + platformFee;
 
-        document.getElementById('itemImage').src = cart.imageUrl || FALLBACK_CART.imageUrl;
+        (document.getElementById('itemImage') as HTMLImageElement).src = cart.imageUrl || FALLBACK_CART.imageUrl;
         document.getElementById('itemTitle').textContent = cart.title || FALLBACK_CART.title;
         document.getElementById('itemSeller').firstElementChild.textContent = `${dict.seller}: ${cart.sellerName || FALLBACK_CART.sellerName}`;
         document.getElementById('itemPrice').textContent = formatPrice(currency, subtotal);
@@ -236,7 +235,7 @@
 
       function renderDiscreet() {
         const card = document.getElementById('privacyCard');
-        const checkbox = document.getElementById('discreet');
+        const checkbox = document.getElementById('discreet') as HTMLInputElement;
         checkbox.checked = state.discreet;
         card.classList.toggle('is-active', state.discreet);
       }
@@ -252,17 +251,17 @@
       async function createPendingOrder() {
         const dict = I18N[state.lang] || I18N.en;
 
-        const firstName = document.getElementById('firstName').value.trim();
-        const lastName = document.getElementById('lastName').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const address = document.getElementById('address').value.trim();
+        const firstName = (document.getElementById('firstName') as HTMLInputElement).value.trim();
+        const lastName = (document.getElementById('lastName') as HTMLInputElement).value.trim();
+        const email = (document.getElementById('email') as HTMLInputElement).value.trim();
+        const address = (document.getElementById('address') as HTMLInputElement).value.trim();
 
         if (!firstName || !email || !address) {
           showStatus(dict.validationError, 'error');
           return;
         }
 
-        const button = document.getElementById('payBtn');
+        const button = document.getElementById('payBtn') as HTMLButtonElement;
         button.disabled = true;
         showStatus(dict.validating, 'pending');
 
@@ -316,8 +315,8 @@
       }
 
       function bindEvents() {
-        document.getElementById('langSelect').addEventListener('change', (event) => {
-          state.lang = safeLang(event.target.value);
+        document.getElementById('langSelect')?.addEventListener('change', (event) => {
+          state.lang = safeLang((event.currentTarget as HTMLSelectElement).value);
           localStorage.setItem('siteLang', state.lang);
           renderI18n();
           renderSummary();
@@ -350,7 +349,7 @@
         state.lang = safeLang(query.lang || localStorage.getItem('siteLang') || 'en');
         state.cart = readCart();
 
-        document.getElementById('langSelect').value = state.lang;
+        (document.getElementById('langSelect') as HTMLSelectElement).value = state.lang;
         renderI18n();
         renderSummary();
         renderDiscreet();

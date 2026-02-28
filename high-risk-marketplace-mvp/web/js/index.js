@@ -1,4 +1,3 @@
-// @ts-nocheck
 const translations = {
     en: {
         brandTitle: 'SluttySluts Platform',
@@ -350,8 +349,9 @@ function bootReveal() {
         observer.observe(el);
     });
 }
-document.getElementById('langSelect').addEventListener('change', (event) => {
-    applyLang(event.target.value);
+const langSelect = document.getElementById('langSelect');
+langSelect?.addEventListener('change', (event) => {
+    applyLang(event.currentTarget.value);
 });
 document.querySelectorAll('[data-role-panel]').forEach((panel) => {
     panel.addEventListener('mouseenter', () => {
@@ -370,7 +370,7 @@ document.querySelectorAll('[data-role-panel]').forEach((panel) => {
         setActiveRole(panel.getAttribute('data-role-panel'));
     });
 });
-heroElement.addEventListener('mouseleave', () => {
+heroElement?.addEventListener('mouseleave', () => {
     pendingMouseX = null;
     clearFluidSplit();
     setActiveRole(activeRole);

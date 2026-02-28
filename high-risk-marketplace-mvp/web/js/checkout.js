@@ -1,4 +1,3 @@
-// @ts-nocheck
 const I18N = {
     en: {
         brandTitle: 'Secure Checkout',
@@ -291,8 +290,8 @@ async function createPendingOrder() {
     }
 }
 function bindEvents() {
-    document.getElementById('langSelect').addEventListener('change', (event) => {
-        state.lang = safeLang(event.target.value);
+    document.getElementById('langSelect')?.addEventListener('change', (event) => {
+        state.lang = safeLang(event.currentTarget.value);
         localStorage.setItem('siteLang', state.lang);
         renderI18n();
         renderSummary();

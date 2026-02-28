@@ -1,4 +1,3 @@
-// @ts-nocheck
       const TEXT = {
         en: {
           title: 'Getting Started',
@@ -113,15 +112,17 @@
           if (dict[key]) node.textContent = dict[key];
         });
 
-        const appBtn = document.getElementById('openAppBtn');
+        const appBtn = document.getElementById('openAppBtn') as HTMLAnchorElement;
         appBtn.href = `./app.html?role=customer&lang=${encodeURIComponent(resolved)}`;
 
-        document.getElementById('langSelect').value = resolved;
+        (document.getElementById('langSelect') as HTMLSelectElement).value = resolved;
         localStorage.setItem('siteLang', resolved);
       }
 
-      const langSelect = document.getElementById('langSelect');
-      langSelect.addEventListener('change', (event) => applyLang(event.target.value));
+      const langSelect = document.getElementById('langSelect') as HTMLSelectElement | null;
+      langSelect?.addEventListener('change', (event) =>
+        applyLang((event.currentTarget as HTMLSelectElement).value)
+      );
 
       applyLang(localStorage.getItem('siteLang') || 'en');
 

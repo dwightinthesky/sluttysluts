@@ -1,4 +1,3 @@
-// @ts-nocheck
       const I18N = {
         en: {
           brandTitle: 'Product Detail',
@@ -184,13 +183,15 @@
         return CATALOG[state.listingId] || CATALOG['sample-lst-001'];
       }
 
-      function showToast(message) {
+      type ToastFn = ((message: string) => void) & { timer?: number };
+
+      const showToast: ToastFn = (message) => {
         const toast = document.getElementById('toast');
         toast.textContent = message;
         toast.classList.add('show');
         window.clearTimeout(showToast.timer);
         showToast.timer = window.setTimeout(() => toast.classList.remove('show'), 2200);
-      }
+      };
 
       function saveCart() {
         const listing = getCurrentListing();
@@ -224,7 +225,8 @@
         holder.querySelectorAll('[data-index]').forEach((button) => {
           button.addEventListener('click', () => {
             state.activeImageIndex = Number(button.getAttribute('data-index') || 0);
-            document.getElementById('heroImage').src = listing.images[state.activeImageIndex] || listing.images[0];
+            (document.getElementById('heroImage') as HTMLImageElement).src =
+              listing.images[state.activeImageIndex] || listing.images[0];
             renderThumbs();
           });
         });
@@ -264,13 +266,14 @@
         document.getElementById('subtitle').textContent = listing.subtitle;
         document.getElementById('price').textContent = formatPrice(listing.currency, listing.price);
         document.getElementById('description').textContent = listing.description;
-        document.getElementById('heroImage').src = listing.images[state.activeImageIndex] || listing.images[0];
-        document.getElementById('heroImage').alt = `${listing.title} image`;
+        (document.getElementById('heroImage') as HTMLImageElement).src =
+          listing.images[state.activeImageIndex] || listing.images[0];
+        (document.getElementById('heroImage') as HTMLImageElement).alt = `${listing.title} image`;
 
         const promoBadge = document.getElementById('promoBadge');
         promoBadge.hidden = !listing.promoted;
 
-        document.getElementById('sellerAvatar').src = listing.seller.avatar;
+        (document.getElementById('sellerAvatar') as HTMLImageElement).src = listing.seller.avatar;
         document.getElementById('sellerName').textContent = listing.seller.name;
         document.getElementById('verifiedIcon').hidden = !listing.seller.verified;
         document.getElementById('sellerMeta').textContent = `⭐ ${listing.seller.rating} (${listing.seller.reviews} reviews) - ${dict.replies} ${dict.hour}`;
@@ -282,8 +285,8 @@
       }
 
       function bindEvents() {
-        document.getElementById('langSelect').addEventListener('change', (event) => {
-          state.lang = safeLang(event.target.value);
+        document.getElementById('langSelect')?.addEventListener('change', (event) => {
+          state.lang = safeLang((event.currentTarget as HTMLSelectElement).value);
           localStorage.setItem('siteLang', state.lang);
           renderI18n();
           renderLinks();
@@ -312,7 +315,7 @@
         state.lang = safeLang(query.lang || localStorage.getItem('siteLang') || 'en');
         state.listingId = CATALOG[query.listing] ? query.listing : 'sample-lst-001';
 
-        document.getElementById('langSelect').value = state.lang;
+        (document.getElementById('langSelect') as HTMLSelectElement).value = state.lang;
         renderI18n();
         renderLinks();
         renderListing();

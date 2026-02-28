@@ -1,4 +1,3 @@
-// @ts-nocheck
 const I18N = {
     en: {
         brandTitle: 'Product Detail',
@@ -174,13 +173,13 @@ function formatPrice(currency, value) {
 function getCurrentListing() {
     return CATALOG[state.listingId] || CATALOG['sample-lst-001'];
 }
-function showToast(message) {
+const showToast = (message) => {
     const toast = document.getElementById('toast');
     toast.textContent = message;
     toast.classList.add('show');
     window.clearTimeout(showToast.timer);
     showToast.timer = window.setTimeout(() => toast.classList.remove('show'), 2200);
-}
+};
 function saveCart() {
     const listing = getCurrentListing();
     const payload = {
@@ -209,7 +208,8 @@ function renderThumbs() {
     holder.querySelectorAll('[data-index]').forEach((button) => {
         button.addEventListener('click', () => {
             state.activeImageIndex = Number(button.getAttribute('data-index') || 0);
-            document.getElementById('heroImage').src = listing.images[state.activeImageIndex] || listing.images[0];
+            document.getElementById('heroImage').src =
+                listing.images[state.activeImageIndex] || listing.images[0];
             renderThumbs();
         });
     });
@@ -246,7 +246,8 @@ function renderListing() {
     document.getElementById('subtitle').textContent = listing.subtitle;
     document.getElementById('price').textContent = formatPrice(listing.currency, listing.price);
     document.getElementById('description').textContent = listing.description;
-    document.getElementById('heroImage').src = listing.images[state.activeImageIndex] || listing.images[0];
+    document.getElementById('heroImage').src =
+        listing.images[state.activeImageIndex] || listing.images[0];
     document.getElementById('heroImage').alt = `${listing.title} image`;
     const promoBadge = document.getElementById('promoBadge');
     promoBadge.hidden = !listing.promoted;
@@ -259,8 +260,8 @@ function renderListing() {
     renderThumbs();
 }
 function bindEvents() {
-    document.getElementById('langSelect').addEventListener('change', (event) => {
-        state.lang = safeLang(event.target.value);
+    document.getElementById('langSelect')?.addEventListener('change', (event) => {
+        state.lang = safeLang(event.currentTarget.value);
         localStorage.setItem('siteLang', state.lang);
         renderI18n();
         renderLinks();

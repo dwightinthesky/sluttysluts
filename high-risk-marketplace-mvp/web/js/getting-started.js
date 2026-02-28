@@ -1,4 +1,3 @@
-// @ts-nocheck
 const TEXT = {
     en: {
         title: 'Getting Started',
@@ -115,6 +114,6 @@ function applyLang(lang) {
     localStorage.setItem('siteLang', resolved);
 }
 const langSelect = document.getElementById('langSelect');
-langSelect.addEventListener('change', (event) => applyLang(event.target.value));
+langSelect?.addEventListener('change', (event) => applyLang(event.currentTarget.value));
 applyLang(localStorage.getItem('siteLang') || 'en');
 export {};
