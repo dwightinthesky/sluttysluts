@@ -33,10 +33,7 @@ jobs:
         run: |
           mkdir -p _site
 
-          # Existing site
-          cp *.html styles.css script.js question-bank.js _site/
-
-          # New project site bundle (self-contained paths)
+          # High-risk marketplace MVP bundle
           mkdir -p _site/high-risk-marketplace-mvp
           cp -R high-risk-marketplace-mvp/web _site/high-risk-marketplace-mvp/
           cp -R high-risk-marketplace-mvp/docs _site/high-risk-marketplace-mvp/
@@ -45,13 +42,6 @@ jobs:
           cp -R high-risk-marketplace-mvp/ops _site/high-risk-marketplace-mvp/
           cp high-risk-marketplace-mvp/README.md _site/high-risk-marketplace-mvp/
           cp high-risk-marketplace-mvp/index.html _site/high-risk-marketplace-mvp/
-
-          # New SaaS project bundle
-          mkdir -p _site/saas-compliance-marketplace
-          cp -R saas-compliance-marketplace/frontend _site/saas-compliance-marketplace/
-          cp -R saas-compliance-marketplace/deploy _site/saas-compliance-marketplace/
-          cp saas-compliance-marketplace/README.md _site/saas-compliance-marketplace/
-          cp saas-compliance-marketplace/index.html _site/saas-compliance-marketplace/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
