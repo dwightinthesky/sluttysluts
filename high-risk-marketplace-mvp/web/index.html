@@ -168,6 +168,86 @@
         justify-content: flex-end;
       }
 
+      .mobile-menu-toggle {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(8, 8, 10, 0.7);
+        color: #f8fafc;
+        cursor: pointer;
+      }
+
+      .mobile-menu-toggle svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .mobile-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(2px);
+        z-index: 88;
+      }
+
+      .mobile-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: min(360px, 92vw);
+        height: 100dvh;
+        background: rgba(5, 5, 7, 0.94);
+        border-left: 1px solid rgba(255, 255, 255, 0.12);
+        z-index: 89;
+        padding: 88px 18px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        transform: translateX(110%);
+        transition: transform 0.35s var(--hero-ease);
+      }
+
+      body.menu-open .mobile-drawer {
+        transform: translateX(0);
+      }
+
+      .mobile-links {
+        display: grid;
+        gap: 8px;
+      }
+
+      .mobile-links a {
+        color: #f5f5f6;
+        text-decoration: none;
+        font-size: 0.86rem;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .mobile-controls {
+        margin-top: 4px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .mobile-controls .select,
+      .mobile-controls .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .quick-dock {
+        display: none;
+      }
+
       .select,
       .btn {
         border-radius: 999px;
@@ -777,6 +857,14 @@
           width: calc(100% - 26px);
         }
 
+        .controls {
+          display: none;
+        }
+
+        .mobile-menu-toggle {
+          display: inline-flex;
+        }
+
         .hero {
           min-height: 100vh;
           flex-direction: column;
@@ -828,18 +916,35 @@
         .topbar {
           min-height: 62px;
           padding: 10px 0;
-          align-items: flex-start;
-          flex-direction: column;
+          align-items: center;
+          flex-direction: row;
         }
 
-        .controls {
-          width: 100%;
+        .brand-sub {
+          display: none;
         }
 
-        .controls .select,
-        .controls .btn {
-          flex: 1;
-          min-width: 0;
+        .quick-dock {
+          position: fixed;
+          left: 12px;
+          right: 12px;
+          bottom: calc(12px + env(safe-area-inset-bottom));
+          z-index: 70;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          padding: 8px;
+          border-radius: 14px;
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          background: rgba(5, 5, 7, 0.82);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+        }
+
+        .quick-dock .btn {
+          min-height: 40px;
+          font-size: 0.63rem;
+          padding: 8px 10px;
         }
 
         .hero-pill {
@@ -895,8 +1000,37 @@
           <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="btnCreator">Creator</a>
           <a class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="btnCustomer">Customer</a>
         </div>
+
+        <button id="mobileMenuToggle" class="mobile-menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileDrawer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="M4 7h16" />
+            <path d="M4 12h16" />
+            <path d="M4 17h16" />
+          </svg>
+        </button>
       </div>
     </header>
+
+    <div id="mobileMenuBackdrop" class="mobile-backdrop" hidden></div>
+    <aside id="mobileDrawer" class="mobile-drawer" aria-hidden="true">
+      <nav class="mobile-links">
+        <a href="#story" data-i18n="navStory">Platform Story</a>
+        <a href="#flows" data-i18n="navFlows">Workspaces</a>
+        <a href="#trust" data-i18n="navTrust">Trust Engine</a>
+        <a href="./getting-started.html" data-i18n="navStart">Getting Started</a>
+      </nav>
+      <div class="mobile-controls">
+        <select id="langSelectMobile" class="select" aria-label="Language selector">
+          <option value="en">Eng</option>
+          <option value="zh-TW">Zh-TW</option>
+          <option value="hu">Hungarian</option>
+          <option value="fr">French</option>
+        </select>
+        <a class="btn ghost" data-role-link="admin" href="./app.html?role=admin&lang=en" data-i18n="btnOps">Operations</a>
+        <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="btnCreator">Creator</a>
+        <a class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="btnCustomer">Customer</a>
+      </div>
+    </aside>
 
     <main>
       <section id="hero" class="hero">
@@ -1088,6 +1222,11 @@
       <footer class="container footer">
         <span data-i18n="footer">SluttySluts Marketplace Platform. Role-first entry, multilingual routing, and production-ready commerce controls.</span>
       </footer>
+
+      <div class="quick-dock">
+        <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroEnterCreator">Enter as Creator</a>
+        <a class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroEnterCustomer">Enter as Customer</a>
+      </div>
     </main>
 
     <script type="module" src="./js/index.js"></script>

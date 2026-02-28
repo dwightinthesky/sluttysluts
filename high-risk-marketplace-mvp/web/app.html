@@ -149,6 +149,17 @@
         border-color: rgba(251, 113, 133, 0.3);
       }
 
+      .shortcut-hint {
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        color: var(--muted);
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
       .input,
       .select,
       .btn {
@@ -361,6 +372,37 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
         gap: 32px 16px;
+      }
+
+      .listing-skeleton {
+        display: grid;
+        gap: 10px;
+      }
+
+      .listing-skeleton .skeleton-media {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        background: linear-gradient(110deg, #141418 20%, #1d1d24 35%, #141418 50%);
+        background-size: 200% 100%;
+        animation: shimmer 1.35s linear infinite;
+      }
+
+      .listing-skeleton .skeleton-line {
+        height: 11px;
+        border-radius: 2px;
+        background: linear-gradient(110deg, #111115 20%, #1a1a20 35%, #111115 50%);
+        background-size: 200% 100%;
+        animation: shimmer 1.35s linear infinite;
+      }
+
+      .listing-skeleton .skeleton-line.short {
+        width: 48%;
+      }
+
+      @keyframes shimmer {
+        to {
+          background-position-x: -200%;
+        }
       }
 
       .listing {
@@ -1168,6 +1210,10 @@
         .main {
           padding: 20px;
         }
+
+        .shortcut-hint {
+          display: none;
+        }
       }
 
       @media (max-width: 720px) {
@@ -1211,6 +1257,7 @@
 
         <div class="toolbar">
           <span id="persona" class="persona">Persona: Customer</span>
+          <span class="shortcut-hint">Alt+1-5</span>
           <select id="langSelect" class="select" aria-label="Language selector">
             <option value="en">Eng</option>
             <option value="zh-TW">Zh-TW</option>

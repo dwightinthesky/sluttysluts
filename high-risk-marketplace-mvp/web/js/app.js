@@ -489,6 +489,7 @@ const state = {
     role: 'customer',
     activePanel: 'overview',
     listings: [],
+    listingsLoading: false,
     logs: [],
     selectedListingId: '',
     promotionMode: 'duration',
@@ -510,6 +511,7 @@ const state = {
     },
     promotionSummary: null
 };
+const PANEL_SEQUENCE = ['overview', 'customer', 'creator', 'operations', 'logs'];
 const LISTING_PLACEHOLDER_IMAGE = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000'>
           <defs>
             <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
@@ -665,8 +667,22 @@ function getQuery() {
     const p = new URLSearchParams(window.location.search);
     return {
         role: p.get('role'),
-        lang: p.get('lang')
+        lang: p.get('lang'),
+        panel: p.get('panel')
     };
+}
+function normalizePanel(raw) {
+    if (!raw)
+        return 'overview';
+    const value = String(raw).trim().toLowerCase();
+    return PANEL_SEQUENCE.includes(value) ? value : 'overview';
+}
+function syncWorkspaceUrl() {
+    const params = new URLSearchParams(window.location.search);
+    params.set('role', state.role);
+    params.set('lang', state.lang);
+    params.set('panel', state.activePanel);
+    window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`);
 }
 function persistConfig() {
     localStorage.setItem('saas_api_base', el.apiBase.value);
@@ -753,12 +769,15 @@ function resolveListingImage(item) {
     return LISTING_PLACEHOLDER_IMAGE;
 }
 function setPanel(panel) {
-    state.activePanel = panel;
+    const normalized = normalizePanel(panel);
+    state.activePanel = normalized;
     Object.entries(el.panels).forEach(([key, panelEl]) => {
-        panelEl.classList.toggle('active', key === panel);
+        panelEl.classList.toggle('active', key === normalized);
     });
-    el.navButtons.forEach((button) => button.classList.toggle('active', button.dataset.panel === panel));
-    if (panel === 'operations') {
+    el.navButtons.forEach((button) => button.classList.toggle('active', button.dataset.panel === normalized));
+    localStorage.setItem('workspace_last_panel', normalized);
+    syncWorkspaceUrl();
+    if (normalized === 'operations') {
         loadModerationQueue(true);
     }
 }
@@ -801,7 +820,23 @@ function renderKpis() {
     el.kpiPromoted.textContent = `${promotedRate}%`;
     el.kpiAov.textContent = `$${(avg * 1.05).toFixed(2)}`;
 }
+function renderListingSkeleton(count = 8) {
+    el.listingGrid.innerHTML = Array.from({ length: count })
+        .map(() => `
+              <article class="listing-skeleton" aria-hidden="true">
+                <div class="skeleton-media"></div>
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+              </article>
+            `)
+        .join('');
+}
 function renderListings() {
+    if (state.listingsLoading) {
+        renderListingSkeleton();
+        return;
+    }
     const search = (el.searchInput.value || '').trim().toLowerCase();
     const filter = el.filterSelect.value;
     const rows = state.listings.filter((item) => {
@@ -1325,6 +1360,8 @@ function renderCreatorTable() {
         .join('');
 }
 async function loadListings() {
+    state.listingsLoading = true;
+    renderListings();
     try {
         const data = await request('/v1/listings?status=all', {
             headers: { 'x-user-id': 'buyer-demo' }
@@ -1340,6 +1377,9 @@ async function loadListings() {
     catch (error) {
         state.listings = fallbackListings;
         writeConsole(el.customerConsole, 'Listings Fallback', String(error));
+    }
+    finally {
+        state.listingsLoading = false;
     }
     renderListings();
     renderCreatorMonetization();
@@ -1574,12 +1614,39 @@ function bindEvents() {
             }
         });
     }
+    document.addEventListener('keydown', (event) => {
+        const target = event.target;
+        if (target && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) {
+            return;
+        }
+        if (event.altKey) {
+            const panelMap = {
+                '1': 'overview',
+                '2': 'customer',
+                '3': 'creator',
+                '4': 'operations',
+                '5': 'logs'
+            };
+            const nextPanel = panelMap[event.key];
+            if (nextPanel) {
+                event.preventDefault();
+                setPanel(nextPanel);
+                return;
+            }
+        }
+        if (event.key === '/' && state.activePanel === 'customer') {
+            event.preventDefault();
+            el.searchInput.focus();
+            el.searchInput.select();
+        }
+    });
     el.langSelect.addEventListener('change', (event) => {
         state.lang = safeLang(event.currentTarget.value);
         renderI18n();
         renderCreatorMonetization();
         renderModerationQueue();
         persistConfig();
+        syncWorkspaceUrl();
     });
 }
 function boot() {
@@ -1588,6 +1655,9 @@ function boot() {
     state.lang = safeLang(query.lang || localStorage.getItem('siteLang') || 'en');
     renderI18n();
     setRole(query.role || 'customer');
+    const preferredPanelRaw = query.panel || localStorage.getItem('workspace_last_panel');
+    if (preferredPanelRaw)
+        setPanel(preferredPanelRaw);
     bindEvents();
     loadListings();
     refreshWallet();

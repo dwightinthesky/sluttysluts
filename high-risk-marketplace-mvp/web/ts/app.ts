@@ -490,6 +490,7 @@
         role: 'customer',
         activePanel: 'overview',
         listings: [],
+        listingsLoading: false,
         logs: [],
         selectedListingId: '',
         promotionMode: 'duration',
@@ -511,6 +512,9 @@
         },
         promotionSummary: null
       };
+
+      const PANEL_SEQUENCE = ['overview', 'customer', 'creator', 'operations', 'logs'] as const;
+      type PanelKey = (typeof PANEL_SEQUENCE)[number];
 
       const LISTING_PLACEHOLDER_IMAGE = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
         `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000'>
@@ -681,8 +685,23 @@
         const p = new URLSearchParams(window.location.search);
         return {
           role: p.get('role'),
-          lang: p.get('lang')
+          lang: p.get('lang'),
+          panel: p.get('panel')
         };
+      }
+
+      function normalizePanel(raw: string | null | undefined): PanelKey {
+        if (!raw) return 'overview';
+        const value = String(raw).trim().toLowerCase();
+        return (PANEL_SEQUENCE as readonly string[]).includes(value) ? (value as PanelKey) : 'overview';
+      }
+
+      function syncWorkspaceUrl() {
+        const params = new URLSearchParams(window.location.search);
+        params.set('role', state.role);
+        params.set('lang', state.lang);
+        params.set('panel', state.activePanel);
+        window.history.replaceState(null, '', `${window.location.pathname}?${params.toString()}`);
       }
 
       function persistConfig() {
@@ -777,13 +796,17 @@
         return LISTING_PLACEHOLDER_IMAGE;
       }
 
-      function setPanel(panel) {
-        state.activePanel = panel;
+      function setPanel(panel: string | null | undefined) {
+        const normalized = normalizePanel(panel);
+        state.activePanel = normalized;
         Object.entries(el.panels).forEach(([key, panelEl]) => {
-          panelEl.classList.toggle('active', key === panel);
+          panelEl.classList.toggle('active', key === normalized);
         });
-        el.navButtons.forEach((button) => button.classList.toggle('active', button.dataset.panel === panel));
-        if (panel === 'operations') {
+        el.navButtons.forEach((button) => button.classList.toggle('active', button.dataset.panel === normalized));
+        localStorage.setItem('workspace_last_panel', normalized);
+        syncWorkspaceUrl();
+
+        if (normalized === 'operations') {
           loadModerationQueue(true);
         }
       }
@@ -829,7 +852,27 @@
         el.kpiAov.textContent = `$${(avg * 1.05).toFixed(2)}`;
       }
 
+      function renderListingSkeleton(count = 8) {
+        el.listingGrid.innerHTML = Array.from({ length: count })
+          .map(
+            () => `
+              <article class="listing-skeleton" aria-hidden="true">
+                <div class="skeleton-media"></div>
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+              </article>
+            `
+          )
+          .join('');
+      }
+
       function renderListings() {
+        if (state.listingsLoading) {
+          renderListingSkeleton();
+          return;
+        }
+
         const search = (el.searchInput.value || '').trim().toLowerCase();
         const filter = el.filterSelect.value;
         const rows = state.listings.filter((item) => {
@@ -1423,6 +1466,9 @@
       }
 
       async function loadListings() {
+        state.listingsLoading = true;
+        renderListings();
+
         try {
           const data = await request('/v1/listings?status=all', {
             headers: { 'x-user-id': 'buyer-demo' }
@@ -1436,6 +1482,8 @@
         } catch (error) {
           state.listings = fallbackListings;
           writeConsole(el.customerConsole, 'Listings Fallback', String(error));
+        } finally {
+          state.listingsLoading = false;
         }
 
         renderListings();
@@ -1680,12 +1728,42 @@
           });
         }
 
+        document.addEventListener('keydown', (event: KeyboardEvent) => {
+          const target = event.target as HTMLElement | null;
+          if (target && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) {
+            return;
+          }
+
+          if (event.altKey) {
+            const panelMap: Record<string, PanelKey> = {
+              '1': 'overview',
+              '2': 'customer',
+              '3': 'creator',
+              '4': 'operations',
+              '5': 'logs'
+            };
+            const nextPanel = panelMap[event.key];
+            if (nextPanel) {
+              event.preventDefault();
+              setPanel(nextPanel);
+              return;
+            }
+          }
+
+          if (event.key === '/' && state.activePanel === 'customer') {
+            event.preventDefault();
+            el.searchInput.focus();
+            el.searchInput.select();
+          }
+        });
+
         el.langSelect.addEventListener('change', (event) => {
           state.lang = safeLang((event.currentTarget as HTMLSelectElement).value);
           renderI18n();
           renderCreatorMonetization();
           renderModerationQueue();
           persistConfig();
+          syncWorkspaceUrl();
         });
       }
 
@@ -1697,6 +1775,8 @@
         renderI18n();
 
         setRole(query.role || 'customer');
+        const preferredPanelRaw = query.panel || localStorage.getItem('workspace_last_panel');
+        if (preferredPanelRaw) setPanel(preferredPanelRaw);
         bindEvents();
 
         loadListings();

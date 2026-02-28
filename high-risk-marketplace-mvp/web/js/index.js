@@ -278,6 +278,10 @@ function copyFor(dict, key) {
 }
 const heroElement = document.getElementById('hero');
 const heroProgressBar = document.getElementById('heroProgressBar');
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const mobileDrawer = document.getElementById('mobileDrawer');
+const mobileMenuBackdrop = document.getElementById('mobileMenuBackdrop');
+const langSelectMobile = document.getElementById('langSelectMobile');
 const desktopQuery = window.matchMedia('(min-width: 981px)');
 const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 let activeRole = 'customer';
@@ -333,7 +337,18 @@ function applyLang(lang) {
     const langSelect = document.getElementById('langSelect');
     if (langSelect)
         langSelect.value = chosen;
+    if (langSelectMobile)
+        langSelectMobile.value = chosen;
     localStorage.setItem('siteLang', chosen);
+}
+function setMobileMenu(open) {
+    document.body.classList.toggle('menu-open', open);
+    if (mobileMenuToggle)
+        mobileMenuToggle.setAttribute('aria-expanded', String(open));
+    if (mobileDrawer)
+        mobileDrawer.setAttribute('aria-hidden', String(!open));
+    if (mobileMenuBackdrop)
+        mobileMenuBackdrop.hidden = !open;
 }
 function bootReveal() {
     const observer = new IntersectionObserver((entries) => {
@@ -352,6 +367,22 @@ function bootReveal() {
 const langSelect = document.getElementById('langSelect');
 langSelect?.addEventListener('change', (event) => {
     applyLang(event.currentTarget.value);
+});
+langSelectMobile?.addEventListener('change', (event) => {
+    applyLang(event.currentTarget.value);
+});
+mobileMenuToggle?.addEventListener('click', () => {
+    const open = !document.body.classList.contains('menu-open');
+    setMobileMenu(open);
+});
+mobileMenuBackdrop?.addEventListener('click', () => setMobileMenu(false));
+document.querySelectorAll('#mobileDrawer a').forEach((link) => {
+    link.addEventListener('click', () => setMobileMenu(false));
+});
+window.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape')
+        return;
+    setMobileMenu(false);
 });
 document.querySelectorAll('[data-role-panel]').forEach((panel) => {
     panel.addEventListener('mouseenter', () => {
@@ -379,7 +410,9 @@ window.addEventListener('resize', () => {
     if (!desktopQuery.matches) {
         pendingMouseX = null;
         clearFluidSplit();
+        return;
     }
+    setMobileMenu(false);
 });
 const query = new URLSearchParams(window.location.search);
 const queryRole = query.get('role');
