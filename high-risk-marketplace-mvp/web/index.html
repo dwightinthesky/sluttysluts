@@ -44,6 +44,7 @@
           radial-gradient(circle at 90% 86%, rgba(207, 52, 95, 0.14), transparent 42%),
           linear-gradient(180deg, #070709 0%, #050506 50%, #070709 100%);
         min-height: 100vh;
+        overflow-x: hidden;
       }
 
       body::before {
@@ -58,70 +59,82 @@
         mask-image: radial-gradient(circle at center, black 44%, transparent 85%);
       }
 
+      body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        pointer-events: none;
+        opacity: 0.16;
+        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.34) 0.5px, transparent 0.6px);
+        background-size: 4px 4px;
+        mix-blend-mode: soft-light;
+      }
+
       .container {
-        width: min(1240px, calc(100% - 42px));
+        width: min(1400px, calc(100% - 48px));
         margin-inline: auto;
       }
 
       .top {
-        position: sticky;
+        position: fixed;
         top: 0;
+        left: 0;
+        width: 100%;
         z-index: 80;
-        background: rgba(4, 4, 6, 0.8);
-        backdrop-filter: blur(14px);
-        border-bottom: 1px solid var(--line);
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.82), transparent);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
       }
 
       .topbar {
-        min-height: 76px;
+        min-height: 80px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 16px;
+        padding-block: 10px;
       }
 
       .brand {
         display: inline-flex;
-        align-items: center;
-        gap: 13px;
+        flex-direction: column;
         text-decoration: none;
         color: inherit;
       }
 
       .brand-mark {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        display: grid;
-        place-items: center;
-        font: 700 0.95rem/1 'Space Grotesk', sans-serif;
-        color: #fff;
-        background: linear-gradient(145deg, #1e2540, #c62c58);
-        border: 1px solid rgba(255, 255, 255, 0.14);
+        display: none;
       }
 
       .brand-title {
         margin: 0;
-        font: 600 1.03rem/1.2 'Space Grotesk', sans-serif;
+        font: 700 1.2rem/1 'Space Grotesk', sans-serif;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
       }
 
       .brand-sub {
-        margin: 2px 0 0;
+        margin: 4px 0 0;
         color: var(--muted);
-        font-size: 0.82rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
       }
 
       .top-links {
         display: inline-flex;
         align-items: center;
-        gap: 18px;
+        gap: 30px;
       }
 
       .top-links a {
-        color: #d7d9df;
+        color: var(--muted);
         text-decoration: none;
-        font-size: 0.9rem;
-        letter-spacing: 0.01em;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: color 0.3s ease;
       }
 
       .top-links a:hover {
@@ -131,23 +144,27 @@
       .controls {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
         flex-wrap: wrap;
         justify-content: flex-end;
       }
 
       .select,
       .btn {
-        border-radius: 11px;
+        border-radius: 999px;
         border: 1px solid var(--line);
-        font: 600 0.84rem/1 'Space Grotesk', sans-serif;
+        font: 600 0.72rem/1 'Space Grotesk', sans-serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
       }
 
       .select {
-        padding: 10px 10px;
-        min-width: 130px;
-        color: var(--ink);
-        background: rgba(19, 19, 24, 0.82);
+        padding: 10px 12px;
+        min-width: 102px;
+        color: var(--muted);
+        background: rgba(3, 3, 3, 0.3);
+        border: none;
+        cursor: pointer;
       }
 
       .btn {
@@ -157,7 +174,7 @@
         text-decoration: none;
         padding: 10px 14px;
         color: #f7f7f8;
-        transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+        transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
       }
 
       .btn:hover {
@@ -181,14 +198,15 @@
       .hero {
         --hero-left: 50%;
         --hero-right: 50%;
-        margin-top: 18px;
-        border-radius: 26px;
-        border: 1px solid var(--line);
+        margin-top: 0;
+        border-radius: 0;
+        border: 0;
         overflow: hidden;
         position: relative;
-        min-height: calc(100vh - 122px);
+        min-height: 100vh;
+        width: 100vw;
         display: flex;
-        box-shadow: var(--shadow);
+        box-shadow: none;
         background: #07080b;
       }
 
@@ -215,33 +233,31 @@
 
       .hero-center {
         position: absolute;
-        top: 26px;
+        top: 100px;
         left: 50%;
         transform: translateX(-50%);
-        z-index: 7;
+        z-index: 20;
         text-align: center;
         pointer-events: none;
         mix-blend-mode: difference;
       }
 
       .hero-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
+        display: inline-block;
         border: 1px solid rgba(255, 255, 255, 0.2);
-        background: rgba(5, 5, 8, 0.62);
-        padding: 7px 13px;
+        background: rgba(5, 5, 8, 0.42);
+        padding: 6px 16px;
         border-radius: 999px;
         text-transform: uppercase;
-        letter-spacing: 0.26em;
-        font: 600 0.64rem/1 'Space Grotesk', sans-serif;
-        color: #dcdee8;
+        letter-spacing: 0.3em;
+        font: 400 0.55rem/1 'Space Grotesk', sans-serif;
+        color: #fff;
       }
 
       .hero-logo {
-        margin-top: 12px;
-        font: 700 clamp(1.45rem, 2.3vw, 2.1rem) / 1 'Space Grotesk', sans-serif;
-        letter-spacing: 0.24em;
+        margin-top: 16px;
+        font: 700 clamp(1.2rem, 2vw, 1.8rem) / 1 'Space Grotesk', sans-serif;
+        letter-spacing: 0.5em;
       }
 
       .hero-logo span {
@@ -260,6 +276,7 @@
 
       .hero-panel.customer-panel {
         flex-basis: var(--hero-left);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
       }
 
       .hero-panel.creator-panel {
@@ -267,17 +284,17 @@
       }
 
       body[data-active-role='customer'] .hero {
-        --hero-left: 70%;
-        --hero-right: 30%;
+        --hero-left: 72%;
+        --hero-right: 28%;
       }
 
       body[data-active-role='creator'] .hero {
-        --hero-left: 30%;
-        --hero-right: 70%;
+        --hero-left: 28%;
+        --hero-right: 72%;
       }
 
       .hero-panel + .hero-panel {
-        border-left: 1px solid rgba(255, 255, 255, 0.12);
+        border-left: 0;
       }
 
       .panel-image {
@@ -286,7 +303,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        filter: grayscale(1) contrast(1.08) brightness(0.36);
+        filter: grayscale(1) contrast(1.08) brightness(0.2);
         transform: scale(1.08);
         transition: transform 0.78s var(--hero-ease), opacity 0.64s var(--hero-ease), filter 0.64s var(--hero-ease);
         opacity: 0.38;
@@ -295,7 +312,7 @@
       body[data-active-role='customer'] .customer-panel .panel-image,
       body[data-active-role='creator'] .creator-panel .panel-image {
         opacity: 0.82;
-        filter: grayscale(0.16) contrast(1.13) brightness(0.64);
+        filter: grayscale(0.18) contrast(1.2) brightness(0.48);
         transform: scale(1.04);
       }
 
@@ -303,25 +320,27 @@
         position: absolute;
         inset: 0;
         pointer-events: none;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 60%);
       }
 
       .customer-panel .panel-tint {
         background:
-          linear-gradient(180deg, rgba(5, 8, 18, 0.24), rgba(4, 7, 12, 0.88)),
-          radial-gradient(circle at 18% 62%, rgba(92, 118, 192, 0.52), transparent 48%);
+          linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 60%),
+          radial-gradient(circle at 18% 62%, rgba(92, 118, 192, 0.42), transparent 48%);
       }
 
       .creator-panel .panel-tint {
         background:
-          linear-gradient(180deg, rgba(15, 8, 14, 0.2), rgba(12, 8, 10, 0.9)),
-          radial-gradient(circle at 84% 58%, rgba(207, 52, 95, 0.55), transparent 52%);
+          linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 60%),
+          radial-gradient(circle at 84% 58%, rgba(207, 52, 95, 0.45), transparent 52%);
       }
 
       .panel-content {
         position: absolute;
-        inset: auto 32px 34px;
+        inset: auto 4vw 80px;
         z-index: 7;
-        max-width: 560px;
+        width: 100%;
+        max-width: none;
         transition: opacity 0.48s var(--hero-ease), transform 0.48s var(--hero-ease);
       }
 
@@ -331,9 +350,9 @@
       }
 
       .panel-kicker {
-        margin: 0 0 10px;
+        margin: 0 0 16px;
         text-transform: uppercase;
-        letter-spacing: 0.4em;
+        letter-spacing: 0.5em;
         font-size: 0.6rem;
         color: #c8cddf;
         font-weight: 600;
@@ -345,20 +364,35 @@
       .panel-kicker::before {
         content: '';
         display: inline-block;
-        width: 30px;
+        width: 40px;
         height: 1px;
         background: currentColor;
         opacity: 0.7;
       }
 
       .creator-panel .panel-kicker {
-        color: #ffd8de;
+        color: #e11d48;
+        justify-content: flex-end;
+      }
+
+      .creator-panel .panel-kicker::before {
+        display: none;
+      }
+
+      .creator-panel .panel-kicker::after {
+        content: '';
+        display: inline-block;
+        width: 40px;
+        height: 1px;
+        background: currentColor;
+        opacity: 0.7;
       }
 
       .panel-title {
         margin: 0;
-        font: 600 clamp(2.2rem, 6.3vw, 6.4rem) / 0.92 'Playfair Display', serif;
+        font: 400 clamp(4rem, 8vw, 10rem) / 0.85 'Playfair Display', serif;
         letter-spacing: -0.01em;
+        text-transform: uppercase;
       }
 
       .panel-title em {
@@ -368,10 +402,11 @@
 
       .panel-copy {
         margin: 0;
-        color: #d8dce8;
-        font-size: 0.93rem;
-        max-width: 36ch;
-        line-height: 1.7;
+        color: #a1a1aa;
+        font-size: 0.95rem;
+        max-width: 42ch;
+        line-height: 1.6;
+        font-weight: 300;
       }
 
       .creator-panel .panel-copy {
@@ -379,45 +414,48 @@
       }
 
       .panel-extra {
-        margin-top: 18px;
+        margin-top: 32px;
         display: grid;
-        gap: 14px;
+        gap: 18px;
         max-height: 0;
         opacity: 0;
         overflow: hidden;
-        transition: max-height 0.52s var(--hero-ease), opacity 0.42s var(--hero-ease);
+        transition: max-height 0.6s var(--hero-ease), opacity 0.42s var(--hero-ease);
       }
 
       body[data-active-role='customer'] .customer-panel .panel-extra,
       body[data-active-role='creator'] .creator-panel .panel-extra {
-        max-height: 220px;
+        max-height: 230px;
         opacity: 1;
       }
 
       .panel-link {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
         text-decoration: none;
         color: #fff;
-        border: 1px solid rgba(255, 255, 255, 0.45);
-        background: rgba(8, 9, 14, 0.5);
-        backdrop-filter: blur(10px);
-        border-radius: 999px;
-        padding: 11px 16px;
-        letter-spacing: 0.16em;
-        font-size: 0.66rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        padding-bottom: 6px;
+        letter-spacing: 0.2em;
+        font-size: 0.7rem;
         text-transform: uppercase;
         width: fit-content;
-        transition: background 0.28s var(--hero-ease), border-color 0.28s var(--hero-ease), color 0.28s var(--hero-ease),
-          box-shadow 0.28s var(--hero-ease);
+        transition: border-color 0.3s ease, color 0.3s ease;
       }
 
       .panel-link:hover {
-        color: #f8f9ff;
-        border-color: rgba(255, 255, 255, 0.8);
-        background: rgba(23, 24, 33, 0.72);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.24);
+        border-color: #fff;
+        color: #fff;
+      }
+
+      .creator-panel .panel-link {
+        color: var(--brand-soft);
+        border-color: rgba(244, 211, 216, 0.3);
+      }
+
+      .creator-panel .panel-link:hover {
+        border-color: var(--brand-soft);
       }
 
       .panel-link svg {
@@ -427,8 +465,8 @@
 
       body[data-active-role='customer'] .creator-panel .panel-content,
       body[data-active-role='creator'] .customer-panel .panel-content {
-        opacity: 0.58;
-        transform: translateY(12px);
+        opacity: 0.3;
+        transform: translateY(20px);
       }
 
       body[data-active-role='customer'] .customer-panel .panel-content,
@@ -438,18 +476,7 @@
       }
 
       .hero-switch {
-        position: absolute;
-        left: 50%;
-        bottom: 18px;
-        transform: translateX(-50%);
-        z-index: 8;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 999px;
-        padding: 4px;
-        background: rgba(6, 7, 10, 0.74);
+        display: none;
       }
 
       .hero-switch button {
@@ -474,7 +501,7 @@
         z-index: 8;
         left: 24px;
         right: 24px;
-        bottom: 82px;
+        bottom: 24px;
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 10px;
@@ -508,103 +535,138 @@
         bottom: 0;
         z-index: 9;
         height: 2px;
-        background: rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.1);
       }
 
       .hero-progress > span {
         display: block;
         height: 100%;
-        width: 25%;
-        background: linear-gradient(90deg, #9caad1, #ffd6df);
-        transition: width 0.45s var(--hero-ease);
+        width: 50%;
+        background: #fff;
+        transition: width 0.8s var(--hero-ease), background 0.8s ease;
+      }
+
+      body[data-active-role='creator'] .hero-progress > span {
+        background: #e11d48;
       }
 
       .section {
-        padding-block: 72px;
+        padding-block: 120px 60px;
+        border-top: 1px solid var(--line);
       }
 
       .section-head {
-        max-width: 820px;
+        max-width: 900px;
+        margin-bottom: 80px;
       }
 
       .section-kicker {
-        margin: 0;
+        margin: 0 0 24px;
         text-transform: uppercase;
-        letter-spacing: 0.25em;
-        color: #c6cada;
-        font-size: 0.68rem;
+        letter-spacing: 0.3em;
+        color: var(--muted);
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .section-kicker::before {
+        content: '';
+        width: 40px;
+        height: 1px;
+        background: var(--muted);
       }
 
       .section-title {
-        margin: 14px 0 0;
-        font: 600 clamp(1.8rem, 3.7vw, 3rem) / 1.05 'Playfair Display', serif;
+        margin: 0;
+        font: 400 clamp(2.5rem, 5vw, 4.5rem) / 1.1 'Playfair Display', serif;
       }
 
       .section-copy {
-        margin: 14px 0 0;
-        color: #c5c9d5;
-        max-width: 62ch;
-        line-height: 1.7;
+        margin: 24px 0 0;
+        color: #a1a1aa;
+        max-width: 50ch;
+        line-height: 1.8;
+        font-size: 1.1rem;
+        font-weight: 300;
       }
 
-      .story-grid {
-        margin-top: 24px;
+      .editorial-list {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 60px 40px;
       }
 
-      .story-card {
-        border: 1px solid var(--line);
-        background: var(--card);
-        border-radius: 18px;
-        padding: 18px;
-        box-shadow: var(--shadow);
+      .editorial-item {
+        position: relative;
+        padding-top: 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
       }
 
-      .story-card h3 {
+      .editorial-num {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-bottom: 16px;
+        display: block;
+      }
+
+      .editorial-item h3 {
+        margin: 0 0 16px;
+        font: 400 1.8rem/1.2 'Playfair Display', serif;
+      }
+
+      .editorial-item p {
         margin: 0;
-        font: 600 1.2rem/1.22 'Space Grotesk', sans-serif;
-      }
-
-      .story-card p {
-        margin: 9px 0 0;
-        color: #c2c7d5;
-        line-height: 1.65;
+        color: #a1a1aa;
+        line-height: 1.6;
+        font-weight: 300;
+        font-size: 0.95rem;
       }
 
       .flows {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-        margin-top: 24px;
+        grid-template-columns: 1fr 1fr;
+        gap: 2px;
+        background: var(--line);
       }
 
       .flow {
-        border: 1px solid var(--line);
-        border-radius: 20px;
-        padding: 22px;
-        background: linear-gradient(160deg, rgba(13, 14, 19, 0.9), rgba(17, 18, 24, 0.68));
+        background: var(--bg);
+        padding: 60px 40px;
       }
 
       .flow h3 {
-        margin: 0;
-        font: 600 1.44rem/1.15 'Space Grotesk', sans-serif;
+        margin: 0 0 16px;
+        font: 400 2.5rem/1.1 'Playfair Display', serif;
       }
 
       .flow p {
-        margin: 12px 0 0;
-        color: #c4c9d7;
+        color: #a1a1aa;
+        font-weight: 300;
+        line-height: 1.6;
       }
 
       .flow ul {
-        margin: 16px 0 0;
-        padding-left: 17px;
-        color: #e5e8f0;
+        margin: 32px 0;
+        padding: 0;
+        list-style: none;
       }
 
       .flow li {
-        margin-bottom: 8px;
+        padding-block: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: #e4e4e7;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .flow li::before {
+        content: '→';
+        color: var(--muted);
       }
 
       .flow .btn {
@@ -612,71 +674,57 @@
       }
 
       .flow.creator {
-        border-color: rgba(207, 52, 95, 0.36);
-        background: linear-gradient(160deg, rgba(38, 13, 21, 0.85), rgba(23, 11, 17, 0.64));
+        background: var(--bg);
       }
 
-      .trust-grid {
-        margin-top: 24px;
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 10px;
+      .flow.creator .panel-link {
+        color: #e11d48;
+        border-color: rgba(225, 29, 72, 0.3);
       }
 
-      .trust-card {
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 16px;
-        background: rgba(15, 16, 22, 0.84);
-      }
-
-      .trust-card strong {
-        display: block;
-        font: 600 1.05rem/1.2 'Space Grotesk', sans-serif;
-        color: #f3f5fd;
-      }
-
-      .trust-card p {
-        margin: 9px 0 0;
-        color: #c5cad8;
-        line-height: 1.55;
+      .flow.creator .panel-link:hover {
+        border-color: #e11d48;
       }
 
       .cta {
-        margin-block: 20px 34px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background:
-          radial-gradient(circle at 76% 12%, rgba(207, 52, 95, 0.34), transparent 42%),
-          linear-gradient(120deg, rgba(16, 18, 28, 0.95), rgba(36, 14, 23, 0.92));
-        border-radius: 22px;
-        padding: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
+        text-align: center;
+        padding-block: 120px;
+        margin-block: 0;
+        border: 0;
+        background: transparent;
+        border-radius: 0;
+        display: block;
       }
 
       .cta h3 {
-        margin: 0;
-        font: 600 clamp(1.5rem, 3vw, 2.4rem) / 1.12 'Playfair Display', serif;
+        margin: 0 0 24px;
+        font: 400 3rem/1.1 'Playfair Display', serif;
       }
 
       .cta p {
-        margin: 12px 0 0;
-        color: #d7dbe8;
+        color: #a1a1aa;
+        max-width: 500px;
+        margin: 0 auto 40px;
+      }
+
+      .cta .controls {
+        justify-content: center;
       }
 
       .footer {
-        padding: 10px 0 28px;
-        color: #a9adba;
-        font-size: 0.87rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 24px 0;
+        text-align: center;
+        color: #52525b;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
       }
 
       .reveal {
         opacity: 0;
-        transform: translateY(18px);
-        transition: opacity 0.62s ease, transform 0.62s ease;
+        transform: translateY(30px);
+        transition: opacity 0.8s var(--hero-ease), transform 0.8s var(--hero-ease);
       }
 
       .reveal.show {
@@ -688,10 +736,6 @@
         .top-links {
           display: none;
         }
-
-        .trust-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
       }
 
       @media (max-width: 980px) {
@@ -700,7 +744,7 @@
         }
 
         .hero {
-          min-height: initial;
+          min-height: 100vh;
           flex-direction: column;
         }
 
@@ -713,7 +757,7 @@
         }
 
         .hero-panel {
-          min-height: 56vh;
+          min-height: 50vh;
         }
 
         .hero-panel + .hero-panel {
@@ -722,7 +766,7 @@
         }
 
         .hero-center {
-          top: 16px;
+          top: 90px;
         }
 
         .hero-stats {
@@ -731,23 +775,18 @@
           pointer-events: auto;
         }
 
-        .hero-switch {
-          bottom: 14px;
-        }
-
         .panel-extra {
           max-height: 220px;
           opacity: 1;
         }
 
-        .story-grid,
+        .editorial-list,
         .flows {
           grid-template-columns: 1fr;
         }
 
         .cta {
-          flex-direction: column;
-          align-items: flex-start;
+          padding-block: 96px;
         }
       }
 
@@ -779,30 +818,16 @@
         }
 
         .panel-content {
-          inset: auto 18px 24px;
+          inset: auto 18px 40px;
         }
 
         .panel-copy {
           font-size: 0.92rem;
         }
 
-        .hero-switch {
-          width: calc(100% - 20px);
-          justify-content: space-between;
-        }
-
-        .hero-switch button {
-          flex: 1;
-          text-align: center;
-        }
-
         .hero-stats {
           grid-template-columns: 1fr;
           gap: 7px;
-        }
-
-        .trust-grid {
-          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -840,7 +865,7 @@
     </header>
 
     <main>
-      <section id="hero" class="container hero">
+      <section id="hero" class="hero">
         <div class="hero-center" aria-hidden="true">
           <div class="hero-pill" data-i18n="heroBadge">Role-first marketplace routing</div>
           <div class="hero-logo">SLUTTY<span>SLUTS</span></div>
@@ -896,11 +921,6 @@
           </div>
         </article>
 
-        <div id="heroSwitch" class="hero-switch" aria-label="Role switcher">
-          <button type="button" data-hero-role="customer" class="active" data-i18n="toggleCustomer">I am a Customer</button>
-          <button type="button" data-hero-role="creator" data-i18n="toggleCreator">I am a Creator</button>
-        </div>
-
         <div class="hero-stats">
           <div class="hero-stat">
             <strong>99.96%</strong>
@@ -927,20 +947,24 @@
               The experience looks editorial and exclusive, while the foundation runs dual-fee calculations, moderation states, dispute operations, and reserve-aware payouts.
             </p>
           </div>
-          <div class="story-grid">
-            <article class="story-card">
+          <div class="editorial-list">
+            <article class="editorial-item">
+              <span class="editorial-num">01</span>
               <h3 data-i18n="storyCard1Title">Dual-Fee Ledger Core</h3>
               <p data-i18n="storyCard1Copy">Every order stores base price, buyer fee, commission, seller earnings, and reconciliation-ready transaction trails.</p>
             </article>
-            <article class="story-card">
+            <article class="editorial-item">
+              <span class="editorial-num">02</span>
               <h3 data-i18n="storyCard2Title">Promotion Monetization</h3>
               <p data-i18n="storyCard2Copy">Creators can buy duration or click-based ranking plans directly from their workspace and track conversion impact.</p>
             </article>
-            <article class="story-card">
+            <article class="editorial-item">
+              <span class="editorial-num">03</span>
               <h3 data-i18n="storyCard3Title">Compliance by Design</h3>
               <p data-i18n="storyCard3Copy">KYC gates, moderation queues, and review events control what gets published before it reaches customers.</p>
             </article>
-            <article class="story-card">
+            <article class="editorial-item">
+              <span class="editorial-num">04</span>
               <h3 data-i18n="storyCard4Title">Chargeback Defense</h3>
               <p data-i18n="storyCard4Copy">Dispute webhooks freeze funds, build evidence packets, and adjust reserve rates using seller risk profiles.</p>
             </article>
@@ -965,7 +989,7 @@
                 <li data-i18n="creatorPoint2">Buy promotion slots and monitor exposure performance</li>
                 <li data-i18n="creatorPoint3">Track available, pending, and disputed balances</li>
               </ul>
-              <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="btnCreator">Creator</a>
+              <a class="panel-link" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroEnterCreator">Enter as Creator</a>
             </article>
             <article class="flow">
               <h3 data-i18n="customerTitle">Customer Workspace</h3>
@@ -975,13 +999,13 @@
                 <li data-i18n="customerPoint2">Review fee breakdown before hosted payment redirect</li>
                 <li data-i18n="customerPoint3">Track order, shipping proof, and dispute states</li>
               </ul>
-              <a class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="btnCustomer">Customer</a>
+              <a class="panel-link" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroEnterCustomer">Enter as Customer</a>
             </article>
           </div>
         </div>
       </section>
 
-      <section id="trust" class="section reveal">
+      <section id="trust" class="section reveal" style="border-bottom: 1px solid rgba(255, 255, 255, 0.08)">
         <div class="container">
           <div class="section-head">
             <p class="section-kicker" data-i18n="trustKicker">Trust Engine</p>
@@ -991,21 +1015,25 @@
             </p>
           </div>
 
-          <div class="trust-grid">
-            <article class="trust-card">
-              <strong data-i18n="trustCard1Title">Idempotent Webhooks</strong>
+          <div class="editorial-list">
+            <article class="editorial-item">
+              <span class="editorial-num">I</span>
+              <h3 data-i18n="trustCard1Title">Idempotent Webhooks</h3>
               <p data-i18n="trustCard1Copy">Duplicate payment callbacks are ignored safely so balances never credit twice.</p>
             </article>
-            <article class="trust-card">
-              <strong data-i18n="trustCard2Title">Append-only Ledger</strong>
+            <article class="editorial-item">
+              <span class="editorial-num">II</span>
+              <h3 data-i18n="trustCard2Title">Append-only Ledger</h3>
               <p data-i18n="trustCard2Copy">All balance transitions are written as immutable records for auditing and reconciliation.</p>
             </article>
-            <article class="trust-card">
-              <strong data-i18n="trustCard3Title">Moderation Console</strong>
+            <article class="editorial-item">
+              <span class="editorial-num">III</span>
+              <h3 data-i18n="trustCard3Title">Moderation Console</h3>
               <p data-i18n="trustCard3Copy">Operations teams process review queues with clear approve/reject state transitions.</p>
             </article>
-            <article class="trust-card">
-              <strong data-i18n="trustCard4Title">Dispute State Machine</strong>
+            <article class="editorial-item">
+              <span class="editorial-num">IV</span>
+              <h3 data-i18n="trustCard4Title">Dispute State Machine</h3>
               <p data-i18n="trustCard4Copy">Chargebacks create holds, lock risky withdrawals, and trigger evidence collection.</p>
             </article>
           </div>
