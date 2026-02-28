@@ -417,6 +417,114 @@ function isOrderStatusAllowedForWebhook(orderStatus, paymentStatus) {
   return Boolean(allowed && allowed.has(orderStatus));
 }
 
+function latestModerationEventForEntity(db, entityType, entityId) {
+  const events = db.moderationEvents
+    .filter((item) => item.entityType === entityType && item.entityId === entityId)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return events[0] || null;
+}
+
+function computeSellerKycProfile(db, sellerId) {
+  const cases = db.verificationCases
+    .filter((item) => item.userId === sellerId && item.type === 'kyc')
+    .sort((a, b) => new Date(b.reviewedAt || b.createdAt || 0).getTime() - new Date(a.reviewedAt || a.createdAt || 0).getTime());
+
+  const latest = cases[0] || null;
+  if (!latest) {
+    return {
+      status: 'unverified',
+      level: 0,
+      label: 'Unverified',
+      caseId: null
+    };
+  }
+
+  if (latest.status !== 'approved') {
+    return {
+      status: latest.status,
+      level: 0,
+      label: latest.status === 'rejected' ? 'Rejected' : 'Pending',
+      caseId: latest.id
+    };
+  }
+
+  const releasedOrders = db.orders.filter((item) => item.sellerId === sellerId && item.status === 'released').length;
+  const level = releasedOrders >= 10 ? 3 : releasedOrders >= 1 ? 2 : 1;
+
+  return {
+    status: 'verified',
+    level,
+    label: `Verified (Level ${level})`,
+    caseId: latest.id
+  };
+}
+
+function moderationRiskBand(score) {
+  if (!Number.isFinite(score)) return 'low';
+  if (score >= 80) return 'high';
+  if (score >= 40) return 'medium';
+  return 'low';
+}
+
+function buildModerationQueueSnapshot(db, limit = 24) {
+  const nowMs = Date.now();
+  const rows = db.listings
+    .filter((item) => item.status === 'pending_review')
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+    .slice(0, limit)
+    .map((listing) => {
+      const seller = findUser(db, listing.sellerId);
+      const kyc = computeSellerKycProfile(db, listing.sellerId);
+      const moderationEvent = latestModerationEventForEntity(db, 'listing', listing.id);
+      const riskScore = Number(
+        Number.isFinite(Number(moderationEvent && moderationEvent.riskScore))
+          ? moderationEvent.riskScore
+          : 50
+      );
+      const submittedAt = listing.createdAt || nowIso();
+      const submittedMs = new Date(submittedAt).getTime();
+      const waitMinutes = Number.isFinite(submittedMs) ? Math.max(0, Math.round((nowMs - submittedMs) / 60000)) : 0;
+      const riskBand = moderationRiskBand(riskScore);
+      const displayName = seller
+        ? seller.displayName || (seller.email ? String(seller.email).split('@')[0] : seller.id)
+        : listing.sellerId;
+
+      return {
+        id: listing.id,
+        listingId: listing.id,
+        creatorId: listing.sellerId,
+        creatorName: displayName,
+        title: listing.title,
+        description: listing.description || '',
+        imageUrl: listing.imageUrl || listing.coverUrl || null,
+        submittedAt,
+        waitMinutes,
+        riskScore,
+        riskBand,
+        moderationReasons:
+          moderationEvent && Array.isArray(moderationEvent.reasons) ? moderationEvent.reasons : [],
+        kycStatus: kyc.status,
+        kycLevel: kyc.level,
+        kycLabel: kyc.label
+      };
+    });
+
+  const totalWaitMinutes = rows.reduce((sum, row) => sum + Number(row.waitMinutes || 0), 0);
+  const avgQueueMinutes = rows.length ? Number((totalWaitMinutes / rows.length).toFixed(1)) : 0;
+  const highRiskCount = rows.filter((row) => row.riskBand === 'high').length;
+  const slaBreachRiskCount = rows.filter((row) => row.waitMinutes >= 30).length;
+
+  return {
+    summary: {
+      pendingCount: rows.length,
+      highRiskCount,
+      avgQueueMinutes,
+      slaBreachRiskCount
+    },
+    queue: rows
+  };
+}
+
 app.get('/health', (_, res) => {
   res.json({
     status: 'ok',
@@ -1689,6 +1797,137 @@ app.post('/v1/chat/threads/:threadId/messages', (req, res) => {
     addAudit(db, 'chat_message_created', 'chat_message', message.id, actor.id, { threadId: thread.id });
 
     return res.status(201).json({ message });
+  });
+});
+
+app.get('/v1/ops/moderation/queue', (req, res) => {
+  const db = loadDb();
+  const actor = getActor(db, req);
+  if (!requireActorRole(res, actor, ['admin', 'ops'])) return;
+
+  const requestedLimit = asNumber(req.query.limit);
+  const limit =
+    Number.isFinite(requestedLimit) && requestedLimit > 0
+      ? Math.min(100, Math.floor(requestedLimit))
+      : 24;
+
+  const snapshot = buildModerationQueueSnapshot(db, limit);
+  res.json({
+    limit,
+    ...snapshot
+  });
+});
+
+app.post('/v1/ops/moderation/listings/:listingId/decision', (req, res) => {
+  const payload = req.body || {};
+  const missing = requireFields(payload, ['action']);
+  if (missing.length) {
+    return sendError(res, 400, 'VALIDATION_ERROR', 'Missing required fields', { missing });
+  }
+
+  const action = String(payload.action || '').toLowerCase();
+  if (!['approve', 'reject'].includes(action)) {
+    return sendError(res, 400, 'VALIDATION_ERROR', 'action must be approve or reject');
+  }
+
+  return mutateDb((db) => {
+    const actor = getActor(db, req);
+    if (!requireActorRole(res, actor, ['admin', 'ops'])) return null;
+
+    const listing = db.listings.find((item) => item.id === req.params.listingId);
+    if (!listing) return sendError(res, 404, 'LISTING_NOT_FOUND', 'Listing not found');
+
+    if (!['pending_review', 'active', 'banned'].includes(listing.status)) {
+      return sendError(res, 409, 'INVALID_STATUS', `Listing status ${listing.status} not eligible for moderation decision`);
+    }
+
+    if (action === 'approve') {
+      if (listing.status === 'active') {
+        return res.status(200).json({
+          message: 'Listing already approved',
+          listingId: listing.id,
+          status: listing.status
+        });
+      }
+      if (listing.status !== 'pending_review') {
+        return sendError(res, 409, 'INVALID_STATUS', `Listing status ${listing.status} cannot be approved`);
+      }
+
+      listing.status = 'active';
+      listing.moderationReason = null;
+      listing.moderatedBy = actor.id;
+      listing.moderatedAt = nowIso();
+      listing.updatedAt = nowIso();
+
+      db.moderationEvents.push({
+        id: makeId('mod'),
+        entityType: 'listing',
+        entityId: listing.id,
+        provider: 'manual_ops_review',
+        riskScore: 5,
+        action: 'allow_manual',
+        reasons: payload.reason ? [String(payload.reason)] : [],
+        createdAt: nowIso()
+      });
+
+      addAudit(db, 'listing_moderation_approved', 'listing', listing.id, actor.id, {
+        reason: payload.reason ? String(payload.reason) : null
+      });
+
+      return res.status(202).json({
+        message: 'Listing approved',
+        listing: {
+          id: listing.id,
+          status: listing.status,
+          moderatedBy: listing.moderatedBy,
+          moderatedAt: listing.moderatedAt
+        }
+      });
+    }
+
+    if (listing.status === 'banned') {
+      return res.status(200).json({
+        message: 'Listing already rejected',
+        listingId: listing.id,
+        status: listing.status
+      });
+    }
+    if (listing.status !== 'pending_review') {
+      return sendError(res, 409, 'INVALID_STATUS', `Listing status ${listing.status} cannot be rejected`);
+    }
+
+    const reason = payload.reason ? String(payload.reason) : 'policy_violation';
+    listing.status = 'banned';
+    listing.moderationReason = reason;
+    listing.moderatedBy = actor.id;
+    listing.moderatedAt = nowIso();
+    listing.updatedAt = nowIso();
+
+    db.moderationEvents.push({
+      id: makeId('mod'),
+      entityType: 'listing',
+      entityId: listing.id,
+      provider: 'manual_ops_review',
+      riskScore: 95,
+      action: 'block_manual',
+      reasons: [reason],
+      createdAt: nowIso()
+    });
+
+    addAudit(db, 'listing_moderation_rejected', 'listing', listing.id, actor.id, {
+      reason
+    });
+
+    return res.status(202).json({
+      message: 'Listing rejected',
+      listing: {
+        id: listing.id,
+        status: listing.status,
+        moderationReason: listing.moderationReason,
+        moderatedBy: listing.moderatedBy,
+        moderatedAt: listing.moderatedAt
+      }
+    });
   });
 });
 

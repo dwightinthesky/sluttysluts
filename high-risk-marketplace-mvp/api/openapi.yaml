@@ -175,6 +175,40 @@ paths:
         "202":
           description: Payout job started
 
+  /v1/ops/moderation/queue:
+    get:
+      summary: List pending listings for manual moderation queue
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 24
+      responses:
+        "200":
+          description: Moderation queue snapshot
+
+  /v1/ops/moderation/listings/{listingId}/decision:
+    post:
+      summary: Approve or reject a pending listing moderation case
+      parameters:
+        - in: path
+          name: listingId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModerationDecisionRequest'
+      responses:
+        "202":
+          description: Moderation decision applied
+
   /v1/promotions/plans:
     get:
       summary: List promotion plans
@@ -495,6 +529,16 @@ components:
           items:
             type: string
             format: uri
+
+    ModerationDecisionRequest:
+      type: object
+      required: [action]
+      properties:
+        action:
+          type: string
+          enum: [approve, reject]
+        reason:
+          type: string
 
     PurchasePromotionRequest:
       type: object

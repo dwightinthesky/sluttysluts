@@ -67,6 +67,9 @@
   - 建立待付款訂單（含拆帳欄位）：`POST /v1/orders`
   - Hosted Checkout Webhook：`POST /v1/payments/webhooks/high-risk`
   - 訂單欄位包含：`basePrice / buyerFee / sellerCommission / totalCharged / sellerEarnings / reserveHeld / payoutableAmount`
+- Ops Moderation Console（先審後發）
+  - 待審核佇列：`GET /v1/ops/moderation/queue`
+  - 審核決策（approve/reject）：`POST /v1/ops/moderation/listings/:listingId/decision`
 - Chat Service
   - 建立會話：`POST /v1/chat/threads`
   - 會話列表：`GET /v1/chat/threads`

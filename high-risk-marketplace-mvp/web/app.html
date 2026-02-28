@@ -951,6 +951,205 @@
         display: block;
       }
 
+      .moderation-kpi-grid {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .moderation-kpi-card {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fafafa;
+        padding: 10px;
+      }
+
+      .moderation-kpi-card span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.72rem;
+      }
+
+      .moderation-kpi-card strong {
+        display: block;
+        margin-top: 4px;
+        font: 700 1.45rem/1.15 'Sora', sans-serif;
+        color: #0f172a;
+      }
+
+      .moderation-grid {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .moderation-item {
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #fff;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .moderation-item-head {
+        padding: 10px;
+        border-bottom: 1px solid #f1f5f9;
+        background: #f8fafc;
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .moderation-item-id {
+        color: #64748b;
+        font: 700 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+      }
+
+      .moderation-item-creator {
+        margin: 2px 0 0;
+        font: 700 0.86rem/1.2 'Sora', sans-serif;
+        color: #0f172a;
+      }
+
+      .moderation-kyc {
+        margin-top: 5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        border: 1px solid #bfdbfe;
+        background: #eff6ff;
+        color: #1d4ed8;
+        border-radius: 999px;
+        padding: 3px 7px;
+        font: 700 0.64rem/1 'Sora', sans-serif;
+      }
+
+      .moderation-item-meta {
+        text-align: right;
+        color: #64748b;
+        font-size: 0.72rem;
+      }
+
+      .risk-flag {
+        margin-top: 4px;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 3px 7px;
+        font: 700 0.62rem/1 'Sora', sans-serif;
+      }
+
+      .risk-flag.high {
+        border: 1px solid #fecdd3;
+        color: #be123c;
+        background: #fff1f2;
+      }
+
+      .risk-flag.medium {
+        border: 1px solid #fde68a;
+        color: #a16207;
+        background: #fffbeb;
+      }
+
+      .risk-flag.low {
+        border: 1px solid #bbf7d0;
+        color: #15803d;
+        background: #f0fdf4;
+      }
+
+      .moderation-item-body {
+        padding: 10px;
+        display: grid;
+        grid-template-columns: 86px minmax(0, 1fr);
+        gap: 10px;
+      }
+
+      .moderation-media {
+        width: 86px;
+        height: 112px;
+        border-radius: 10px;
+        background: #e2e8f0;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+      }
+
+      .moderation-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .moderation-title {
+        margin: 0 0 5px;
+        font: 700 0.86rem/1.2 'Sora', sans-serif;
+        color: #0f172a;
+      }
+
+      .moderation-desc {
+        margin: 0;
+        font-size: 0.75rem;
+        color: #334155;
+        line-height: 1.45;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .moderation-foot {
+        margin-top: auto;
+        padding: 10px;
+        border-top: 1px solid #f1f5f9;
+        background: #f8fafc;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .moderation-btn {
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        background: #fff;
+        padding: 8px 10px;
+        cursor: pointer;
+        font: 700 0.76rem/1 'Sora', sans-serif;
+      }
+
+      .moderation-btn.reject {
+        border-color: #fecdd3;
+        color: #be123c;
+        background: #fff1f2;
+      }
+
+      .moderation-btn.approve {
+        border-color: #bbf7d0;
+        color: #15803d;
+        background: #f0fdf4;
+      }
+
+      .moderation-empty {
+        border: 1px dashed #cbd5e1;
+        border-radius: 14px;
+        background: #f8fafc;
+        padding: 30px 12px;
+        text-align: center;
+      }
+
+      .moderation-empty h4 {
+        margin: 0;
+        font: 700 1rem/1.2 'Sora', sans-serif;
+        color: #0f172a;
+      }
+
+      .moderation-empty p {
+        margin: 6px 0 0;
+        color: #64748b;
+        font-size: 0.8rem;
+      }
+
       @media (max-width: 1120px) {
         .grid.kpi {
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -962,6 +1161,10 @@
 
         .creator-wallet-grid {
           grid-template-columns: 1fr;
+        }
+
+        .moderation-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
       }
 
@@ -993,6 +1196,10 @@
         }
 
         .grid.two {
+          grid-template-columns: 1fr;
+        }
+
+        .moderation-kpi-grid {
           grid-template-columns: 1fr;
         }
       }
@@ -1033,6 +1240,10 @@
 
       @media (max-width: 420px) {
         .listing-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .moderation-grid {
           grid-template-columns: 1fr;
         }
       }
@@ -1342,37 +1553,31 @@
             </div>
 
             <article class="card">
-              <h3 data-i18n="moderationTitle">Moderation command board</h3>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th data-i18n="tblEntity">Entity</th>
-                    <th data-i18n="tblType">Type</th>
-                    <th data-i18n="tblRisk">Risk</th>
-                    <th data-i18n="tblAction">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>lst_9a2f</td>
-                    <td>listing</td>
-                    <td class="bad">65</td>
-                    <td>review</td>
-                  </tr>
-                  <tr>
-                    <td>msg_3bc1</td>
-                    <td>chat_message</td>
-                    <td class="bad">99.9</td>
-                    <td>block</td>
-                  </tr>
-                  <tr>
-                    <td>profile_111</td>
-                    <td>profile</td>
-                    <td class="good">5</td>
-                    <td>allow</td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="row" style="justify-content: space-between; align-items: center">
+                <div>
+                  <h3 data-i18n="moderationTitle">Moderation command board</h3>
+                  <p data-i18n="moderationSub">Review pending creator listings before publish and capture audit-safe decisions.</p>
+                </div>
+                <button id="loadModerationQueue" class="btn" data-i18n="btnModerationRefresh">Refresh queue</button>
+              </div>
+
+              <div class="moderation-kpi-grid">
+                <article class="moderation-kpi-card">
+                  <span data-i18n="moderationKpiPending">Pending Queue</span>
+                  <strong id="moderationKpiPending">0</strong>
+                </article>
+                <article class="moderation-kpi-card">
+                  <span data-i18n="moderationKpiHighRisk">High Risk Flag</span>
+                  <strong id="moderationKpiHighRisk">0</strong>
+                </article>
+                <article class="moderation-kpi-card">
+                  <span data-i18n="moderationKpiSlaRisk">SLA Breach Risk</span>
+                  <strong id="moderationKpiSlaRisk">0</strong>
+                </article>
+              </div>
+
+              <div id="moderationQueueGrid" class="moderation-grid"></div>
+              <pre id="moderationConsole" class="console compact"></pre>
             </article>
           </section>
 
@@ -1483,6 +1688,22 @@
           opsSub: 'Run payout release after delivery/dispute checks.',
           btnReleasePayout: 'Run payout release',
           moderationTitle: 'Moderation command board',
+          moderationSub: 'Review pending creator listings before publish and capture audit-safe decisions.',
+          btnModerationRefresh: 'Refresh queue',
+          moderationKpiPending: 'Pending Queue',
+          moderationKpiHighRisk: 'High Risk Flag',
+          moderationKpiSlaRisk: 'SLA Breach Risk',
+          moderationQueueEmptyTitle: 'Queue is empty',
+          moderationQueueEmptySub: 'No listings are waiting for manual review.',
+          moderationApprove: 'Approve',
+          moderationReject: 'Reject',
+          moderationRejectPrompt: 'Reject reason',
+          moderationQueuedAt: 'Queued',
+          moderationWait: 'wait',
+          moderationRiskHigh: 'High Risk',
+          moderationRiskMedium: 'Medium Risk',
+          moderationRiskLow: 'Low Risk',
+          moderationKycUnknown: 'KYC Unknown',
           logsTitle: 'API request log stream',
           logsSub: 'All actions are mirrored here for troubleshooting and demos.',
           tblListing: 'Listing',
@@ -1588,6 +1809,22 @@
           opsSub: '在交付與爭議檢查後執行撥款釋放。',
           btnReleasePayout: '執行 payout release',
           moderationTitle: '內容審核指揮板',
+          moderationSub: '先審後發：審核待上架 Creator 商品並留下可稽核決策紀錄。',
+          btnModerationRefresh: '刷新審核佇列',
+          moderationKpiPending: '待審核數',
+          moderationKpiHighRisk: '高風險旗標',
+          moderationKpiSlaRisk: 'SLA 逾時風險',
+          moderationQueueEmptyTitle: '審核佇列為空',
+          moderationQueueEmptySub: '目前沒有待人工審核的商品。',
+          moderationApprove: '核准',
+          moderationReject: '拒絕',
+          moderationRejectPrompt: '拒絕原因',
+          moderationQueuedAt: '送審',
+          moderationWait: '等待',
+          moderationRiskHigh: '高風險',
+          moderationRiskMedium: '中風險',
+          moderationRiskLow: '低風險',
+          moderationKycUnknown: 'KYC 未知',
           logsTitle: 'API 操作紀錄流',
           logsSub: '所有操作會同步寫入，方便除錯與展示。',
           tblListing: '商品',
@@ -1693,6 +1930,22 @@
           opsSub: 'Payout release futtatasa delivery/dispute ellenorzes utan.',
           btnReleasePayout: 'Payout release futtatasa',
           moderationTitle: 'Moderation board',
+          moderationSub: 'Pending creator listingek ellenorzese publikacio elott, audit-biztos dontesekkel.',
+          btnModerationRefresh: 'Queue frissites',
+          moderationKpiPending: 'Pending Queue',
+          moderationKpiHighRisk: 'High Risk Flag',
+          moderationKpiSlaRisk: 'SLA Risk',
+          moderationQueueEmptyTitle: 'Ures queue',
+          moderationQueueEmptySub: 'Nincs manualis review-ra varo listing.',
+          moderationApprove: 'Approve',
+          moderationReject: 'Reject',
+          moderationRejectPrompt: 'Reject reason',
+          moderationQueuedAt: 'Queued',
+          moderationWait: 'wait',
+          moderationRiskHigh: 'High Risk',
+          moderationRiskMedium: 'Medium Risk',
+          moderationRiskLow: 'Low Risk',
+          moderationKycUnknown: 'KYC Unknown',
           logsTitle: 'API naplo stream',
           logsSub: 'Minden muvelet itt is naplozva van demohoz es hibakereseshez.',
           tblListing: 'Listing',
@@ -1798,6 +2051,22 @@
           opsSub: 'Executer payout release apres verification delivery/dispute.',
           btnReleasePayout: 'Executer payout release',
           moderationTitle: 'Board moderation',
+          moderationSub: 'Verifier les listings creator en attente avant publication avec decision auditable.',
+          btnModerationRefresh: 'Rafraichir queue',
+          moderationKpiPending: 'File en attente',
+          moderationKpiHighRisk: 'Alerte haut risque',
+          moderationKpiSlaRisk: 'Risque SLA',
+          moderationQueueEmptyTitle: 'Queue vide',
+          moderationQueueEmptySub: 'Aucun listing en attente de revue manuelle.',
+          moderationApprove: 'Approve',
+          moderationReject: 'Reject',
+          moderationRejectPrompt: 'Motif de rejet',
+          moderationQueuedAt: 'Queue',
+          moderationWait: 'attente',
+          moderationRiskHigh: 'High Risk',
+          moderationRiskMedium: 'Medium Risk',
+          moderationRiskLow: 'Low Risk',
+          moderationKycUnknown: 'KYC Unknown',
           logsTitle: 'Flux de logs API',
           logsSub: 'Toutes les actions sont journalisees pour demo et diagnostic.',
           tblListing: 'Listing',
@@ -1829,6 +2098,12 @@
           currency: 'USD'
         },
         walletLedger: [],
+        moderationQueue: [],
+        moderationSummary: {
+          pendingCount: 0,
+          highRiskCount: 0,
+          slaBreachRiskCount: 0
+        },
         promotionSummary: null
       };
 
@@ -1974,6 +2249,12 @@
         opsConsole: document.getElementById('opsConsole'),
         releasePayout: document.getElementById('releasePayout'),
         settlementConsole: document.getElementById('settlementConsole'),
+        loadModerationQueue: document.getElementById('loadModerationQueue'),
+        moderationKpiPending: document.getElementById('moderationKpiPending'),
+        moderationKpiHighRisk: document.getElementById('moderationKpiHighRisk'),
+        moderationKpiSlaRisk: document.getElementById('moderationKpiSlaRisk'),
+        moderationQueueGrid: document.getElementById('moderationQueueGrid'),
+        moderationConsole: document.getElementById('moderationConsole'),
         globalLog: document.getElementById('globalLog')
       };
 
@@ -2087,6 +2368,9 @@
           panelEl.classList.toggle('active', key === panel);
         });
         el.navButtons.forEach((button) => button.classList.toggle('active', button.dataset.panel === panel));
+        if (panel === 'operations') {
+          loadModerationQueue(true);
+        }
       }
 
       function setRole(role) {
@@ -2553,6 +2837,150 @@
           .join('');
       }
 
+      function opsActorId() {
+        return state.role === 'ops' ? 'ops-demo' : 'admin-demo';
+      }
+
+      function moderationRiskTone(riskBand) {
+        if (riskBand === 'high') return 'high';
+        if (riskBand === 'medium') return 'medium';
+        return 'low';
+      }
+
+      function moderationRiskLabel(riskBand) {
+        if (riskBand === 'high') return t('moderationRiskHigh', 'High Risk');
+        if (riskBand === 'medium') return t('moderationRiskMedium', 'Medium Risk');
+        return t('moderationRiskLow', 'Low Risk');
+      }
+
+      function renderModerationSummary() {
+        if (el.moderationKpiPending) {
+          el.moderationKpiPending.textContent = String(state.moderationSummary.pendingCount || 0);
+        }
+        if (el.moderationKpiHighRisk) {
+          el.moderationKpiHighRisk.textContent = String(state.moderationSummary.highRiskCount || 0);
+        }
+        if (el.moderationKpiSlaRisk) {
+          el.moderationKpiSlaRisk.textContent = String(state.moderationSummary.slaBreachRiskCount || 0);
+        }
+      }
+
+      function renderModerationQueue() {
+        renderModerationSummary();
+        if (!el.moderationQueueGrid) return;
+
+        const rows = Array.isArray(state.moderationQueue) ? state.moderationQueue : [];
+        if (!rows.length) {
+          el.moderationQueueGrid.innerHTML = `
+            <article class="moderation-empty" style="grid-column: 1 / -1">
+              <h4>${escapeHtml(t('moderationQueueEmptyTitle', 'Queue is empty'))}</h4>
+              <p>${escapeHtml(t('moderationQueueEmptySub', 'No listings are waiting for manual review.'))}</p>
+            </article>
+          `;
+          return;
+        }
+
+        el.moderationQueueGrid.innerHTML = rows
+          .map((item) => {
+            const riskTone = moderationRiskTone(item.riskBand);
+            const riskLabel = moderationRiskLabel(item.riskBand);
+            const submitted = item.submittedAt
+              ? new Date(item.submittedAt).toLocaleTimeString(state.lang, { hour: '2-digit', minute: '2-digit' })
+              : '--:--';
+            const waitMinutes = Number.isFinite(Number(item.waitMinutes)) ? Math.max(0, Number(item.waitMinutes)) : 0;
+            const kycLabel = item.kycLabel || t('moderationKycUnknown', 'KYC Unknown');
+            const imageUrl =
+              typeof item.imageUrl === 'string' && item.imageUrl.trim()
+                ? item.imageUrl
+                : LISTING_PLACEHOLDER_IMAGE;
+
+            return `
+              <article class="moderation-item">
+                <div class="moderation-item-head">
+                  <div>
+                    <span class="moderation-item-id">${escapeHtml(item.id || item.listingId || '-')}</span>
+                    <p class="moderation-item-creator">${escapeHtml(item.creatorName || item.creatorId || 'Creator')}</p>
+                    <span class="moderation-kyc">${escapeHtml(kycLabel)}</span>
+                  </div>
+                  <div class="moderation-item-meta">
+                    <div>${escapeHtml(t('moderationQueuedAt', 'Queued'))} ${escapeHtml(submitted)}</div>
+                    <div>${escapeHtml(waitMinutes)}m ${escapeHtml(t('moderationWait', 'wait'))}</div>
+                    <span class="risk-flag ${riskTone}">${escapeHtml(riskLabel)} • ${Number(item.riskScore || 0).toFixed(1)}</span>
+                  </div>
+                </div>
+                <div class="moderation-item-body">
+                  <div class="moderation-media">
+                    <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(item.title || item.id || 'Listing')}" loading="lazy" />
+                  </div>
+                  <div>
+                    <h4 class="moderation-title">${escapeHtml(item.title || item.listingId || 'Untitled listing')}</h4>
+                    <p class="moderation-desc">${escapeHtml(item.description || '')}</p>
+                  </div>
+                </div>
+                <div class="moderation-foot">
+                  <button class="moderation-btn reject" data-mod-action="reject" data-mod-id="${escapeHtml(
+                    item.listingId || item.id || ''
+                  )}">${escapeHtml(t('moderationReject', 'Reject'))}</button>
+                  <button class="moderation-btn approve" data-mod-action="approve" data-mod-id="${escapeHtml(
+                    item.listingId || item.id || ''
+                  )}">${escapeHtml(t('moderationApprove', 'Approve'))}</button>
+                </div>
+              </article>
+            `;
+          })
+          .join('');
+      }
+
+      async function loadModerationQueue(silent = false) {
+        try {
+          const data = await request('/v1/ops/moderation/queue?limit=24', {
+            headers: { 'x-user-id': opsActorId() }
+          });
+          state.moderationSummary = {
+            pendingCount: firstNumeric([data && data.summary && data.summary.pendingCount], 0),
+            highRiskCount: firstNumeric([data && data.summary && data.summary.highRiskCount], 0),
+            slaBreachRiskCount: firstNumeric([data && data.summary && data.summary.slaBreachRiskCount], 0)
+          };
+          state.moderationQueue = Array.isArray(data && data.queue) ? data.queue : [];
+          renderModerationQueue();
+          if (!silent && el.moderationConsole) {
+            writeConsole(el.moderationConsole, 'Moderation Queue', {
+              count: state.moderationQueue.length,
+              summary: state.moderationSummary
+            });
+          }
+        } catch (error) {
+          state.moderationQueue = [];
+          state.moderationSummary = { pendingCount: 0, highRiskCount: 0, slaBreachRiskCount: 0 };
+          renderModerationQueue();
+          if (!silent && el.moderationConsole) {
+            writeConsole(el.moderationConsole, 'Moderation Queue Error', String(error));
+          }
+        }
+      }
+
+      async function applyModerationDecision(listingId, action, reason) {
+        try {
+          const data = await request(`/v1/ops/moderation/listings/${encodeURIComponent(listingId)}/decision`, {
+            method: 'POST',
+            headers: { 'x-user-id': opsActorId() },
+            body: {
+              action,
+              reason
+            }
+          });
+          if (el.moderationConsole) {
+            writeConsole(el.moderationConsole, `Moderation ${action}`, data);
+          }
+          await loadModerationQueue(true);
+          await loadListings();
+        } catch (error) {
+          if (el.moderationConsole) {
+            writeConsole(el.moderationConsole, `Moderation ${action} Error`, String(error));
+          }
+        }
+      }
+
       function renderCreatorMonetization() {
         renderCreatorListingOptions();
         renderPromotionPlans();
@@ -2805,11 +3233,40 @@
         });
         el.sendWebhook.addEventListener('click', sendWebhook);
         el.releasePayout.addEventListener('click', runPayoutRelease);
+        if (el.loadModerationQueue) {
+          el.loadModerationQueue.addEventListener('click', () => loadModerationQueue(false));
+        }
+        if (el.moderationQueueGrid) {
+          el.moderationQueueGrid.addEventListener('click', async (event) => {
+            const btn = event.target.closest('[data-mod-action][data-mod-id]');
+            if (!btn) return;
+
+            const listingId = btn.getAttribute('data-mod-id') || '';
+            const action = btn.getAttribute('data-mod-action') || '';
+            if (!listingId || !action) return;
+
+            let reason = '';
+            if (action === 'reject') {
+              const promptLabel = t('moderationRejectPrompt', 'Reject reason');
+              const input = window.prompt(promptLabel, 'policy_violation');
+              if (input === null) return;
+              reason = String(input || '').trim() || 'policy_violation';
+            }
+
+            btn.disabled = true;
+            try {
+              await applyModerationDecision(listingId, action, reason);
+            } finally {
+              btn.disabled = false;
+            }
+          });
+        }
 
         el.langSelect.addEventListener('change', (event) => {
           state.lang = safeLang(event.target.value);
           renderI18n();
           renderCreatorMonetization();
+          renderModerationQueue();
           persistConfig();
         });
       }
@@ -2826,6 +3283,7 @@
 
         loadListings();
         refreshWallet();
+        loadModerationQueue(true);
 
         appendLog('Boot', {
           role: state.role,
