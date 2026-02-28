@@ -175,6 +175,145 @@ function calculateWalletSummary(db, sellerId, currency) {
   };
 }
 
+function releaseMaturedReserveCredits(db, sellerId, currency) {
+  const nowMs = Date.now();
+  let releasedCount = 0;
+  let releasedAmount = 0;
+
+  for (const entry of db.walletEntries) {
+    if (entry.sellerId !== sellerId) continue;
+    if (currency && entry.currency !== currency) continue;
+    if (entry.type !== 'credit' || entry.sourceType !== 'reserve' || entry.status !== 'pending') continue;
+
+    const availableAtMs = new Date(entry.availableAt || '').getTime();
+    if (!Number.isFinite(availableAtMs) || availableAtMs > nowMs) continue;
+
+    entry.status = 'available';
+    entry.updatedAt = nowIso();
+    releasedCount += 1;
+    releasedAmount += Number(entry.amount || 0);
+  }
+
+  return {
+    releasedCount,
+    releasedAmount: roundMoney(releasedAmount)
+  };
+}
+
+function calculateReserveSummary(db, sellerId, currency) {
+  const reserveEntries = db.walletEntries
+    .filter((entry) => entry.sellerId === sellerId)
+    .filter((entry) => !currency || entry.currency === currency)
+    .filter((entry) => entry.type === 'credit' && entry.sourceType === 'reserve');
+
+  const pendingEntries = reserveEntries
+    .filter((entry) => entry.status === 'pending')
+    .sort((a, b) => {
+      const aMs = new Date(a.availableAt || a.createdAt || 0).getTime();
+      const bMs = new Date(b.availableAt || b.createdAt || 0).getTime();
+      return aMs - bMs;
+    });
+
+  return {
+    reserveBalance: roundMoney(pendingEntries.reduce((sum, entry) => sum + Number(entry.amount || 0), 0)),
+    upcomingReserveReleases: pendingEntries.slice(0, 5).map((entry) => ({
+      id: entry.id,
+      amount: roundMoney(entry.amount || 0),
+      currency: entry.currency,
+      availableAt: entry.availableAt || null
+    }))
+  };
+}
+
+function getListingTitleForPayout(db, payoutId) {
+  const payout = db.payouts.find((item) => item.id === payoutId);
+  if (!payout) return null;
+  const order = db.orders.find((item) => item.id === payout.orderId);
+  if (!order) return null;
+  const listing = db.listings.find((item) => item.id === order.listingId);
+  return listing ? listing.title : order.listingId;
+}
+
+function ledgerCodeFromEntry(entry) {
+  if (entry.sourceType === 'reserve' && entry.status === 'pending') return 'RESERVE_HOLD';
+  if (entry.sourceType === 'reserve' && entry.status !== 'pending') return 'RESERVE_RELEASE';
+  if (entry.sourceType === 'withdrawal') return 'WITHDRAWAL';
+  if (entry.sourceType === 'promotion') return 'PROMO_FEE';
+  if (entry.sourceType === 'payout') return 'CREDIT';
+  return entry.type === 'debit' ? 'DEBIT' : 'CREDIT';
+}
+
+function ledgerSignedAmount(entry, code) {
+  const amount = Math.abs(Number(entry.amount || 0));
+  if (code === 'RESERVE_HOLD' || entry.type === 'debit' || code === 'WITHDRAWAL' || code === 'PROMO_FEE') {
+    return roundMoney(-amount);
+  }
+  return roundMoney(amount);
+}
+
+function ledgerDescription(db, entry, code) {
+  if (code === 'CREDIT' && entry.sourceType === 'payout') {
+    const title = getListingTitleForPayout(db, entry.sourceId);
+    return title ? `Sale payout: ${title}` : 'Sale payout';
+  }
+  if (code === 'RESERVE_HOLD') return `Rolling reserve hold (${ROLLING_RESERVE_DAYS}d)`;
+  if (code === 'RESERVE_RELEASE') return 'Rolling reserve released';
+  if (code === 'WITHDRAWAL') return 'Withdrawal request';
+  if (code === 'PROMO_FEE') return 'Promotion fee';
+  return 'Wallet transaction';
+}
+
+function buildWalletLedgerRows(db, sellerId, currency, limit) {
+  const walletRows = db.walletEntries
+    .filter((entry) => entry.sellerId === sellerId)
+    .filter((entry) => !currency || entry.currency === currency)
+    .map((entry) => {
+      const code = ledgerCodeFromEntry(entry);
+      const signedAmount = ledgerSignedAmount(entry, code);
+      return {
+        id: entry.id,
+        postedAt: entry.createdAt || nowIso(),
+        availableAt: entry.availableAt || null,
+        updatedAt: entry.updatedAt || null,
+        code,
+        description: ledgerDescription(db, entry, code),
+        amount: signedAmount,
+        absoluteAmount: roundMoney(Math.abs(signedAmount)),
+        currency: entry.currency,
+        status: entry.status || null,
+        sourceType: entry.sourceType || null,
+        sourceId: entry.sourceId || null
+      };
+    });
+
+  const promotionRows = db.payments
+    .filter((payment) => payment.kind === 'promotion')
+    .filter((payment) => !currency || payment.currency === currency)
+    .map((payment) => {
+      const promotion = db.promotions.find((item) => item.id === payment.campaignId);
+      if (!promotion || promotion.sellerId !== sellerId) return null;
+      return {
+        id: payment.id,
+        postedAt: payment.createdAt || nowIso(),
+        availableAt: null,
+        updatedAt: payment.updatedAt || null,
+        code: 'PROMO_FEE',
+        description: 'Promotion fee',
+        amount: roundMoney(-Math.abs(Number(payment.amount || 0))),
+        absoluteAmount: roundMoney(Math.abs(Number(payment.amount || 0))),
+        currency: payment.currency,
+        status: payment.status || null,
+        sourceType: 'promotion_payment',
+        sourceId: payment.campaignId || null
+      };
+    })
+    .filter(Boolean);
+
+  return [...walletRows, ...promotionRows]
+    .sort((a, b) => new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime())
+    .slice(0, limit);
+}
+
 function canAccessThread(actor, thread) {
   if (isAdminLike(actor)) return true;
   return Boolean(actor && (actor.id === thread.buyerId || actor.id === thread.sellerId));
@@ -1002,22 +1141,61 @@ app.post('/v1/promotions/:promotionId/consume-click', (req, res) => {
 });
 
 app.get('/v1/wallets/:sellerId/summary', (req, res) => {
-  const db = loadDb();
-  const actor = getActor(db, req);
+  return mutateDb((db) => {
+    const actor = getActor(db, req);
 
-  if (!requireActorRole(res, actor, ['seller', 'admin', 'ops'])) return;
-  if (actor.role === 'seller' && actor.id !== req.params.sellerId) {
-    sendError(res, 403, 'FORBIDDEN', 'Seller can only view own wallet');
-    return;
-  }
+    if (!requireActorRole(res, actor, ['seller', 'admin', 'ops'])) return null;
+    if (actor.role === 'seller' && actor.id !== req.params.sellerId) {
+      return sendError(res, 403, 'FORBIDDEN', 'Seller can only view own wallet');
+    }
 
-  const currency = String(req.query.currency || 'USD').toUpperCase();
-  const summary = calculateWalletSummary(db, req.params.sellerId, currency);
+    const currency = String(req.query.currency || 'USD').toUpperCase();
+    const releaseInfo = releaseMaturedReserveCredits(db, req.params.sellerId, currency);
+    const summary = calculateWalletSummary(db, req.params.sellerId, currency);
+    const reserveSummary = calculateReserveSummary(db, req.params.sellerId, currency);
 
-  res.json({
-    sellerId: req.params.sellerId,
-    currency,
-    ...summary
+    return res.json({
+      sellerId: req.params.sellerId,
+      currency,
+      reserveWindowDays: ROLLING_RESERVE_DAYS,
+      releasedReserveCount: releaseInfo.releasedCount,
+      ...summary,
+      ...reserveSummary
+    });
+  });
+});
+
+app.get('/v1/wallets/:sellerId/ledger', (req, res) => {
+  return mutateDb((db) => {
+    const actor = getActor(db, req);
+    if (!requireActorRole(res, actor, ['seller', 'admin', 'ops'])) return null;
+    if (actor.role === 'seller' && actor.id !== req.params.sellerId) {
+      return sendError(res, 403, 'FORBIDDEN', 'Seller can only view own wallet');
+    }
+
+    const currency = String(req.query.currency || 'USD').toUpperCase();
+    const requestedLimit = asNumber(req.query.limit);
+    const limit =
+      Number.isFinite(requestedLimit) && requestedLimit > 0
+        ? Math.min(200, Math.floor(requestedLimit))
+        : 50;
+    const releaseInfo = releaseMaturedReserveCredits(db, req.params.sellerId, currency);
+    const summary = calculateWalletSummary(db, req.params.sellerId, currency);
+    const reserveSummary = calculateReserveSummary(db, req.params.sellerId, currency);
+    const entries = buildWalletLedgerRows(db, req.params.sellerId, currency, limit);
+
+    return res.json({
+      sellerId: req.params.sellerId,
+      currency,
+      reserveWindowDays: ROLLING_RESERVE_DAYS,
+      releasedReserveCount: releaseInfo.releasedCount,
+      summary: {
+        ...summary,
+        ...reserveSummary
+      },
+      count: entries.length,
+      entries
+    });
   });
 });
 
@@ -1043,6 +1221,7 @@ app.post('/v1/wallets/:sellerId/withdrawals', (req, res) => {
     }
 
     const currency = String(payload.currency).toUpperCase();
+    releaseMaturedReserveCredits(db, req.params.sellerId, currency);
     const summary = calculateWalletSummary(db, req.params.sellerId, currency);
 
     if (summary.availableBalance < amount) {

@@ -713,6 +713,180 @@
         font: 700 0.88rem/1 'Sora', sans-serif;
       }
 
+      .promo-buy-note {
+        margin: 9px 0 0;
+        font-size: 0.71rem;
+        color: #71717a;
+      }
+
+      .creator-wallet-grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .wallet-available-card,
+      .wallet-reserve-card {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .wallet-available-card::after {
+        content: '';
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        right: -54px;
+        top: -56px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, rgba(16, 185, 129, 0) 72%);
+        pointer-events: none;
+      }
+
+      .wallet-total {
+        font: 300 2rem/1.05 'Sora', sans-serif;
+        letter-spacing: -0.03em;
+        margin-top: 8px;
+        color: #f4f4f5;
+      }
+
+      .wallet-total.subtle {
+        font-size: 1.72rem;
+        color: #d4d4d8;
+      }
+
+      .wallet-help {
+        margin: 8px 0 0;
+        font-size: 0.74rem;
+        color: #a1a1aa;
+        max-width: 60ch;
+      }
+
+      .wallet-action-row {
+        margin-top: 10px;
+      }
+
+      .wallet-reserve-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .wallet-pill {
+        border: 1px solid #3f3f46;
+        color: #f4f4f5;
+        border-radius: 999px;
+        padding: 4px 8px;
+        font: 700 0.66rem/1 'Sora', sans-serif;
+        background: rgba(39, 39, 42, 0.7);
+      }
+
+      .reserve-release-list {
+        margin-top: 10px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .reserve-release-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #27272a;
+        background: #111115;
+        border-radius: 10px;
+        padding: 8px 9px;
+        font-size: 0.76rem;
+      }
+
+      .reserve-release-row span {
+        color: #a1a1aa;
+      }
+
+      .reserve-release-row strong {
+        color: #34d399;
+      }
+
+      .reserve-release-empty {
+        border: 1px dashed #3f3f46;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 0.75rem;
+        color: #71717a;
+      }
+
+      .wallet-ledger-wrap {
+        margin-top: 10px;
+        overflow-x: auto;
+      }
+
+      .wallet-ledger-table {
+        min-width: 640px;
+      }
+
+      .wallet-ledger-amount-head {
+        text-align: right !important;
+      }
+
+      .wallet-ledger-amount {
+        text-align: right !important;
+        font: 700 0.83rem/1 'Sora', sans-serif;
+      }
+
+      .wallet-ledger-amount.in {
+        color: #34d399;
+      }
+
+      .wallet-ledger-amount.out {
+        color: #fda4af;
+      }
+
+      .wallet-ledger-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        padding: 4px 8px;
+        border: 1px solid #3f3f46;
+        font: 700 0.62rem/1 'Sora', sans-serif;
+        color: #d4d4d8;
+        background: #18181b;
+      }
+
+      .wallet-ledger-pill.credit {
+        border-color: rgba(59, 130, 246, 0.4);
+        color: #93c5fd;
+      }
+
+      .wallet-ledger-pill.reserve_hold {
+        border-color: rgba(245, 158, 11, 0.45);
+        color: #fcd34d;
+      }
+
+      .wallet-ledger-pill.reserve_release {
+        border-color: rgba(52, 211, 153, 0.45);
+        color: #6ee7b7;
+      }
+
+      .wallet-ledger-pill.withdrawal,
+      .wallet-ledger-pill.promo_fee,
+      .wallet-ledger-pill.debit {
+        border-color: rgba(244, 63, 94, 0.4);
+        color: #fda4af;
+      }
+
+      .wallet-ledger-date {
+        color: #a1a1aa;
+        white-space: nowrap;
+      }
+
+      .wallet-ledger-desc {
+        color: #f4f4f5;
+      }
+
+      .wallet-ledger-empty {
+        color: #71717a;
+      }
+
       .console.compact {
         margin-top: 10px;
         min-height: 80px;
@@ -783,6 +957,10 @@
         }
 
         .promo-metric-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .creator-wallet-grid {
           grid-template-columns: 1fr;
         }
       }
@@ -1063,15 +1241,62 @@
                   Purchase promotion
                 </button>
 
-                <div class="row" style="margin-top: 9px">
+                <p class="promo-buy-note" data-i18n="promoBuyNote">Promotion spend is tracked in your wallet ledger.</p>
+              </aside>
+            </div>
+
+            <div class="creator-wallet-grid">
+              <article class="card creator-dark wallet-available-card">
+                <h3 data-i18n="walletAvailableTitle">Available to Payout</h3>
+                <div id="walletAvailablePrimary" class="wallet-total">USD 0.00</div>
+                <p class="wallet-help" data-i18n="walletAvailableHelp">
+                  Funds you can withdraw now after reserve holds and completed debits.
+                </p>
+                <div class="row wallet-action-row">
                   <button id="walletRefresh" class="btn" data-i18n="btnWalletRefresh">Refresh wallet</button>
                   <input id="withdrawAmount" class="input" value="20" style="width: 92px" />
                   <button id="withdrawBtn" class="btn primary" data-i18n="btnWithdraw">Withdraw</button>
                 </div>
-
                 <pre id="walletConsole" class="console compact"></pre>
-              </aside>
+              </article>
+
+              <article class="card creator-dark wallet-reserve-card">
+                <div class="wallet-reserve-head">
+                  <h3 data-i18n="walletReserveTitle">Rolling Reserve (120d)</h3>
+                  <span id="walletReserveDays" class="wallet-pill">120d</span>
+                </div>
+                <div id="walletReserveTotal" class="wallet-total subtle">USD 0.00</div>
+                <p class="wallet-help" data-i18n="walletReserveHelp">
+                  Reserve funds are held to cover delayed chargeback risk and auto-release on maturity.
+                </p>
+                <div id="walletReserveReleases" class="reserve-release-list"></div>
+              </article>
             </div>
+
+            <article class="card creator-dark">
+              <div class="row" style="justify-content: space-between; align-items: center">
+                <div>
+                  <h3 data-i18n="walletLedgerTitle">Ledger Transactions</h3>
+                  <p data-i18n="walletLedgerSub">
+                    Append-only movements for credits, reserve holds/releases, promotion fees, and withdrawals.
+                  </p>
+                </div>
+                <button id="walletLedgerRefresh" class="btn" data-i18n="btnWalletLedgerRefresh">Refresh ledger</button>
+              </div>
+              <div class="wallet-ledger-wrap">
+                <table class="table wallet-ledger-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="walletLedgerDate">Date</th>
+                      <th data-i18n="walletLedgerDesc">Description</th>
+                      <th data-i18n="walletLedgerType">Type</th>
+                      <th class="wallet-ledger-amount-head" data-i18n="walletLedgerAmount">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody id="walletLedgerBody"></tbody>
+                </table>
+              </div>
+            </article>
 
             <article class="card">
               <h3 data-i18n="creatorTableTitle">Creator snapshot</h3>
@@ -1229,9 +1454,25 @@
           promoListingLabel: 'Select Listing',
           promoWalletLabel: 'Pay from wallet balance',
           btnBuyPromo: 'Purchase promotion',
+          promoBuyNote: 'Promotion spend is tracked in your wallet ledger.',
           btnLoadPromo: 'Sync campaigns',
           walletTitle: 'Wallet and withdrawals',
           walletSub: 'Track available and pending balances, then request withdrawal.',
+          walletAvailableTitle: 'Available to Payout',
+          walletAvailableHelp: 'Funds you can withdraw now after reserve holds and completed debits.',
+          walletReserveTitle: 'Rolling Reserve (120d)',
+          walletReserveHelp: 'Reserve funds are held to cover delayed chargeback risk and auto-release on maturity.',
+          walletReserveEmpty: 'No pending reserve releases.',
+          walletReserveReleasePrefix: 'Releasing',
+          walletReserveNoDate: 'Date pending',
+          walletLedgerTitle: 'Ledger Transactions',
+          walletLedgerSub: 'Append-only movements for credits, reserve holds/releases, promotion fees, and withdrawals.',
+          walletLedgerDate: 'Date',
+          walletLedgerDesc: 'Description',
+          walletLedgerType: 'Type',
+          walletLedgerAmount: 'Amount',
+          walletLedgerEmpty: 'No wallet ledger entries yet.',
+          btnWalletLedgerRefresh: 'Refresh ledger',
           btnWalletRefresh: 'Refresh wallet',
           btnWithdraw: 'Withdraw',
           creatorTableTitle: 'Creator snapshot',
@@ -1318,9 +1559,25 @@
           promoListingLabel: '選擇商品',
           promoWalletLabel: '從錢包餘額扣款',
           btnBuyPromo: '購買推廣方案',
+          promoBuyNote: '推廣支出會同步記錄在錢包帳本。',
           btnLoadPromo: '同步活動',
           walletTitle: '錢包與提現',
           walletSub: '查詢 available / pending 餘額並申請提現。',
+          walletAvailableTitle: '可提現餘額',
+          walletAvailableHelp: '此金額可立即提領，已扣除保留金與已完成扣款。',
+          walletReserveTitle: '滾動保留金 (120 天)',
+          walletReserveHelp: '保留金用於承擔延遲 chargeback 風險，時間到會自動解凍。',
+          walletReserveEmpty: '目前沒有待解凍的保留金。',
+          walletReserveReleasePrefix: '預計解凍',
+          walletReserveNoDate: '待排程',
+          walletLedgerTitle: '帳本交易明細',
+          walletLedgerSub: '以 append-only 方式記錄收入、保留金凍結/解凍、推廣費與提現。',
+          walletLedgerDate: '日期',
+          walletLedgerDesc: '說明',
+          walletLedgerType: '類型',
+          walletLedgerAmount: '金額',
+          walletLedgerEmpty: '目前沒有帳本資料。',
+          btnWalletLedgerRefresh: '刷新帳本',
           btnWalletRefresh: '刷新錢包',
           btnWithdraw: '提現',
           creatorTableTitle: 'Creator 營運快照',
@@ -1407,9 +1664,25 @@
           promoListingLabel: 'Select Listing',
           promoWalletLabel: 'Pay from wallet balance',
           btnBuyPromo: 'Purchase promotion',
+          promoBuyNote: 'A promotion koltes a wallet ledgerben kovetheto.',
           btnLoadPromo: 'Sync campaigns',
           walletTitle: 'Wallet es kiutalas',
           walletSub: 'Available/pending egyenleg kovetese es kiutalas kerese.',
+          walletAvailableTitle: 'Kifizetheto egyenleg',
+          walletAvailableHelp: 'Azonnal kiutalhato osszeg reserve holdok es teljesitett debitek utan.',
+          walletReserveTitle: 'Gordulo tartalek (120 nap)',
+          walletReserveHelp: 'A tartalek kesleltetett chargeback kockazatot fed, lejartkor automatikusan felszabadul.',
+          walletReserveEmpty: 'Nincs varhato tartalek-felszabaditas.',
+          walletReserveReleasePrefix: 'Felszabadul',
+          walletReserveNoDate: 'Datum varhato',
+          walletLedgerTitle: 'Ledger tranzakciok',
+          walletLedgerSub: 'Append-only mozgasok: jovairas, reserve hold/release, promotion dij es kiutalas.',
+          walletLedgerDate: 'Datum',
+          walletLedgerDesc: 'Leiras',
+          walletLedgerType: 'Tipus',
+          walletLedgerAmount: 'Osszeg',
+          walletLedgerEmpty: 'Meg nincs wallet ledger bejegyzes.',
+          btnWalletLedgerRefresh: 'Ledger frissites',
           btnWalletRefresh: 'Wallet frissites',
           btnWithdraw: 'Withdraw',
           creatorTableTitle: 'Creator snapshot',
@@ -1496,9 +1769,25 @@
           promoListingLabel: 'Select Listing',
           promoWalletLabel: 'Pay from wallet balance',
           btnBuyPromo: 'Purchase promotion',
+          promoBuyNote: 'Les depenses promotion sont tracees dans votre ledger wallet.',
           btnLoadPromo: 'Sync campaigns',
           walletTitle: 'Wallet et retraits',
           walletSub: 'Suivre soldes available/pending et demander un retrait.',
+          walletAvailableTitle: 'Disponible pour retrait',
+          walletAvailableHelp: 'Montant retirable maintenant apres reserve et debits finalises.',
+          walletReserveTitle: 'Reserve roulante (120j)',
+          walletReserveHelp: 'La reserve couvre le risque de chargeback differe et se libere automatiquement a echeance.',
+          walletReserveEmpty: 'Aucune liberation de reserve en attente.',
+          walletReserveReleasePrefix: 'Liberation',
+          walletReserveNoDate: 'Date en attente',
+          walletLedgerTitle: 'Transactions ledger',
+          walletLedgerSub: 'Mouvements append-only: credits, reserve hold/release, frais promotion et retraits.',
+          walletLedgerDate: 'Date',
+          walletLedgerDesc: 'Description',
+          walletLedgerType: 'Type',
+          walletLedgerAmount: 'Montant',
+          walletLedgerEmpty: 'Aucune entree ledger pour le moment.',
+          btnWalletLedgerRefresh: 'Rafraichir ledger',
           btnWalletRefresh: 'Rafraichir wallet',
           btnWithdraw: 'Withdraw',
           creatorTableTitle: 'Snapshot creator',
@@ -1534,8 +1823,12 @@
         walletSummary: {
           available: 450,
           pending: 0,
+          reserveBalance: 0,
+          reserveWindowDays: 120,
+          upcomingReserveReleases: [],
           currency: 'USD'
         },
+        walletLedger: [],
         promotionSummary: null
       };
 
@@ -1661,10 +1954,16 @@
         promoMetricLift: document.getElementById('promoMetricLift'),
         promoMetricLiftNote: document.getElementById('promoMetricLiftNote'),
         walletAvailable: document.getElementById('walletAvailable'),
+        walletAvailablePrimary: document.getElementById('walletAvailablePrimary'),
+        walletReserveTotal: document.getElementById('walletReserveTotal'),
+        walletReserveDays: document.getElementById('walletReserveDays'),
+        walletReserveReleases: document.getElementById('walletReserveReleases'),
+        walletLedgerBody: document.getElementById('walletLedgerBody'),
         buyPromoBtn: document.getElementById('buyPromoBtn'),
         loadPromotions: document.getElementById('loadPromotions'),
         promoConsole: document.getElementById('promoConsole'),
         walletRefresh: document.getElementById('walletRefresh'),
+        walletLedgerRefresh: document.getElementById('walletLedgerRefresh'),
         withdrawAmount: document.getElementById('withdrawAmount'),
         withdrawBtn: document.getElementById('withdrawBtn'),
         walletConsole: document.getElementById('walletConsole'),
@@ -1956,6 +2255,19 @@
       }
 
       function parseWalletSummary(payload) {
+        const currency =
+          (payload && payload.currency) ||
+          (payload && payload.wallet && payload.wallet.currency) ||
+          (payload && payload.summary && payload.summary.currency) ||
+          (payload && payload.balances && payload.balances.currency) ||
+          state.walletSummary.currency ||
+          'USD';
+
+        const reserveRows =
+          (payload && payload.upcomingReserveReleases) ||
+          (payload && payload.summary && payload.summary.upcomingReserveReleases) ||
+          [];
+
         return {
           available: firstNumeric(
             [
@@ -1964,6 +2276,7 @@
               payload && payload.wallet && payload.wallet.available,
               payload && payload.wallet && payload.wallet.availableBalance,
               payload && payload.summary && payload.summary.available,
+              payload && payload.summary && payload.summary.availableBalance,
               payload && payload.balances && payload.balances.available
             ],
             state.walletSummary.available
@@ -1975,17 +2288,43 @@
               payload && payload.wallet && payload.wallet.pending,
               payload && payload.wallet && payload.wallet.pendingBalance,
               payload && payload.summary && payload.summary.pending,
+              payload && payload.summary && payload.summary.pendingBalance,
               payload && payload.balances && payload.balances.pending
             ],
             state.walletSummary.pending
           ),
-          currency:
-            (payload && payload.currency) ||
-            (payload && payload.wallet && payload.wallet.currency) ||
-            (payload && payload.summary && payload.summary.currency) ||
-            (payload && payload.balances && payload.balances.currency) ||
-            state.walletSummary.currency ||
-            'USD'
+          reserveBalance: firstNumeric(
+            [
+              payload && payload.reserveBalance,
+              payload && payload.summary && payload.summary.reserveBalance,
+              payload && payload.wallet && payload.wallet.reserveBalance
+            ],
+            state.walletSummary.reserveBalance
+          ),
+          reserveWindowDays: Math.max(
+            1,
+            Math.round(
+              firstNumeric(
+                [
+                  payload && payload.reserveWindowDays,
+                  payload && payload.summary && payload.summary.reserveWindowDays,
+                  payload && payload.wallet && payload.wallet.reserveWindowDays
+                ],
+                state.walletSummary.reserveWindowDays
+              )
+            )
+          ),
+          upcomingReserveReleases: Array.isArray(reserveRows)
+            ? reserveRows
+                .map((row) => ({
+                  id: row && row.id ? String(row.id) : '',
+                  amount: firstNumeric([row && row.amount], 0),
+                  currency: (row && row.currency) || currency,
+                  availableAt: row && row.availableAt ? String(row.availableAt) : ''
+                }))
+                .filter((row) => row.amount > 0)
+            : state.walletSummary.upcomingReserveReleases,
+          currency
         };
       }
 
@@ -2106,8 +2445,112 @@
       }
 
       function renderWalletSummaryDisplay() {
-        if (!el.walletAvailable) return;
-        el.walletAvailable.textContent = money(state.walletSummary.available, state.walletSummary.currency);
+        const currency = state.walletSummary.currency || 'USD';
+        if (el.walletAvailable) {
+          el.walletAvailable.textContent = money(state.walletSummary.available, currency);
+        }
+        if (el.walletAvailablePrimary) {
+          el.walletAvailablePrimary.textContent = money(state.walletSummary.available, currency);
+        }
+        if (el.walletReserveTotal) {
+          el.walletReserveTotal.textContent = money(state.walletSummary.reserveBalance, currency);
+        }
+        if (el.walletReserveDays) {
+          el.walletReserveDays.textContent = `${state.walletSummary.reserveWindowDays || 120}d`;
+        }
+
+        if (el.walletReserveReleases) {
+          const releases = Array.isArray(state.walletSummary.upcomingReserveReleases)
+            ? state.walletSummary.upcomingReserveReleases
+            : [];
+
+          if (!releases.length) {
+            el.walletReserveReleases.innerHTML = `<div class="reserve-release-empty">${escapeHtml(
+              t('walletReserveEmpty', 'No pending reserve releases.')
+            )}</div>`;
+          } else {
+            el.walletReserveReleases.innerHTML = releases
+              .slice(0, 4)
+              .map((row) => {
+                const rawDate = row.availableAt ? new Date(row.availableAt) : null;
+                const hasDate = rawDate && Number.isFinite(rawDate.getTime());
+                const dateLabel = hasDate
+                  ? rawDate.toLocaleDateString(state.lang, { month: 'short', day: 'numeric' })
+                  : t('walletReserveNoDate', 'Date pending');
+                return `
+                  <div class="reserve-release-row">
+                    <span>${escapeHtml(t('walletReserveReleasePrefix', 'Releasing'))} ${escapeHtml(dateLabel)}</span>
+                    <strong>+${escapeHtml(money(row.amount, row.currency || currency))}</strong>
+                  </div>
+                `;
+              })
+              .join('');
+          }
+        }
+      }
+
+      function parseWalletLedger(payload) {
+        const rows = (payload && payload.entries) || [];
+        if (!Array.isArray(rows)) return [];
+
+        return rows
+          .map((row) => ({
+            id: row && row.id ? String(row.id) : '',
+            postedAt: row && row.postedAt ? String(row.postedAt) : '',
+            description: row && row.description ? String(row.description) : 'Wallet transaction',
+            code: row && row.code ? String(row.code) : 'CREDIT',
+            amount: firstNumeric([row && row.amount], 0),
+            currency: (row && row.currency) || state.walletSummary.currency || 'USD'
+          }))
+          .sort((a, b) => new Date(b.postedAt || 0).getTime() - new Date(a.postedAt || 0).getTime());
+      }
+
+      function walletLedgerCodeClass(code) {
+        const normalized = String(code || '').toLowerCase();
+        if (normalized === 'reserve_hold') return 'reserve_hold';
+        if (normalized === 'reserve_release') return 'reserve_release';
+        if (normalized === 'withdrawal') return 'withdrawal';
+        if (normalized === 'promo_fee') return 'promo_fee';
+        if (normalized === 'debit') return 'debit';
+        return 'credit';
+      }
+
+      function renderWalletLedger() {
+        if (!el.walletLedgerBody) return;
+        if (!Array.isArray(state.walletLedger) || !state.walletLedger.length) {
+          el.walletLedgerBody.innerHTML = `
+            <tr>
+              <td colspan="4" class="wallet-ledger-empty">${escapeHtml(
+                t('walletLedgerEmpty', 'No wallet ledger entries yet.')
+              )}</td>
+            </tr>
+          `;
+          return;
+        }
+
+        el.walletLedgerBody.innerHTML = state.walletLedger
+          .slice(0, 80)
+          .map((row) => {
+            const dateObj = row.postedAt ? new Date(row.postedAt) : null;
+            const dateLabel =
+              dateObj && Number.isFinite(dateObj.getTime())
+                ? dateObj.toLocaleDateString(state.lang, { year: 'numeric', month: 'short', day: 'numeric' })
+                : '-';
+            const amountClass = row.amount >= 0 ? 'in' : 'out';
+            const amountLabel = `${row.amount >= 0 ? '+' : '-'}${money(Math.abs(row.amount), row.currency)}`;
+            const code = row.code || 'CREDIT';
+            return `
+              <tr>
+                <td class="wallet-ledger-date">${escapeHtml(dateLabel)}</td>
+                <td class="wallet-ledger-desc">${escapeHtml(row.description || 'Wallet transaction')}</td>
+                <td>
+                  <span class="wallet-ledger-pill ${walletLedgerCodeClass(code)}">${escapeHtml(code)}</span>
+                </td>
+                <td class="wallet-ledger-amount ${amountClass}">${escapeHtml(amountLabel)}</td>
+              </tr>
+            `;
+          })
+          .join('');
       }
 
       function renderCreatorMonetization() {
@@ -2116,6 +2559,7 @@
         renderPromotionMetrics();
         renderActivePromotions();
         renderWalletSummaryDisplay();
+        renderWalletLedger();
       }
 
       function renderCreatorTable() {
@@ -2229,8 +2673,29 @@
           state.walletSummary = parseWalletSummary(data);
           writeConsole(el.walletConsole, 'Wallet Summary', data);
           renderWalletSummaryDisplay();
+          await refreshWalletLedger(true);
         } catch (error) {
           writeConsole(el.walletConsole, 'Wallet Error', String(error));
+        }
+      }
+
+      async function refreshWalletLedger(silent = false) {
+        try {
+          const data = await request('/v1/wallets/seller-demo/ledger?currency=USD&limit=80', {
+            headers: { 'x-user-id': 'seller-demo' }
+          });
+          state.walletSummary = parseWalletSummary(data);
+          state.walletLedger = parseWalletLedger(data);
+          renderWalletSummaryDisplay();
+          renderWalletLedger();
+          if (!silent) {
+            writeConsole(el.walletConsole, 'Wallet Ledger', { count: state.walletLedger.length });
+          }
+        } catch (error) {
+          if (!silent) {
+            writeConsole(el.walletConsole, 'Wallet Ledger Error', String(error));
+          }
+          renderWalletLedger();
         }
       }
 
@@ -2319,6 +2784,9 @@
         el.buyPromoBtn.addEventListener('click', buyPromotion);
         el.loadPromotions.addEventListener('click', loadPromotions);
         el.walletRefresh.addEventListener('click', refreshWallet);
+        if (el.walletLedgerRefresh) {
+          el.walletLedgerRefresh.addEventListener('click', () => refreshWalletLedger(false));
+        }
         el.withdrawBtn.addEventListener('click', requestWithdrawal);
         el.promoModeDuration.addEventListener('click', () => {
           setPromotionMode('duration');
