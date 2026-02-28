@@ -117,6 +117,7 @@ npm run smoke
 ### GitHub Pages（靜態頁）
 - 推送到 `main` 後，GitHub Actions 會自動部署。
 - 主要路徑：`/high-risk-marketplace-mvp/web/index.html`
+- `web/index.html` 為可操作的 SaaS Console（Buyer / Seller / Admin）。
 
 ### Docker（後端 API）
 ```bash

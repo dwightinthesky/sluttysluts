@@ -3,142 +3,878 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>High-Risk Marketplace MVP</title>
+    <title>Marketplace SaaS Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
-        --bg: #f4f2ea;
-        --card: #ffffff;
-        --text: #1f2937;
-        --accent: #0f766e;
+        --bg: #f7f4ec;
+        --panel: #ffffff;
+        --ink: #1e2228;
         --muted: #6b7280;
+        --line: #e5dfcf;
+        --brand: #c2410c;
+        --brand-soft: #ffedd5;
+        --success: #166534;
+        --danger: #b91c1c;
+        --shadow: 0 14px 38px rgba(15, 23, 42, 0.08);
       }
+
+      * {
+        box-sizing: border-box;
+      }
+
       body {
         margin: 0;
-        font-family: "Noto Sans TC", "Segoe UI", sans-serif;
-        background: radial-gradient(circle at 20% 0%, #e6fffa 0%, var(--bg) 45%);
-        color: var(--text);
+        font-family: 'Space Grotesk', 'Noto Sans TC', sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 95% 0%, #ffe0b2 0%, transparent 36%),
+          radial-gradient(circle at 0% 100%, #fde68a 0%, transparent 28%),
+          var(--bg);
       }
-      .wrap {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 0 20px;
+
+      .shell {
+        min-height: 100vh;
+        padding: 24px;
       }
-      .toolbar {
+
+      .topbar {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 16px 18px;
         display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        align-items: center;
         justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 16px;
       }
-      .nav {
-        display: inline-flex;
+
+      .brand {
+        display: flex;
         align-items: center;
-        gap: 12px;
-        background: var(--card);
-        border-radius: 10px;
-        padding: 10px 12px;
-        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+        gap: 10px;
       }
-      .lang-box {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: var(--card);
-        padding: 10px 12px;
-        border-radius: 10px;
-        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+
+      .brand-chip {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: var(--brand-soft);
+        color: var(--brand);
+        font-weight: 700;
       }
-      .lang-box label {
+
+      .brand h1 {
+        margin: 0;
+        font-size: 1.1rem;
+        line-height: 1.1;
+      }
+
+      .brand p {
+        margin: 2px 0 0;
         color: var(--muted);
-        font-size: 14px;
+        font-size: 0.85rem;
       }
-      .lang-box select {
-        border: 1px solid #d1d5db;
-        border-radius: 6px;
-        padding: 4px 8px;
+
+      .topbar-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .input,
+      .select,
+      .btn {
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        padding: 10px 12px;
+        font: inherit;
+      }
+
+      .input,
+      .select {
         background: #fff;
       }
-      h1 {
+
+      .btn {
+        cursor: pointer;
+        background: #fff;
+        transition: all 0.18s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        border-color: #d8cdb7;
+      }
+
+      .btn.primary {
+        background: var(--brand);
+        color: #fff;
+        border-color: var(--brand);
+      }
+
+      .btn.ghost {
+        background: transparent;
+      }
+
+      .layout {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: 240px minmax(0, 1fr);
+        gap: 16px;
+      }
+
+      .sidebar {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .nav-btn {
+        width: 100%;
+        text-align: left;
+        border: 1px solid transparent;
+        background: transparent;
+        border-radius: 12px;
+        padding: 10px 12px;
+        font: inherit;
+        cursor: pointer;
+        color: #111827;
+      }
+
+      .nav-btn strong {
+        display: block;
+        font-size: 0.95rem;
+      }
+
+      .nav-btn small {
+        color: var(--muted);
+      }
+
+      .nav-btn.active {
+        background: #fff7ed;
+        border-color: #fed7aa;
+      }
+
+      .content {
+        display: grid;
+        gap: 14px;
+      }
+
+      .panel {
+        display: none;
+        gap: 14px;
+      }
+
+      .panel.active {
+        display: grid;
+      }
+
+      .grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .grid.metrics {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .grid.cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: var(--shadow);
+      }
+
+      .card h2,
+      .card h3 {
         margin: 0 0 10px;
       }
-      .sub {
+
+      .muted {
         color: var(--muted);
-        margin-bottom: 24px;
       }
-      .card {
-        background: var(--card);
-        border-radius: 14px;
-        padding: 20px;
-        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
-        margin-bottom: 14px;
+
+      .kpi {
+        font-size: 1.8rem;
+        margin: 6px 0;
       }
-      a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-      ul {
-        padding-left: 20px;
-      }
-      .notice {
-        border-left: 4px solid #f59e0b;
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 3px 10px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        border: 1px solid #fcd34d;
         background: #fffbeb;
       }
-      @media (max-width: 768px) {
-        .toolbar {
-          flex-direction: column;
-          align-items: flex-start;
+
+      .pill.ok {
+        border-color: #bbf7d0;
+        background: #f0fdf4;
+        color: #166534;
+      }
+
+      .pill.bad {
+        border-color: #fecaca;
+        background: #fef2f2;
+        color: #991b1b;
+      }
+
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .listings {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .listing {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+        background: #fff;
+      }
+
+      .listing h4 {
+        margin: 0 0 6px;
+      }
+
+      .listing p {
+        margin: 6px 0;
+      }
+
+      .listing .price {
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.93rem;
+      }
+
+      .table th,
+      .table td {
+        text-align: left;
+        padding: 10px 8px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .table th {
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      .console {
+        margin: 0;
+        border-radius: 10px;
+        border: 1px solid #111827;
+        background: #111827;
+        color: #e5e7eb;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+        font-size: 0.78rem;
+        padding: 12px;
+        min-height: 180px;
+        max-height: 280px;
+        overflow: auto;
+      }
+
+      .link {
+        color: var(--brand);
+        text-decoration: none;
+      }
+
+      .link:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 1100px) {
+        .listings {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          flex-direction: row;
+          overflow: auto;
+          padding: 8px;
+        }
+
+        .nav-btn {
+          min-width: 210px;
+        }
+
+        .grid.metrics {
+          grid-template-columns: 1fr;
+        }
+
+        .grid.cards,
+        .listings {
+          grid-template-columns: 1fr;
         }
       }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <div class="toolbar">
-        <div class="nav">
-          <a href="./index.html" data-i18n="navHome">首頁</a>
-          <a href="./getting-started.html" data-i18n="navStart">快速開始</a>
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-chip">SS</div>
+          <div>
+            <h1>Marketplace SaaS Console</h1>
+            <p>Buyer / Seller / Admin unified cockpit</p>
+          </div>
         </div>
-        <div class="lang-box">
-          <label id="lang-label" for="language-select" data-i18n="langLabel">語言</label>
-          <select id="language-select">
-            <option value="zh-Hant">繁體中文</option>
-            <option value="en">English</option>
-            <option value="hu">Magyar</option>
-            <option value="fr">Francais</option>
-          </select>
+
+        <div class="topbar-controls">
+          <input id="apiBase" class="input" style="min-width: 260px" value="http://localhost:8080" />
+          <input id="webhookToken" class="input" style="min-width: 170px" value="dev-webhook-token" />
+          <button id="saveConfig" class="btn">保存連線設定</button>
+          <a class="btn ghost link" href="./getting-started.html">後端啟動教學</a>
         </div>
-      </div>
+      </header>
 
-      <h1 id="title" data-i18n="title">High-Risk Marketplace MVP</h1>
-      <p id="subtitle" class="sub" data-i18n="subtitle">法遵優先、風險驅動的新專案骨架</p>
+      <div class="layout">
+        <aside class="sidebar">
+          <button class="nav-btn active" data-panel="buyer">
+            <strong>Buyer Portal</strong>
+            <small>Explore, 下單, 追蹤付款</small>
+          </button>
+          <button class="nav-btn" data-panel="seller">
+            <strong>Seller Dashboard</strong>
+            <small>商品, 置頂, 錢包提現</small>
+          </button>
+          <button class="nav-btn" data-panel="admin">
+            <strong>Admin Panel</strong>
+            <small>Webhook, 風控, 爭議處理</small>
+          </button>
+          <button class="nav-btn" data-panel="docs">
+            <strong>Docs Shortcuts</strong>
+            <small>PRD, API, Schema</small>
+          </button>
+        </aside>
 
-      <div class="card notice">
-        <strong id="notice-title" data-i18n="noticeTitle">提醒：</strong>
-        <span id="notice-body" data-i18n="noticeBody">此專案為產品與技術框架，不構成法律意見。上線前請完成律師與合規顧問審查。</span>
-      </div>
+        <main class="content">
+          <section id="panel-buyer" class="panel active">
+            <div class="grid metrics">
+              <article class="card">
+                <h3>Explore Listings</h3>
+                <div class="kpi" id="kpiListings">0</div>
+                <div class="muted">目前可瀏覽商品數</div>
+              </article>
+              <article class="card">
+                <h3>Promoted Slots</h3>
+                <div class="kpi" id="kpiPromoted">0</div>
+                <div class="muted">付費置頂中的商品</div>
+              </article>
+              <article class="card">
+                <h3>Estimated Ticket</h3>
+                <div class="kpi" id="kpiTicket">$0</div>
+                <div class="muted">含 buyer fee 的平均客單</div>
+              </article>
+            </div>
 
-      <div class="card">
-        <h2 id="docs-title" data-i18n="docsTitle">文件導覽</h2>
-        <ul>
-          <li><a id="doc-readme" href="../README.md" data-i18n="docReadme">README</a></li>
-          <li><a id="doc-prd" href="../docs/PRD_zh-TW.md" data-i18n="docPrd">產品需求文件（PRD）</a></li>
-          <li><a id="doc-compliance" href="../docs/COMPLIANCE_CHECKLIST_zh-TW.md" data-i18n="docCompliance">法遵清單</a></li>
-          <li><a id="doc-risk" href="../docs/RISK_REGISTER_zh-TW.md" data-i18n="docRisk">風險登錄</a></li>
-          <li><a id="doc-roadmap" href="../docs/ROADMAP_90D_zh-TW.md" data-i18n="docRoadmap">90 天路線圖</a></li>
-          <li><a id="doc-kpi" href="../ops/KPI_DASHBOARD_TEMPLATE_zh-TW.md" data-i18n="docKpi">KPI 儀表板模板</a></li>
-          <li><a id="doc-openapi" href="../api/openapi.yaml" data-i18n="docOpenapi">OpenAPI 規格</a></li>
-          <li><a id="doc-schema" href="../sql/schema.sql" data-i18n="docSchema">資料庫 Schema</a></li>
-          <li><a id="doc-backend" href="./getting-started.html" data-i18n="docBackend">後端快速開始頁</a></li>
-        </ul>
+            <article class="card stack">
+              <div class="row">
+                <input id="buyerSearch" class="input" placeholder="搜尋商品標題或描述" style="flex: 1" />
+                <select id="buyerFilter" class="select">
+                  <option value="all">全部</option>
+                  <option value="promoted">只看置頂</option>
+                  <option value="normal">只看一般</option>
+                </select>
+              </div>
+              <div id="listingGrid" class="listings"></div>
+            </article>
+
+            <article class="card stack">
+              <h3>下單工作台（Pending Order + Hosted Checkout）</h3>
+              <div class="row">
+                <input id="selectedListingId" class="input" placeholder="Listing ID" style="flex: 1" />
+                <button id="createOrder" class="btn primary">建立待付款訂單</button>
+              </div>
+              <div class="muted">系統會呼叫 <code>/v1/orders</code>，回傳 hosted checkout URL。</div>
+              <pre id="buyerLog" class="console"></pre>
+            </article>
+          </section>
+
+          <section id="panel-seller" class="panel">
+            <div class="grid cards">
+              <article class="card">
+                <h3>Promotion Center</h3>
+                <p class="muted">快速購買置頂方案，提升 Explore 權重。</p>
+                <div class="row">
+                  <select id="sellerPlan" class="select">
+                    <option value="top-24h">Top Placement 24h</option>
+                    <option value="top-7d">Top Placement 7d</option>
+                    <option value="boost-200-clicks">Boost 200 Clicks</option>
+                  </select>
+                  <input id="sellerListingId" class="input" placeholder="Listing ID" style="flex: 1" />
+                  <button id="buyPromotion" class="btn primary">購買</button>
+                </div>
+                <pre id="promotionLog" class="console"></pre>
+              </article>
+
+              <article class="card">
+                <h3>Wallet & Withdraw</h3>
+                <p class="muted">查詢 available / pending balance，並送出提現。</p>
+                <div class="row">
+                  <button id="refreshWallet" class="btn">刷新錢包</button>
+                  <input id="withdrawAmount" class="input" placeholder="提現金額" value="20" style="width: 120px" />
+                  <button id="withdrawNow" class="btn primary">申請提現</button>
+                </div>
+                <pre id="walletLog" class="console"></pre>
+              </article>
+            </div>
+
+            <article class="card">
+              <h3>Seller Operational Snapshot</h3>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Listing</th>
+                    <th>Status</th>
+                    <th>Price</th>
+                    <th>Promoted</th>
+                    <th>Conversion</th>
+                  </tr>
+                </thead>
+                <tbody id="sellerTableBody"></tbody>
+              </table>
+            </article>
+          </section>
+
+          <section id="panel-admin" class="panel">
+            <article class="card stack">
+              <h3>Webhook Simulator</h3>
+              <div class="row">
+                <input id="webhookOrderId" class="input" placeholder="Order ID" style="flex: 1" />
+                <select id="webhookStatus" class="select">
+                  <option value="paid">paid</option>
+                  <option value="failed">failed</option>
+                  <option value="chargeback">chargeback</option>
+                </select>
+                <button id="sendWebhook" class="btn primary">送出 webhook</button>
+              </div>
+              <pre id="adminLog" class="console"></pre>
+            </article>
+
+            <article class="card">
+              <h3>Moderation Queue</h3>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Entity</th>
+                    <th>Type</th>
+                    <th>Risk</th>
+                    <th>Action</th>
+                    <th>Owner</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>lst_demo_192</td>
+                    <td>listing</td>
+                    <td><span class="pill">65</span></td>
+                    <td>review</td>
+                    <td>seller-demo</td>
+                  </tr>
+                  <tr>
+                    <td>msg_demo_88</td>
+                    <td>chat_message</td>
+                    <td><span class="pill bad">99.9</span></td>
+                    <td>block</td>
+                    <td>buyer-demo</td>
+                  </tr>
+                  <tr>
+                    <td>profile_demo_11</td>
+                    <td>profile</td>
+                    <td><span class="pill ok">5</span></td>
+                    <td>allow</td>
+                    <td>seller-demo</td>
+                  </tr>
+                </tbody>
+              </table>
+            </article>
+          </section>
+
+          <section id="panel-docs" class="panel">
+            <article class="card stack">
+              <h3>Project Assets</h3>
+              <a class="link" href="../README.md" target="_blank" rel="noreferrer">README</a>
+              <a class="link" href="../docs/PRD_zh-TW.md" target="_blank" rel="noreferrer">PRD</a>
+              <a class="link" href="../docs/COMPLIANCE_CHECKLIST_zh-TW.md" target="_blank" rel="noreferrer">Compliance Checklist</a>
+              <a class="link" href="../api/openapi.yaml" target="_blank" rel="noreferrer">OpenAPI</a>
+              <a class="link" href="../sql/schema.sql" target="_blank" rel="noreferrer">PostgreSQL Schema</a>
+              <a class="link" href="./getting-started.html" target="_blank" rel="noreferrer">Backend Quick Start</a>
+            </article>
+          </section>
+        </main>
       </div>
     </div>
 
-    <script src="./i18n/translations.js"></script>
-    <script src="./i18n/core.js"></script>
     <script>
-      window.initI18nPage('index');
+      const state = {
+        activePanel: 'buyer',
+        buyerId: 'buyer-demo',
+        sellerId: 'seller-demo',
+        listings: [
+          {
+            id: 'sample-lst-001',
+            title: 'Limited Custom Bundle',
+            description: 'Personalized packaging with verified seller fulfillment.',
+            price: 120,
+            currency: 'USD',
+            promoted: true,
+            rating: 4.9,
+            conversion: '13.8%'
+          },
+          {
+            id: 'sample-lst-002',
+            title: 'Express Premium Item',
+            description: 'Fast dispatch workflow with compliance checks.',
+            price: 95,
+            currency: 'USD',
+            promoted: false,
+            rating: 4.7,
+            conversion: '9.4%'
+          },
+          {
+            id: 'sample-lst-003',
+            title: 'Collector Edition',
+            description: 'High-margin niche SKU for repeat buyers.',
+            price: 145,
+            currency: 'USD',
+            promoted: true,
+            rating: 4.8,
+            conversion: '16.1%'
+          }
+        ]
+      };
+
+      const els = {
+        navButtons: document.querySelectorAll('.nav-btn'),
+        panels: {
+          buyer: document.getElementById('panel-buyer'),
+          seller: document.getElementById('panel-seller'),
+          admin: document.getElementById('panel-admin'),
+          docs: document.getElementById('panel-docs')
+        },
+        apiBase: document.getElementById('apiBase'),
+        webhookToken: document.getElementById('webhookToken'),
+        saveConfig: document.getElementById('saveConfig'),
+        buyerSearch: document.getElementById('buyerSearch'),
+        buyerFilter: document.getElementById('buyerFilter'),
+        listingGrid: document.getElementById('listingGrid'),
+        selectedListingId: document.getElementById('selectedListingId'),
+        createOrder: document.getElementById('createOrder'),
+        buyerLog: document.getElementById('buyerLog'),
+        sellerTableBody: document.getElementById('sellerTableBody'),
+        sellerPlan: document.getElementById('sellerPlan'),
+        sellerListingId: document.getElementById('sellerListingId'),
+        buyPromotion: document.getElementById('buyPromotion'),
+        promotionLog: document.getElementById('promotionLog'),
+        refreshWallet: document.getElementById('refreshWallet'),
+        withdrawNow: document.getElementById('withdrawNow'),
+        withdrawAmount: document.getElementById('withdrawAmount'),
+        walletLog: document.getElementById('walletLog'),
+        webhookOrderId: document.getElementById('webhookOrderId'),
+        webhookStatus: document.getElementById('webhookStatus'),
+        sendWebhook: document.getElementById('sendWebhook'),
+        adminLog: document.getElementById('adminLog'),
+        kpiListings: document.getElementById('kpiListings'),
+        kpiPromoted: document.getElementById('kpiPromoted'),
+        kpiTicket: document.getElementById('kpiTicket')
+      };
+
+      function log(el, label, payload) {
+        const line = `[${new Date().toLocaleTimeString()}] ${label}\n${
+          typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2)
+        }\n\n`;
+        el.textContent = line + el.textContent;
+      }
+
+      function getApiBase() {
+        return (els.apiBase.value || '').replace(/\/$/, '');
+      }
+
+      function saveConfig() {
+        localStorage.setItem('saas_api_base', els.apiBase.value);
+        localStorage.setItem('saas_webhook_token', els.webhookToken.value);
+        log(els.buyerLog, 'Config', { apiBase: els.apiBase.value, webhookToken: '***saved***' });
+      }
+
+      async function api(path, options = {}) {
+        const url = `${getApiBase()}${path}`;
+        const headers = {
+          'Content-Type': 'application/json',
+          ...(options.headers || {})
+        };
+
+        const res = await fetch(url, {
+          method: options.method || 'GET',
+          headers,
+          body: options.body ? JSON.stringify(options.body) : undefined
+        });
+
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : {};
+        if (!res.ok) {
+          throw new Error(`${res.status} ${res.statusText} ${JSON.stringify(data)}`);
+        }
+
+        return data;
+      }
+
+      function setActivePanel(panel) {
+        state.activePanel = panel;
+        Object.entries(els.panels).forEach(([key, panelEl]) => {
+          panelEl.classList.toggle('active', key === panel);
+        });
+        els.navButtons.forEach((btn) => {
+          btn.classList.toggle('active', btn.dataset.panel === panel);
+        });
+      }
+
+      function renderBuyer() {
+        const q = (els.buyerSearch.value || '').trim().toLowerCase();
+        const filter = els.buyerFilter.value;
+        const rows = state.listings.filter((item) => {
+          const searchable = `${item.title} ${item.description}`.toLowerCase();
+          const matchSearch = !q || searchable.includes(q);
+          const matchFilter =
+            filter === 'all' || (filter === 'promoted' && item.promoted) || (filter === 'normal' && !item.promoted);
+          return matchSearch && matchFilter;
+        });
+
+        els.listingGrid.innerHTML = rows
+          .map(
+            (item) => `
+            <article class="listing">
+              <div class="row" style="justify-content: space-between;">
+                <h4>${item.title}</h4>
+                ${item.promoted ? '<span class="pill">Promoted</span>' : ''}
+              </div>
+              <p class="muted">${item.description}</p>
+              <p class="price">${item.currency} ${item.price.toFixed(2)}</p>
+              <p class="muted">Seller rating ${item.rating} / Conversion ${item.conversion}</p>
+              <button class="btn" data-select-id="${item.id}">選擇下單</button>
+            </article>
+          `
+          )
+          .join('');
+
+        const promotedCount = rows.filter((item) => item.promoted).length;
+        const avgTicket = rows.length
+          ? rows.reduce((sum, item) => sum + item.price * 1.05, 0) / rows.length
+          : 0;
+
+        els.kpiListings.textContent = String(rows.length);
+        els.kpiPromoted.textContent = String(promotedCount);
+        els.kpiTicket.textContent = `$${avgTicket.toFixed(2)}`;
+
+        document.querySelectorAll('[data-select-id]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            els.selectedListingId.value = btn.dataset.selectId;
+            log(els.buyerLog, 'Selected Listing', { listingId: btn.dataset.selectId });
+          });
+        });
+      }
+
+      function renderSellerTable() {
+        els.sellerTableBody.innerHTML = state.listings
+          .map(
+            (item) => `
+            <tr>
+              <td>${item.id}</td>
+              <td>${item.promoted ? '<span class="pill">promoted</span>' : '<span class="pill ok">active</span>'}</td>
+              <td>${item.currency} ${item.price.toFixed(2)}</td>
+              <td>${item.promoted ? 'Yes' : 'No'}</td>
+              <td>${item.conversion}</td>
+            </tr>
+          `
+          )
+          .join('');
+      }
+
+      async function createPendingOrder() {
+        const listingId = (els.selectedListingId.value || '').trim();
+        if (!listingId) {
+          log(els.buyerLog, 'Validation', '請先選擇 Listing ID');
+          return;
+        }
+
+        try {
+          const result = await api('/v1/orders', {
+            method: 'POST',
+            headers: { 'x-user-id': state.buyerId },
+            body: {
+              buyerId: state.buyerId,
+              listingId,
+              currency: 'USD'
+            }
+          });
+
+          log(els.buyerLog, 'Order Created', result);
+          if (result.order && result.order.id) {
+            els.webhookOrderId.value = result.order.id;
+          }
+        } catch (err) {
+          log(els.buyerLog, 'Order Failed', String(err));
+        }
+      }
+
+      async function buyPromotionPlan() {
+        const listingId = (els.sellerListingId.value || '').trim();
+        if (!listingId) {
+          log(els.promotionLog, 'Validation', '請輸入 Listing ID');
+          return;
+        }
+
+        try {
+          const result = await api('/v1/promotions/purchase', {
+            method: 'POST',
+            headers: { 'x-user-id': state.sellerId },
+            body: {
+              sellerId: state.sellerId,
+              listingId,
+              planId: els.sellerPlan.value,
+              currency: 'USD'
+            }
+          });
+          log(els.promotionLog, 'Promotion Purchased', result);
+        } catch (err) {
+          log(els.promotionLog, 'Promotion Failed', String(err));
+        }
+      }
+
+      async function loadWallet() {
+        try {
+          const result = await api(`/v1/wallets/${state.sellerId}/summary?currency=USD`, {
+            headers: { 'x-user-id': state.sellerId }
+          });
+          log(els.walletLog, 'Wallet Summary', result);
+        } catch (err) {
+          log(els.walletLog, 'Wallet Failed', String(err));
+        }
+      }
+
+      async function withdrawNow() {
+        const amount = Number(els.withdrawAmount.value);
+        if (!Number.isFinite(amount) || amount <= 0) {
+          log(els.walletLog, 'Validation', '提現金額必須 > 0');
+          return;
+        }
+
+        try {
+          const result = await api(`/v1/wallets/${state.sellerId}/withdrawals`, {
+            method: 'POST',
+            headers: { 'x-user-id': state.sellerId },
+            body: {
+              amount,
+              currency: 'USD',
+              payoutMethod: 'wire'
+            }
+          });
+          log(els.walletLog, 'Withdrawal Requested', result);
+        } catch (err) {
+          log(els.walletLog, 'Withdrawal Failed', String(err));
+        }
+      }
+
+      async function sendWebhook() {
+        const orderId = (els.webhookOrderId.value || '').trim();
+        if (!orderId) {
+          log(els.adminLog, 'Validation', '請輸入 Order ID');
+          return;
+        }
+
+        try {
+          const result = await api('/v1/payments/webhooks/high-risk', {
+            method: 'POST',
+            headers: {
+              'x-webhook-token': els.webhookToken.value
+            },
+            body: {
+              eventId: `evt-${orderId}-${Date.now()}`,
+              orderId,
+              paymentStatus: els.webhookStatus.value,
+              pspTxnId: `txn-${Date.now()}`
+            }
+          });
+          log(els.adminLog, 'Webhook Sent', result);
+        } catch (err) {
+          log(els.adminLog, 'Webhook Failed', String(err));
+        }
+      }
+
+      function hydrateConfig() {
+        const savedApi = localStorage.getItem('saas_api_base');
+        const savedWebhook = localStorage.getItem('saas_webhook_token');
+        if (savedApi) els.apiBase.value = savedApi;
+        if (savedWebhook) els.webhookToken.value = savedWebhook;
+      }
+
+      function boot() {
+        hydrateConfig();
+        renderBuyer();
+        renderSellerTable();
+
+        els.navButtons.forEach((btn) => {
+          btn.addEventListener('click', () => setActivePanel(btn.dataset.panel));
+        });
+        els.buyerSearch.addEventListener('input', renderBuyer);
+        els.buyerFilter.addEventListener('change', renderBuyer);
+        els.saveConfig.addEventListener('click', saveConfig);
+        els.createOrder.addEventListener('click', createPendingOrder);
+        els.buyPromotion.addEventListener('click', buyPromotionPlan);
+        els.refreshWallet.addEventListener('click', loadWallet);
+        els.withdrawNow.addEventListener('click', withdrawNow);
+        els.sendWebhook.addEventListener('click', sendWebhook);
+
+        log(els.buyerLog, 'Ready', 'SaaS console loaded. Connect backend to execute real workflows.');
+      }
+
+      boot();
     </script>
   </body>
 </html>
