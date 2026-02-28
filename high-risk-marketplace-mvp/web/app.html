@@ -1,95 +1,100 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Marketplace SaaS Console</title>
+    <title>Marketplace Control Center</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg: #f7f4ec;
-        --panel: #ffffff;
-        --ink: #1e2228;
-        --muted: #6b7280;
-        --line: #e5dfcf;
-        --brand: #c2410c;
-        --brand-soft: #ffedd5;
-        --success: #166534;
+        --bg: #f3f4ee;
+        --ink: #0f172a;
+        --muted: #5b6577;
+        --line: #d8e0ea;
+        --surface: #ffffff;
+        --brand: #0f766e;
+        --brand-soft: #ccfbf1;
+        --accent: #ea580c;
         --danger: #b91c1c;
-        --shadow: 0 14px 38px rgba(15, 23, 42, 0.08);
+        --ok: #166534;
+        --shadow: 0 18px 44px rgba(15, 23, 42, 0.12);
       }
 
       * {
         box-sizing: border-box;
       }
 
+      html,
       body {
         margin: 0;
-        font-family: 'Space Grotesk', 'Noto Sans TC', sans-serif;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Manrope', sans-serif;
         color: var(--ink);
         background:
-          radial-gradient(circle at 95% 0%, #ffe0b2 0%, transparent 36%),
-          radial-gradient(circle at 0% 100%, #fde68a 0%, transparent 28%),
+          radial-gradient(circle at 100% 0%, rgba(15, 118, 110, 0.17), transparent 34%),
+          radial-gradient(circle at 0% 100%, rgba(251, 146, 60, 0.2), transparent 32%),
           var(--bg);
       }
 
       .shell {
-        min-height: 100vh;
-        padding: 24px;
+        width: min(1240px, calc(100% - 30px));
+        margin: 18px auto 24px;
       }
 
       .topbar {
-        background: var(--panel);
+        background: var(--surface);
         border: 1px solid var(--line);
-        border-radius: 16px;
+        border-radius: 18px;
         box-shadow: var(--shadow);
-        padding: 16px 18px;
+        padding: 14px;
         display: flex;
-        flex-wrap: wrap;
-        gap: 14px;
         align-items: center;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
       }
 
       .brand {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 11px;
       }
 
-      .brand-chip {
-        width: 38px;
-        height: 38px;
+      .brand-mark {
+        width: 40px;
+        height: 40px;
         border-radius: 12px;
         display: grid;
         place-items: center;
-        background: var(--brand-soft);
-        color: var(--brand);
-        font-weight: 700;
+        background: linear-gradient(140deg, #0f766e, #14b8a6);
+        color: #fff;
+        font: 800 0.92rem/1 'Sora', sans-serif;
       }
 
       .brand h1 {
         margin: 0;
-        font-size: 1.1rem;
-        line-height: 1.1;
+        font: 700 1.08rem/1.2 'Sora', sans-serif;
       }
 
       .brand p {
         margin: 2px 0 0;
         color: var(--muted);
-        font-size: 0.85rem;
+        font-size: 0.84rem;
       }
 
-      .topbar-controls {
+      .toolbar {
         display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
         align-items: center;
+        gap: 7px;
+        flex-wrap: wrap;
       }
 
       .input,
@@ -97,88 +102,105 @@
       .btn {
         border-radius: 10px;
         border: 1px solid var(--line);
-        padding: 10px 12px;
         font: inherit;
       }
 
       .input,
       .select {
         background: #fff;
+        padding: 10px 11px;
       }
 
       .btn {
-        cursor: pointer;
+        padding: 10px 12px;
+        text-decoration: none;
+        color: inherit;
         background: #fff;
-        transition: all 0.18s ease;
+        cursor: pointer;
+        transition: all 0.22s ease;
       }
 
       .btn:hover {
         transform: translateY(-1px);
-        border-color: #d8cdb7;
       }
 
       .btn.primary {
         background: var(--brand);
-        color: #fff;
         border-color: var(--brand);
+        color: #fff;
       }
 
-      .btn.ghost {
-        background: transparent;
+      .btn.soft {
+        background: #f0fdfa;
+        border-color: #99f6e4;
+        color: #0f766e;
+      }
+
+      .persona {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        color: #9a3412;
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 0.84rem;
+        font-weight: 700;
       }
 
       .layout {
-        margin-top: 16px;
+        margin-top: 12px;
         display: grid;
-        grid-template-columns: 240px minmax(0, 1fr);
-        gap: 16px;
+        grid-template-columns: 248px minmax(0, 1fr);
+        gap: 12px;
       }
 
-      .sidebar {
-        background: var(--panel);
+      .side {
+        background: var(--surface);
         border: 1px solid var(--line);
-        border-radius: 16px;
+        border-radius: 18px;
         box-shadow: var(--shadow);
         padding: 10px;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
+        align-self: start;
+        position: sticky;
+        top: 12px;
       }
 
       .nav-btn {
         width: 100%;
         text-align: left;
+        padding: 11px 12px;
+        border-radius: 12px;
         border: 1px solid transparent;
         background: transparent;
-        border-radius: 12px;
-        padding: 10px 12px;
         font: inherit;
         cursor: pointer;
-        color: #111827;
       }
 
       .nav-btn strong {
         display: block;
-        font-size: 0.95rem;
+        font: 700 0.95rem/1.2 'Sora', sans-serif;
       }
 
       .nav-btn small {
         color: var(--muted);
+        font-size: 0.8rem;
       }
 
       .nav-btn.active {
-        background: #fff7ed;
-        border-color: #fed7aa;
+        border-color: #99f6e4;
+        background: #f0fdfa;
       }
 
-      .content {
+      .main {
         display: grid;
-        gap: 14px;
+        gap: 10px;
       }
 
       .panel {
         display: none;
-        gap: 14px;
+        gap: 10px;
       }
 
       .panel.active {
@@ -187,79 +209,64 @@
 
       .grid {
         display: grid;
-        gap: 12px;
+        gap: 10px;
       }
 
-      .grid.metrics {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+      .grid.kpi {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
       }
 
-      .grid.cards {
+      .grid.two {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .card {
-        background: var(--panel);
+        background: var(--surface);
         border: 1px solid var(--line);
         border-radius: 16px;
-        padding: 16px;
         box-shadow: var(--shadow);
+        padding: 15px;
       }
 
       .card h2,
-      .card h3 {
-        margin: 0 0 10px;
+      .card h3,
+      .card h4 {
+        margin: 0;
+        font-family: 'Sora', sans-serif;
       }
 
-      .muted {
+      .card p {
+        margin: 8px 0 0;
         color: var(--muted);
       }
 
-      .kpi {
-        font-size: 1.8rem;
-        margin: 6px 0;
+      .kpi-value {
+        margin-top: 8px;
+        font: 800 1.8rem/1 'Sora', sans-serif;
       }
 
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        border-radius: 999px;
-        padding: 3px 10px;
-        font-size: 0.78rem;
-        font-weight: 600;
-        border: 1px solid #fcd34d;
-        background: #fffbeb;
-      }
-
-      .pill.ok {
-        border-color: #bbf7d0;
-        background: #f0fdf4;
-        color: #166534;
-      }
-
-      .pill.bad {
-        border-color: #fecaca;
-        background: #fef2f2;
-        color: #991b1b;
-      }
-
-      .stack {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+      .kpi-note {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 0.82rem;
       }
 
       .row {
         display: flex;
-        gap: 8px;
         flex-wrap: wrap;
+        gap: 8px;
         align-items: center;
       }
 
-      .listings {
+      .label {
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+
+      .listing-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
+        gap: 8px;
       }
 
       .listing {
@@ -270,87 +277,144 @@
       }
 
       .listing h4 {
-        margin: 0 0 6px;
+        margin: 0;
+        font: 700 0.94rem/1.3 'Sora', sans-serif;
       }
 
       .listing p {
-        margin: 6px 0;
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 0.84rem;
       }
 
-      .listing .price {
+      .badge {
+        display: inline-flex;
+        border-radius: 999px;
+        padding: 3px 8px;
+        border: 1px solid #cbd5e1;
+        background: #f8fafc;
+        font-size: 0.73rem;
         font-weight: 700;
-        font-size: 1.1rem;
+      }
+
+      .badge.promo {
+        border-color: #fdba74;
+        background: #fff7ed;
+        color: #9a3412;
       }
 
       .table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 0.93rem;
       }
 
       .table th,
       .table td {
         text-align: left;
-        padding: 10px 8px;
         border-bottom: 1px solid var(--line);
+        padding: 9px 7px;
+        font-size: 0.87rem;
       }
 
       .table th {
         color: var(--muted);
-        font-weight: 600;
       }
 
       .console {
         margin: 0;
-        border-radius: 10px;
-        border: 1px solid #111827;
-        background: #111827;
-        color: #e5e7eb;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
-        font-size: 0.78rem;
-        padding: 12px;
-        min-height: 180px;
+        border-radius: 12px;
+        border: 1px solid #0f172a;
+        background: #0f172a;
+        color: #e2e8f0;
+        font: 500 0.77rem/1.48 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+        padding: 11px;
+        min-height: 160px;
         max-height: 280px;
         overflow: auto;
       }
 
-      .link {
-        color: var(--brand);
-        text-decoration: none;
+      .good {
+        color: var(--ok);
       }
 
-      .link:hover {
-        text-decoration: underline;
+      .bad {
+        color: var(--danger);
       }
 
-      @media (max-width: 1100px) {
-        .listings {
+      .muted {
+        color: var(--muted);
+      }
+
+      .timeline {
+        margin-top: 7px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .timeline div {
+        border-left: 3px solid #cbd5e1;
+        padding-left: 10px;
+      }
+
+      .timeline strong {
+        display: block;
+      }
+
+      @media (max-width: 1120px) {
+        .grid.kpi {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .listing-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
       }
 
-      @media (max-width: 900px) {
+      @media (max-width: 930px) {
         .layout {
           grid-template-columns: 1fr;
         }
 
-        .sidebar {
+        .side {
+          position: static;
           flex-direction: row;
           overflow: auto;
-          padding: 8px;
         }
 
         .nav-btn {
-          min-width: 210px;
+          min-width: 195px;
         }
 
-        .grid.metrics {
+        .grid.two {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .shell {
+          width: calc(100% - 14px);
+          margin-top: 8px;
+        }
+
+        .topbar {
+          padding: 10px;
+        }
+
+        .grid.kpi,
+        .listing-grid {
           grid-template-columns: 1fr;
         }
 
-        .grid.cards,
-        .listings {
-          grid-template-columns: 1fr;
+        .toolbar {
+          width: 100%;
+        }
+
+        .toolbar .input,
+        .toolbar .select,
+        .toolbar .btn,
+        .toolbar .persona {
+          flex: 1;
+          min-width: 0;
         }
       }
     </style>
@@ -359,194 +423,250 @@
     <div class="shell">
       <header class="topbar">
         <div class="brand">
-          <div class="brand-chip">SS</div>
+          <div class="brand-mark">SS</div>
           <div>
-            <h1>Marketplace SaaS Console</h1>
-            <p>Customer / Creator / Admin unified cockpit</p>
+            <h1 data-i18n="brandTitle">Marketplace Control Center</h1>
+            <p data-i18n="brandSub">Enterprise operations console for creator commerce</p>
           </div>
         </div>
 
-        <div class="topbar-controls">
-          <input id="apiBase" class="input" style="min-width: 260px" value="http://localhost:8080" />
-          <input id="webhookToken" class="input" style="min-width: 170px" value="dev-webhook-token" />
-          <button id="saveConfig" class="btn">保存連線設定</button>
-          <a class="btn ghost link" href="./index.html">回 Landing</a>
-          <a class="btn ghost link" href="./getting-started.html">後端啟動教學</a>
+        <div class="toolbar">
+          <span id="persona" class="persona">Persona: Customer</span>
+          <select id="langSelect" class="select" aria-label="Language selector">
+            <option value="en">Eng</option>
+            <option value="zh-TW">Zh-TW</option>
+            <option value="hu">Hungarian</option>
+            <option value="fr">French</option>
+          </select>
+          <input id="apiBase" class="input" value="http://localhost:8080" aria-label="API base" />
+          <input id="webhookToken" class="input" value="dev-webhook-token" aria-label="Webhook token" />
+          <button id="saveConfig" class="btn">Save</button>
+          <a class="btn soft" href="./index.html" data-i18n="btnLanding">Landing</a>
         </div>
       </header>
 
       <div class="layout">
-        <aside class="sidebar">
-          <button class="nav-btn active" data-panel="buyer">
-            <strong>Customer Portal</strong>
-            <small>Explore, 下單, 付款追蹤</small>
+        <aside class="side">
+          <button class="nav-btn active" data-panel="overview">
+            <strong data-i18n="navOverview">Overview</strong>
+            <small data-i18n="navOverviewSub">Revenue, risk, conversion pulse</small>
           </button>
-          <button class="nav-btn" data-panel="seller">
-            <strong>Creator Dashboard</strong>
-            <small>商品, 置頂, 錢包提現</small>
+          <button class="nav-btn" data-panel="customer">
+            <strong data-i18n="navCustomer">Customer</strong>
+            <small data-i18n="navCustomerSub">Explore and pending orders</small>
           </button>
-          <button class="nav-btn" data-panel="admin">
-            <strong>Admin Panel</strong>
-            <small>Webhook, 風控, 爭議處理</small>
+          <button class="nav-btn" data-panel="creator">
+            <strong data-i18n="navCreator">Creator</strong>
+            <small data-i18n="navCreatorSub">Promotion and wallet operations</small>
           </button>
-          <button class="nav-btn" data-panel="docs">
-            <strong>Docs Shortcuts</strong>
-            <small>PRD, API, Schema</small>
+          <button class="nav-btn" data-panel="operations">
+            <strong data-i18n="navOps">Operations</strong>
+            <small data-i18n="navOpsSub">Webhook, payout, moderation</small>
+          </button>
+          <button class="nav-btn" data-panel="logs">
+            <strong data-i18n="navLogs">API Logs</strong>
+            <small data-i18n="navLogsSub">Request and response traces</small>
           </button>
         </aside>
 
-        <main class="content">
-          <section id="panel-buyer" class="panel active">
-            <div class="grid metrics">
+        <main class="main">
+          <section id="panel-overview" class="panel active">
+            <div class="grid kpi">
               <article class="card">
-                <h3>Explore Listings</h3>
-                <div class="kpi" id="kpiListings">0</div>
-                <div class="muted">目前可瀏覽商品數</div>
+                <h3 data-i18n="kpiListings">Active listings</h3>
+                <div id="kpiListings" class="kpi-value">0</div>
+                <div class="kpi-note" data-i18n="kpiListingsSub">Total visible catalog inventory</div>
               </article>
               <article class="card">
-                <h3>Promoted Slots</h3>
-                <div class="kpi" id="kpiPromoted">0</div>
-                <div class="muted">付費置頂中的商品</div>
+                <h3 data-i18n="kpiPromoted">Promoted share</h3>
+                <div id="kpiPromoted" class="kpi-value">0%</div>
+                <div class="kpi-note" data-i18n="kpiPromotedSub">Inventory with active promotion plans</div>
               </article>
               <article class="card">
-                <h3>Estimated Ticket</h3>
-                <div class="kpi" id="kpiTicket">$0</div>
-                <div class="muted">含 buyer fee 的平均客單</div>
+                <h3 data-i18n="kpiAov">Projected AOV</h3>
+                <div id="kpiAov" class="kpi-value">$0.00</div>
+                <div class="kpi-note" data-i18n="kpiAovSub">Estimated total charged including buyer fee</div>
+              </article>
+              <article class="card">
+                <h3 data-i18n="kpiRole">Current entry role</h3>
+                <div id="kpiRole" class="kpi-value">customer</div>
+                <div class="kpi-note" data-i18n="kpiRoleSub">Role hint carried from Landing URL</div>
               </article>
             </div>
 
-            <article class="card stack">
-              <div class="row">
-                <input id="buyerSearch" class="input" placeholder="搜尋商品標題或描述" style="flex: 1" />
-                <select id="buyerFilter" class="select">
-                  <option value="all">全部</option>
-                  <option value="promoted">只看置頂</option>
-                  <option value="normal">只看一般</option>
+            <div class="grid two">
+              <article class="card">
+                <h3 data-i18n="flowTitle">Business flow health</h3>
+                <p data-i18n="flowSub">Critical checkpoints for checkout, payout, and reserve management.</p>
+                <div class="timeline">
+                  <div>
+                    <strong data-i18n="flowPoint1">Pending order created</strong>
+                    <span class="muted" data-i18n="flowPoint1Sub">Customer initiates hosted checkout with fee breakdown.</span>
+                  </div>
+                  <div>
+                    <strong data-i18n="flowPoint2">Webhook processed</strong>
+                    <span class="muted" data-i18n="flowPoint2Sub">Payment status transitions to held, failed, or chargeback.</span>
+                  </div>
+                  <div>
+                    <strong data-i18n="flowPoint3">Payout release</strong>
+                    <span class="muted" data-i18n="flowPoint3Sub">Creator wallet splits available and reserve balances.</span>
+                  </div>
+                </div>
+              </article>
+              <article class="card">
+                <h3 data-i18n="quickTitle">Quick persona switch</h3>
+                <p data-i18n="quickSub">Jump between role-centric workflows without returning to Landing.</p>
+                <div class="row" style="margin-top: 10px">
+                  <button class="btn soft" data-switch-role="customer" data-i18n="btnCustomerRole">Switch to Customer</button>
+                  <button class="btn soft" data-switch-role="creator" data-i18n="btnCreatorRole">Switch to Creator</button>
+                  <button class="btn soft" data-switch-role="admin" data-i18n="btnAdminRole">Switch to Admin</button>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section id="panel-customer" class="panel">
+            <article class="card">
+              <h3 data-i18n="customerTitle">Customer listing desk</h3>
+              <p data-i18n="customerSub">Search inventory, select listing, and generate pending order request.</p>
+              <div class="row" style="margin-top: 10px">
+                <input id="searchInput" class="input" style="flex: 1" placeholder="Search listings" />
+                <select id="filterSelect" class="select">
+                  <option value="all">All</option>
+                  <option value="promoted">Promoted</option>
+                  <option value="organic">Organic</option>
                 </select>
+                <button id="refreshListings" class="btn" data-i18n="btnRefresh">Refresh</button>
               </div>
-              <div id="listingGrid" class="listings"></div>
+              <div id="listingGrid" class="listing-grid" style="margin-top: 10px"></div>
             </article>
 
-            <article class="card stack">
-              <h3>下單工作台（Pending Order + Hosted Checkout）</h3>
-              <div class="row">
-                <input id="selectedListingId" class="input" placeholder="Listing ID" style="flex: 1" />
-                <button id="createOrder" class="btn primary">建立待付款訂單</button>
+            <article class="card">
+              <h3 data-i18n="orderTitle">Order workspace</h3>
+              <p data-i18n="orderSub">Creates pending order and returns hosted checkout URL.</p>
+              <div class="row" style="margin-top: 10px">
+                <input id="selectedListing" class="input" style="flex: 1" placeholder="Listing ID" />
+                <button id="createOrderBtn" class="btn primary" data-i18n="btnCreateOrder">Create pending order</button>
               </div>
-              <div class="muted">系統會呼叫 <code>/v1/orders</code>，回傳 hosted checkout URL。</div>
-              <pre id="buyerLog" class="console"></pre>
+              <pre id="customerConsole" class="console" style="margin-top: 10px"></pre>
             </article>
           </section>
 
-          <section id="panel-seller" class="panel">
-            <div class="grid cards">
+          <section id="panel-creator" class="panel">
+            <div class="grid two">
               <article class="card">
-                <h3>Promotion Center</h3>
-                <p class="muted">快速購買置頂方案，提升 Explore 權重。</p>
-                <div class="row">
-                  <select id="sellerPlan" class="select">
-                    <option value="top-24h">Top Placement 24h</option>
-                    <option value="top-7d">Top Placement 7d</option>
-                    <option value="boost-200-clicks">Boost 200 Clicks</option>
+                <h3 data-i18n="promoTitle">Promotion center</h3>
+                <p data-i18n="promoSub">Purchase ranking plans for creator listings.</p>
+                <div class="row" style="margin-top: 10px">
+                  <select id="planSelect" class="select">
+                    <option value="top-24h">top-24h</option>
+                    <option value="top-7d">top-7d</option>
+                    <option value="boost-200-clicks">boost-200-clicks</option>
                   </select>
-                  <input id="sellerListingId" class="input" placeholder="Listing ID" style="flex: 1" />
-                  <button id="buyPromotion" class="btn primary">購買</button>
+                  <input id="creatorListing" class="input" style="flex: 1" placeholder="Listing ID" />
+                  <button id="buyPromoBtn" class="btn primary" data-i18n="btnBuyPromo">Buy plan</button>
                 </div>
-                <pre id="promotionLog" class="console"></pre>
+                <div class="row" style="margin-top: 8px">
+                  <button id="loadPromotions" class="btn" data-i18n="btnLoadPromo">Load campaigns</button>
+                </div>
+                <pre id="promoConsole" class="console" style="margin-top: 10px"></pre>
               </article>
 
               <article class="card">
-                <h3>Wallet & Withdraw</h3>
-                <p class="muted">查詢 available / pending balance，並送出提現。</p>
-                <div class="row">
-                  <button id="refreshWallet" class="btn">刷新錢包</button>
-                  <input id="withdrawAmount" class="input" placeholder="提現金額" value="20" style="width: 120px" />
-                  <button id="withdrawNow" class="btn primary">申請提現</button>
+                <h3 data-i18n="walletTitle">Wallet and withdrawals</h3>
+                <p data-i18n="walletSub">Track available and pending balances, then request withdrawal.</p>
+                <div class="row" style="margin-top: 10px">
+                  <button id="walletRefresh" class="btn" data-i18n="btnWalletRefresh">Refresh wallet</button>
+                  <input id="withdrawAmount" class="input" value="20" style="width: 120px" />
+                  <button id="withdrawBtn" class="btn primary" data-i18n="btnWithdraw">Request withdrawal</button>
                 </div>
-                <pre id="walletLog" class="console"></pre>
+                <pre id="walletConsole" class="console" style="margin-top: 10px"></pre>
               </article>
             </div>
 
             <article class="card">
-              <h3>Seller Operational Snapshot</h3>
-              <table class="table">
+              <h3 data-i18n="creatorTableTitle">Creator snapshot</h3>
+              <table class="table" id="creatorTable">
                 <thead>
                   <tr>
-                    <th>Listing</th>
-                    <th>Status</th>
-                    <th>Price</th>
-                    <th>Promoted</th>
-                    <th>Conversion</th>
+                    <th data-i18n="tblListing">Listing</th>
+                    <th data-i18n="tblPrice">Price</th>
+                    <th data-i18n="tblPromo">Promoted</th>
+                    <th data-i18n="tblScore">Ranking score</th>
                   </tr>
                 </thead>
-                <tbody id="sellerTableBody"></tbody>
+                <tbody id="creatorTableBody"></tbody>
               </table>
             </article>
           </section>
 
-          <section id="panel-admin" class="panel">
-            <article class="card stack">
-              <h3>Webhook Simulator</h3>
-              <div class="row">
-                <input id="webhookOrderId" class="input" placeholder="Order ID" style="flex: 1" />
-                <select id="webhookStatus" class="select">
-                  <option value="paid">paid</option>
-                  <option value="failed">failed</option>
-                  <option value="chargeback">chargeback</option>
-                </select>
-                <button id="sendWebhook" class="btn primary">送出 webhook</button>
-              </div>
-              <pre id="adminLog" class="console"></pre>
-            </article>
+          <section id="panel-operations" class="panel">
+            <div class="grid two">
+              <article class="card">
+                <h3 data-i18n="webhookTitle">Webhook simulator</h3>
+                <p data-i18n="webhookSub">Post payment event callbacks to update order and payment state.</p>
+                <div class="row" style="margin-top: 10px">
+                  <input id="webhookOrder" class="input" style="flex: 1" placeholder="Order ID" />
+                  <select id="webhookStatus" class="select">
+                    <option value="paid">paid</option>
+                    <option value="failed">failed</option>
+                    <option value="chargeback">chargeback</option>
+                  </select>
+                  <button id="sendWebhook" class="btn primary" data-i18n="btnSendWebhook">Send webhook</button>
+                </div>
+                <pre id="opsConsole" class="console" style="margin-top: 10px"></pre>
+              </article>
+
+              <article class="card">
+                <h3 data-i18n="opsTitle">Settlement operations</h3>
+                <p data-i18n="opsSub">Run payout release after delivery/dispute checks.</p>
+                <div class="row" style="margin-top: 10px">
+                  <button id="releasePayout" class="btn primary" data-i18n="btnReleasePayout">Run payout release</button>
+                </div>
+                <pre id="settlementConsole" class="console" style="margin-top: 10px"></pre>
+              </article>
+            </div>
 
             <article class="card">
-              <h3>Moderation Queue</h3>
+              <h3 data-i18n="moderationTitle">Moderation command board</h3>
               <table class="table">
                 <thead>
                   <tr>
-                    <th>Entity</th>
-                    <th>Type</th>
-                    <th>Risk</th>
-                    <th>Action</th>
-                    <th>Owner</th>
+                    <th data-i18n="tblEntity">Entity</th>
+                    <th data-i18n="tblType">Type</th>
+                    <th data-i18n="tblRisk">Risk</th>
+                    <th data-i18n="tblAction">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>lst_demo_192</td>
+                    <td>lst_9a2f</td>
                     <td>listing</td>
-                    <td><span class="pill">65</span></td>
+                    <td class="bad">65</td>
                     <td>review</td>
-                    <td>seller-demo</td>
                   </tr>
                   <tr>
-                    <td>msg_demo_88</td>
+                    <td>msg_3bc1</td>
                     <td>chat_message</td>
-                    <td><span class="pill bad">99.9</span></td>
+                    <td class="bad">99.9</td>
                     <td>block</td>
-                    <td>buyer-demo</td>
                   </tr>
                   <tr>
-                    <td>profile_demo_11</td>
+                    <td>profile_111</td>
                     <td>profile</td>
-                    <td><span class="pill ok">5</span></td>
+                    <td class="good">5</td>
                     <td>allow</td>
-                    <td>seller-demo</td>
                   </tr>
                 </tbody>
               </table>
             </article>
           </section>
 
-          <section id="panel-docs" class="panel">
-            <article class="card stack">
-              <h3>Project Assets</h3>
-              <a class="link" href="../README.md" target="_blank" rel="noreferrer">README</a>
-              <a class="link" href="../docs/PRD_zh-TW.md" target="_blank" rel="noreferrer">PRD</a>
-              <a class="link" href="../docs/COMPLIANCE_CHECKLIST_zh-TW.md" target="_blank" rel="noreferrer">Compliance Checklist</a>
-              <a class="link" href="../api/openapi.yaml" target="_blank" rel="noreferrer">OpenAPI</a>
-              <a class="link" href="../sql/schema.sql" target="_blank" rel="noreferrer">PostgreSQL Schema</a>
-              <a class="link" href="./getting-started.html" target="_blank" rel="noreferrer">Backend Quick Start</a>
+          <section id="panel-logs" class="panel">
+            <article class="card">
+              <h3 data-i18n="logsTitle">API request log stream</h3>
+              <p data-i18n="logsSub">All actions are mirrored here for troubleshooting and demos.</p>
+              <pre id="globalLog" class="console" style="margin-top: 10px"></pre>
             </article>
           </section>
         </main>
@@ -554,344 +674,743 @@
     </div>
 
     <script>
-      const state = {
-        activePanel: 'buyer',
-        buyerId: 'buyer-demo',
-        sellerId: 'seller-demo',
-        listings: [
-          {
-            id: 'sample-lst-001',
-            title: 'Limited Custom Bundle',
-            description: 'Personalized packaging with verified seller fulfillment.',
-            price: 120,
-            currency: 'USD',
-            promoted: true,
-            rating: 4.9,
-            conversion: '13.8%'
-          },
-          {
-            id: 'sample-lst-002',
-            title: 'Express Premium Item',
-            description: 'Fast dispatch workflow with compliance checks.',
-            price: 95,
-            currency: 'USD',
-            promoted: false,
-            rating: 4.7,
-            conversion: '9.4%'
-          },
-          {
-            id: 'sample-lst-003',
-            title: 'Collector Edition',
-            description: 'High-margin niche SKU for repeat buyers.',
-            price: 145,
-            currency: 'USD',
-            promoted: true,
-            rating: 4.8,
-            conversion: '16.1%'
-          }
-        ]
+      const I18N = {
+        en: {
+          personaLabel: 'Persona',
+          brandTitle: 'Marketplace Control Center',
+          brandSub: 'Enterprise operations console for creator commerce',
+          btnLanding: 'Landing',
+          navOverview: 'Overview',
+          navOverviewSub: 'Revenue, risk, conversion pulse',
+          navCustomer: 'Customer',
+          navCustomerSub: 'Explore and pending orders',
+          navCreator: 'Creator',
+          navCreatorSub: 'Promotion and wallet operations',
+          navOps: 'Operations',
+          navOpsSub: 'Webhook, payout, moderation',
+          navLogs: 'API Logs',
+          navLogsSub: 'Request and response traces',
+          kpiListings: 'Active listings',
+          kpiListingsSub: 'Total visible catalog inventory',
+          kpiPromoted: 'Promoted share',
+          kpiPromotedSub: 'Inventory with active promotion plans',
+          kpiAov: 'Projected AOV',
+          kpiAovSub: 'Estimated total charged including buyer fee',
+          kpiRole: 'Current entry role',
+          kpiRoleSub: 'Role hint carried from Landing URL',
+          flowTitle: 'Business flow health',
+          flowSub: 'Critical checkpoints for checkout, payout, and reserve management.',
+          flowPoint1: 'Pending order created',
+          flowPoint1Sub: 'Customer initiates hosted checkout with fee breakdown.',
+          flowPoint2: 'Webhook processed',
+          flowPoint2Sub: 'Payment status transitions to held, failed, or chargeback.',
+          flowPoint3: 'Payout release',
+          flowPoint3Sub: 'Creator wallet splits available and reserve balances.',
+          quickTitle: 'Quick persona switch',
+          quickSub: 'Jump between role-centric workflows without returning to Landing.',
+          btnCustomerRole: 'Switch to Customer',
+          btnCreatorRole: 'Switch to Creator',
+          btnAdminRole: 'Switch to Admin',
+          customerTitle: 'Customer listing desk',
+          customerSub: 'Search inventory, select listing, and generate pending order request.',
+          btnRefresh: 'Refresh',
+          orderTitle: 'Order workspace',
+          orderSub: 'Creates pending order and returns hosted checkout URL.',
+          btnCreateOrder: 'Create pending order',
+          promoTitle: 'Promotion center',
+          promoSub: 'Purchase ranking plans for creator listings.',
+          btnBuyPromo: 'Buy plan',
+          btnLoadPromo: 'Load campaigns',
+          walletTitle: 'Wallet and withdrawals',
+          walletSub: 'Track available and pending balances, then request withdrawal.',
+          btnWalletRefresh: 'Refresh wallet',
+          btnWithdraw: 'Request withdrawal',
+          creatorTableTitle: 'Creator snapshot',
+          webhookTitle: 'Webhook simulator',
+          webhookSub: 'Post payment event callbacks to update order and payment state.',
+          btnSendWebhook: 'Send webhook',
+          opsTitle: 'Settlement operations',
+          opsSub: 'Run payout release after delivery/dispute checks.',
+          btnReleasePayout: 'Run payout release',
+          moderationTitle: 'Moderation command board',
+          logsTitle: 'API request log stream',
+          logsSub: 'All actions are mirrored here for troubleshooting and demos.',
+          tblListing: 'Listing',
+          tblPrice: 'Price',
+          tblPromo: 'Promoted',
+          tblScore: 'Ranking score',
+          tblEntity: 'Entity',
+          tblType: 'Type',
+          tblRisk: 'Risk',
+          tblAction: 'Action'
+        },
+        'zh-TW': {
+          personaLabel: '身份',
+          brandTitle: 'Marketplace 控制中心',
+          brandSub: 'Creator Commerce 的企業級營運 Console',
+          btnLanding: '回 Landing',
+          navOverview: '總覽',
+          navOverviewSub: '營收、風險、轉換脈動',
+          navCustomer: 'Customer',
+          navCustomerSub: '探索與待付款訂單',
+          navCreator: 'Creator',
+          navCreatorSub: '推廣與錢包操作',
+          navOps: '營運',
+          navOpsSub: 'Webhook、撥款、審核',
+          navLogs: 'API 紀錄',
+          navLogsSub: '請求與回應追蹤',
+          kpiListings: '有效商品數',
+          kpiListingsSub: '目前可見的目錄總量',
+          kpiPromoted: '置頂占比',
+          kpiPromotedSub: '有啟用推廣方案的商品比例',
+          kpiAov: '預估客單',
+          kpiAovSub: '含 buyer fee 的預估 charged 金額',
+          kpiRole: '目前入口角色',
+          kpiRoleSub: '來自 Landing 的 role 參數',
+          flowTitle: '商業流程健康度',
+          flowSub: '結帳、撥款、保留金三大關鍵檢查點。',
+          flowPoint1: '建立待付款訂單',
+          flowPoint1Sub: 'Customer 建立含費率拆解的 hosted checkout 訂單。',
+          flowPoint2: 'Webhook 回寫成功',
+          flowPoint2Sub: '支付狀態轉移為 held、failed 或 chargeback。',
+          flowPoint3: '撥款釋放',
+          flowPoint3Sub: 'Creator 錢包拆成 available 與 reserve。',
+          quickTitle: '快速切換角色',
+          quickSub: '不回 Landing 也可切換角色導向流程。',
+          btnCustomerRole: '切換 Customer',
+          btnCreatorRole: '切換 Creator',
+          btnAdminRole: '切換 Admin',
+          customerTitle: 'Customer 商品工作台',
+          customerSub: '搜尋商品、挑選 listing、建立 pending 訂單。',
+          btnRefresh: '刷新',
+          orderTitle: '下單工作區',
+          orderSub: '建立待付款訂單並回傳 hosted checkout URL。',
+          btnCreateOrder: '建立 pending 訂單',
+          promoTitle: '推廣中心',
+          promoSub: '為 Creator 商品購買排序方案。',
+          btnBuyPromo: '購買方案',
+          btnLoadPromo: '載入活動',
+          walletTitle: '錢包與提現',
+          walletSub: '查詢 available / pending 餘額並申請提現。',
+          btnWalletRefresh: '刷新錢包',
+          btnWithdraw: '申請提現',
+          creatorTableTitle: 'Creator 營運快照',
+          webhookTitle: 'Webhook 模擬器',
+          webhookSub: '送出支付事件回呼，更新訂單與支付狀態。',
+          btnSendWebhook: '送出 webhook',
+          opsTitle: '清算操作',
+          opsSub: '在交付與爭議檢查後執行撥款釋放。',
+          btnReleasePayout: '執行 payout release',
+          moderationTitle: '內容審核指揮板',
+          logsTitle: 'API 操作紀錄流',
+          logsSub: '所有操作會同步寫入，方便除錯與展示。',
+          tblListing: '商品',
+          tblPrice: '價格',
+          tblPromo: '置頂',
+          tblScore: '排序分數',
+          tblEntity: '實體',
+          tblType: '類型',
+          tblRisk: '風險',
+          tblAction: '動作'
+        },
+        hu: {
+          personaLabel: 'Szerep',
+          brandTitle: 'Marketplace Control Center',
+          brandSub: 'Vallalati operations console creator commerce-hez',
+          btnLanding: 'Landing',
+          navOverview: 'Attekintes',
+          navOverviewSub: 'Bevetel, kockazat, konverzio',
+          navCustomer: 'Customer',
+          navCustomerSub: 'Felfedezes es pending rendelesek',
+          navCreator: 'Creator',
+          navCreatorSub: 'Promotion es wallet muveletek',
+          navOps: 'Operations',
+          navOpsSub: 'Webhook, payout, moderacio',
+          navLogs: 'API naplok',
+          navLogsSub: 'Request/response tracek',
+          kpiListings: 'Aktiv listingek',
+          kpiListingsSub: 'Lathato katalogus mennyiseg',
+          kpiPromoted: 'Promotalt arany',
+          kpiPromotedSub: 'Aktiv promotion planes listingek aranya',
+          kpiAov: 'Becsult AOV',
+          kpiAovSub: 'Becsult charged osszeg buyer feevel',
+          kpiRole: 'Aktiv belepesi szerep',
+          kpiRoleSub: 'Landing URL-bol erkezo szerep',
+          flowTitle: 'Uzleti flow allapot',
+          flowSub: 'Checkout, payout es reserve kulcs pontok.',
+          flowPoint1: 'Pending rendeles letrehozva',
+          flowPoint1Sub: 'Customer hosted checkout rendelest indit dij bontassal.',
+          flowPoint2: 'Webhook feldolgozva',
+          flowPoint2Sub: 'Statusz atvalt held, failed vagy chargeback allapotba.',
+          flowPoint3: 'Payout release',
+          flowPoint3Sub: 'Creator wallet available es reserve egyenlegre bomlik.',
+          quickTitle: 'Gyors szerepvaltas',
+          quickSub: 'Landing nelkul is valthatsz workflow-t.',
+          btnCustomerRole: 'Valtas Customer',
+          btnCreatorRole: 'Valtas Creator',
+          btnAdminRole: 'Valtas Admin',
+          customerTitle: 'Customer listing desk',
+          customerSub: 'Kereses, listing valasztas, pending rendeles generalas.',
+          btnRefresh: 'Frissites',
+          orderTitle: 'Rendeles workspace',
+          orderSub: 'Pending rendeles es hosted checkout URL generalasa.',
+          btnCreateOrder: 'Pending rendeles',
+          promoTitle: 'Promotion center',
+          promoSub: 'Ranking plan vasarlas creator listingekhez.',
+          btnBuyPromo: 'Plan vasarlas',
+          btnLoadPromo: 'Kampanyok betoltese',
+          walletTitle: 'Wallet es kiutalas',
+          walletSub: 'Available/pending egyenleg kovetese es kiutalas kerese.',
+          btnWalletRefresh: 'Wallet frissites',
+          btnWithdraw: 'Kiutalas kerese',
+          creatorTableTitle: 'Creator snapshot',
+          webhookTitle: 'Webhook szimulator',
+          webhookSub: 'Payment callback kuldese order/payment status frissiteshez.',
+          btnSendWebhook: 'Webhook kuldese',
+          opsTitle: 'Settlement operations',
+          opsSub: 'Payout release futtatasa delivery/dispute ellenorzes utan.',
+          btnReleasePayout: 'Payout release futtatasa',
+          moderationTitle: 'Moderation board',
+          logsTitle: 'API naplo stream',
+          logsSub: 'Minden muvelet itt is naplozva van demohoz es hibakereseshez.',
+          tblListing: 'Listing',
+          tblPrice: 'Ar',
+          tblPromo: 'Promotalt',
+          tblScore: 'Rang pont',
+          tblEntity: 'Entity',
+          tblType: 'Tipus',
+          tblRisk: 'Risk',
+          tblAction: 'Action'
+        },
+        fr: {
+          personaLabel: 'Role',
+          brandTitle: 'Marketplace Control Center',
+          brandSub: 'Console operations niveau entreprise pour creator commerce',
+          btnLanding: 'Landing',
+          navOverview: 'Vue globale',
+          navOverviewSub: 'Revenus, risque, conversion',
+          navCustomer: 'Customer',
+          navCustomerSub: 'Exploration et commandes pending',
+          navCreator: 'Creator',
+          navCreatorSub: 'Promotion et operations wallet',
+          navOps: 'Operations',
+          navOpsSub: 'Webhook, payout, moderation',
+          navLogs: 'Logs API',
+          navLogsSub: 'Traces request/response',
+          kpiListings: 'Listings actifs',
+          kpiListingsSub: 'Volume catalogue visible',
+          kpiPromoted: 'Part promue',
+          kpiPromotedSub: 'Inventaire avec plans promotion actifs',
+          kpiAov: 'AOV projete',
+          kpiAovSub: 'Montant charged estime avec buyer fee',
+          kpiRole: 'Role dentree courant',
+          kpiRoleSub: 'Role recu depuis Landing',
+          flowTitle: 'Sante du flux business',
+          flowSub: 'Points critiques checkout, payout et reserve.',
+          flowPoint1: 'Commande pending creee',
+          flowPoint1Sub: 'Le Customer initie hosted checkout avec decomposition des frais.',
+          flowPoint2: 'Webhook traite',
+          flowPoint2Sub: 'Le statut passe a held, failed ou chargeback.',
+          flowPoint3: 'Payout release',
+          flowPoint3Sub: 'Le wallet creator separe available et reserve.',
+          quickTitle: 'Changement de role rapide',
+          quickSub: 'Basculez de workflow sans revenir au Landing.',
+          btnCustomerRole: 'Basculer Customer',
+          btnCreatorRole: 'Basculer Creator',
+          btnAdminRole: 'Basculer Admin',
+          customerTitle: 'Customer listing desk',
+          customerSub: 'Recherche, selection listing et creation de commande pending.',
+          btnRefresh: 'Rafraichir',
+          orderTitle: 'Espace commande',
+          orderSub: 'Cree une commande pending et renvoie lURL hosted checkout.',
+          btnCreateOrder: 'Creer commande pending',
+          promoTitle: 'Centre promotion',
+          promoSub: 'Acheter des plans de ranking pour listings creator.',
+          btnBuyPromo: 'Acheter plan',
+          btnLoadPromo: 'Charger campagnes',
+          walletTitle: 'Wallet et retraits',
+          walletSub: 'Suivre soldes available/pending et demander un retrait.',
+          btnWalletRefresh: 'Rafraichir wallet',
+          btnWithdraw: 'Demander retrait',
+          creatorTableTitle: 'Snapshot creator',
+          webhookTitle: 'Simulateur webhook',
+          webhookSub: 'Poster des callbacks paiement pour mettre a jour les statuts.',
+          btnSendWebhook: 'Envoyer webhook',
+          opsTitle: 'Operations de settlement',
+          opsSub: 'Executer payout release apres verification delivery/dispute.',
+          btnReleasePayout: 'Executer payout release',
+          moderationTitle: 'Board moderation',
+          logsTitle: 'Flux de logs API',
+          logsSub: 'Toutes les actions sont journalisees pour demo et diagnostic.',
+          tblListing: 'Listing',
+          tblPrice: 'Prix',
+          tblPromo: 'Promu',
+          tblScore: 'Score ranking',
+          tblEntity: 'Entite',
+          tblType: 'Type',
+          tblRisk: 'Risque',
+          tblAction: 'Action'
+        }
       };
 
-      const els = {
+      const state = {
+        lang: 'en',
+        role: 'customer',
+        activePanel: 'overview',
+        listings: [],
+        logs: []
+      };
+
+      const fallbackListings = [
+        {
+          id: 'sample-lst-001',
+          title: 'Premium Custom Package',
+          description: 'Verified creator, high conversion item.',
+          price: 120,
+          currency: 'USD',
+          isPromoted: true,
+          ranking: { score: 88 }
+        },
+        {
+          id: 'sample-lst-002',
+          title: 'Express Bundle',
+          description: 'Fast dispatch and compliance-safe content.',
+          price: 95,
+          currency: 'USD',
+          isPromoted: false,
+          ranking: { score: 71 }
+        },
+        {
+          id: 'sample-lst-003',
+          title: 'Collector Tier Listing',
+          description: 'High ticket niche SKU with repeat demand.',
+          price: 160,
+          currency: 'USD',
+          isPromoted: true,
+          ranking: { score: 93 }
+        }
+      ];
+
+      const el = {
         navButtons: document.querySelectorAll('.nav-btn'),
         panels: {
-          buyer: document.getElementById('panel-buyer'),
-          seller: document.getElementById('panel-seller'),
-          admin: document.getElementById('panel-admin'),
-          docs: document.getElementById('panel-docs')
+          overview: document.getElementById('panel-overview'),
+          customer: document.getElementById('panel-customer'),
+          creator: document.getElementById('panel-creator'),
+          operations: document.getElementById('panel-operations'),
+          logs: document.getElementById('panel-logs')
         },
+        persona: document.getElementById('persona'),
+        langSelect: document.getElementById('langSelect'),
         apiBase: document.getElementById('apiBase'),
         webhookToken: document.getElementById('webhookToken'),
         saveConfig: document.getElementById('saveConfig'),
-        buyerSearch: document.getElementById('buyerSearch'),
-        buyerFilter: document.getElementById('buyerFilter'),
-        listingGrid: document.getElementById('listingGrid'),
-        selectedListingId: document.getElementById('selectedListingId'),
-        createOrder: document.getElementById('createOrder'),
-        buyerLog: document.getElementById('buyerLog'),
-        sellerTableBody: document.getElementById('sellerTableBody'),
-        sellerPlan: document.getElementById('sellerPlan'),
-        sellerListingId: document.getElementById('sellerListingId'),
-        buyPromotion: document.getElementById('buyPromotion'),
-        promotionLog: document.getElementById('promotionLog'),
-        refreshWallet: document.getElementById('refreshWallet'),
-        withdrawNow: document.getElementById('withdrawNow'),
-        withdrawAmount: document.getElementById('withdrawAmount'),
-        walletLog: document.getElementById('walletLog'),
-        webhookOrderId: document.getElementById('webhookOrderId'),
-        webhookStatus: document.getElementById('webhookStatus'),
-        sendWebhook: document.getElementById('sendWebhook'),
-        adminLog: document.getElementById('adminLog'),
         kpiListings: document.getElementById('kpiListings'),
         kpiPromoted: document.getElementById('kpiPromoted'),
-        kpiTicket: document.getElementById('kpiTicket')
+        kpiAov: document.getElementById('kpiAov'),
+        kpiRole: document.getElementById('kpiRole'),
+        searchInput: document.getElementById('searchInput'),
+        filterSelect: document.getElementById('filterSelect'),
+        refreshListings: document.getElementById('refreshListings'),
+        listingGrid: document.getElementById('listingGrid'),
+        selectedListing: document.getElementById('selectedListing'),
+        createOrderBtn: document.getElementById('createOrderBtn'),
+        customerConsole: document.getElementById('customerConsole'),
+        planSelect: document.getElementById('planSelect'),
+        creatorListing: document.getElementById('creatorListing'),
+        buyPromoBtn: document.getElementById('buyPromoBtn'),
+        loadPromotions: document.getElementById('loadPromotions'),
+        promoConsole: document.getElementById('promoConsole'),
+        walletRefresh: document.getElementById('walletRefresh'),
+        withdrawAmount: document.getElementById('withdrawAmount'),
+        withdrawBtn: document.getElementById('withdrawBtn'),
+        walletConsole: document.getElementById('walletConsole'),
+        creatorTableBody: document.getElementById('creatorTableBody'),
+        webhookOrder: document.getElementById('webhookOrder'),
+        webhookStatus: document.getElementById('webhookStatus'),
+        sendWebhook: document.getElementById('sendWebhook'),
+        opsConsole: document.getElementById('opsConsole'),
+        releasePayout: document.getElementById('releasePayout'),
+        settlementConsole: document.getElementById('settlementConsole'),
+        globalLog: document.getElementById('globalLog')
       };
 
-      function log(el, label, payload) {
-        const line = `[${new Date().toLocaleTimeString()}] ${label}\n${
+      function safeLang(raw) {
+        return Object.prototype.hasOwnProperty.call(I18N, raw) ? raw : 'en';
+      }
+
+      function getQuery() {
+        const p = new URLSearchParams(window.location.search);
+        return {
+          role: p.get('role'),
+          lang: p.get('lang')
+        };
+      }
+
+      function persistConfig() {
+        localStorage.setItem('saas_api_base', el.apiBase.value);
+        localStorage.setItem('saas_webhook_token', el.webhookToken.value);
+        localStorage.setItem('siteLang', state.lang);
+      }
+
+      function hydrateConfig() {
+        const savedApi = localStorage.getItem('saas_api_base');
+        const savedToken = localStorage.getItem('saas_webhook_token');
+        if (savedApi) el.apiBase.value = savedApi;
+        if (savedToken) el.webhookToken.value = savedToken;
+      }
+
+      function appendLog(title, payload) {
+        const line = `[${new Date().toISOString()}] ${title}\n${
+          typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2)
+        }\n`;
+        state.logs.unshift(line);
+        if (state.logs.length > 120) state.logs.pop();
+        el.globalLog.textContent = state.logs.join('\n');
+      }
+
+      function writeConsole(target, title, payload) {
+        const line = `[${new Date().toLocaleTimeString()}] ${title}\n${
           typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2)
         }\n\n`;
-        el.textContent = line + el.textContent;
+        target.textContent = line + target.textContent;
+        appendLog(title, payload);
       }
 
-      function getApiBase() {
-        return (els.apiBase.value || '').replace(/\/$/, '');
+      function apiBase() {
+        return (el.apiBase.value || '').replace(/\/$/, '');
       }
 
-      function getQueryParams() {
-        const params = new URLSearchParams(window.location.search);
-        return {
-          role: params.get('role'),
-          lang: params.get('lang')
-        };
-      }
-
-      function saveConfig() {
-        localStorage.setItem('saas_api_base', els.apiBase.value);
-        localStorage.setItem('saas_webhook_token', els.webhookToken.value);
-        log(els.buyerLog, 'Config', { apiBase: els.apiBase.value, webhookToken: '***saved***' });
-      }
-
-      async function api(path, options = {}) {
-        const url = `${getApiBase()}${path}`;
-        const headers = {
-          'Content-Type': 'application/json',
-          ...(options.headers || {})
-        };
-
-        const res = await fetch(url, {
+      async function request(path, options = {}) {
+        const response = await fetch(`${apiBase()}${path}`, {
           method: options.method || 'GET',
-          headers,
+          headers: {
+            'Content-Type': 'application/json',
+            ...(options.headers || {})
+          },
           body: options.body ? JSON.stringify(options.body) : undefined
         });
 
-        const text = await res.text();
-        const data = text ? JSON.parse(text) : {};
-        if (!res.ok) {
-          throw new Error(`${res.status} ${res.statusText} ${JSON.stringify(data)}`);
+        const raw = await response.text();
+        const data = raw ? JSON.parse(raw) : {};
+
+        if (!response.ok) {
+          throw new Error(`${response.status} ${response.statusText} ${JSON.stringify(data)}`);
         }
 
         return data;
       }
 
-      function setActivePanel(panel) {
+      function setPanel(panel) {
         state.activePanel = panel;
-        Object.entries(els.panels).forEach(([key, panelEl]) => {
+        Object.entries(el.panels).forEach(([key, panelEl]) => {
           panelEl.classList.toggle('active', key === panel);
         });
-        els.navButtons.forEach((btn) => {
-          btn.classList.toggle('active', btn.dataset.panel === panel);
-        });
+        el.navButtons.forEach((button) => button.classList.toggle('active', button.dataset.panel === panel));
       }
 
-      function renderBuyer() {
-        const q = (els.buyerSearch.value || '').trim().toLowerCase();
-        const filter = els.buyerFilter.value;
+      function setRole(role) {
+        const normalized = ['customer', 'creator', 'admin', 'ops'].includes(role) ? role : 'customer';
+        state.role = normalized;
+        const label = (I18N[state.lang] && I18N[state.lang].personaLabel) || 'Persona';
+        el.persona.textContent = `${label}: ${normalized}`;
+        el.kpiRole.textContent = normalized;
+
+        if (normalized === 'creator') {
+          setPanel('creator');
+        } else if (normalized === 'admin' || normalized === 'ops') {
+          setPanel('operations');
+        } else {
+          setPanel('customer');
+        }
+      }
+
+      function renderI18n() {
+        const dict = I18N[state.lang];
+        document.documentElement.lang = state.lang;
+        document.querySelectorAll('[data-i18n]').forEach((node) => {
+          const key = node.getAttribute('data-i18n');
+          if (dict[key]) node.textContent = dict[key];
+        });
+        const label = dict.personaLabel || 'Persona';
+        el.persona.textContent = `${label}: ${state.role}`;
+        el.langSelect.value = state.lang;
+      }
+
+      function renderKpis() {
+        const total = state.listings.length;
+        const promoted = state.listings.filter((item) => item.isPromoted).length;
+        const promotedRate = total ? Math.round((promoted / total) * 100) : 0;
+        const avg = total
+          ? state.listings.reduce((sum, item) => sum + Number(item.price || 0), 0) / total
+          : 0;
+
+        el.kpiListings.textContent = String(total);
+        el.kpiPromoted.textContent = `${promotedRate}%`;
+        el.kpiAov.textContent = `$${(avg * 1.05).toFixed(2)}`;
+      }
+
+      function renderListings() {
+        const search = (el.searchInput.value || '').trim().toLowerCase();
+        const filter = el.filterSelect.value;
         const rows = state.listings.filter((item) => {
-          const searchable = `${item.title} ${item.description}`.toLowerCase();
-          const matchSearch = !q || searchable.includes(q);
-          const matchFilter =
-            filter === 'all' || (filter === 'promoted' && item.promoted) || (filter === 'normal' && !item.promoted);
-          return matchSearch && matchFilter;
+          const text = `${item.title || ''} ${item.description || ''}`.toLowerCase();
+          const bySearch = !search || text.includes(search) || String(item.id).toLowerCase().includes(search);
+          const byFilter =
+            filter === 'all' ||
+            (filter === 'promoted' && item.isPromoted) ||
+            (filter === 'organic' && !item.isPromoted);
+          return bySearch && byFilter;
         });
 
-        els.listingGrid.innerHTML = rows
+        el.listingGrid.innerHTML = rows
           .map(
             (item) => `
             <article class="listing">
-              <div class="row" style="justify-content: space-between;">
-                <h4>${item.title}</h4>
-                ${item.promoted ? '<span class="pill">Promoted</span>' : ''}
+              <div class="row" style="justify-content: space-between; margin-bottom: 4px;">
+                <h4>${item.title || item.id}</h4>
+                <span class="badge ${item.isPromoted ? 'promo' : ''}">${item.isPromoted ? 'Promoted' : 'Organic'}</span>
               </div>
-              <p class="muted">${item.description}</p>
-              <p class="price">${item.currency} ${item.price.toFixed(2)}</p>
-              <p class="muted">Seller rating ${item.rating} / Conversion ${item.conversion}</p>
-              <button class="btn" data-select-id="${item.id}">選擇下單</button>
+              <p>${item.description || 'No description'}</p>
+              <p><strong>${item.currency || 'USD'} ${Number(item.price || 0).toFixed(2)}</strong></p>
+              <button class="btn" data-select="${item.id}">Select</button>
             </article>
           `
           )
           .join('');
 
-        const promotedCount = rows.filter((item) => item.promoted).length;
-        const avgTicket = rows.length
-          ? rows.reduce((sum, item) => sum + item.price * 1.05, 0) / rows.length
-          : 0;
-
-        els.kpiListings.textContent = String(rows.length);
-        els.kpiPromoted.textContent = String(promotedCount);
-        els.kpiTicket.textContent = `$${avgTicket.toFixed(2)}`;
-
-        document.querySelectorAll('[data-select-id]').forEach((btn) => {
+        document.querySelectorAll('[data-select]').forEach((btn) => {
           btn.addEventListener('click', () => {
-            els.selectedListingId.value = btn.dataset.selectId;
-            log(els.buyerLog, 'Selected Listing', { listingId: btn.dataset.selectId });
+            el.selectedListing.value = btn.getAttribute('data-select');
+            el.creatorListing.value = btn.getAttribute('data-select');
+            writeConsole(el.customerConsole, 'Listing Selected', { listingId: btn.getAttribute('data-select') });
           });
         });
       }
 
-      function renderSellerTable() {
-        els.sellerTableBody.innerHTML = state.listings
+      function renderCreatorTable() {
+        el.creatorTableBody.innerHTML = state.listings
           .map(
             (item) => `
             <tr>
               <td>${item.id}</td>
-              <td>${item.promoted ? '<span class="pill">promoted</span>' : '<span class="pill ok">active</span>'}</td>
-              <td>${item.currency} ${item.price.toFixed(2)}</td>
-              <td>${item.promoted ? 'Yes' : 'No'}</td>
-              <td>${item.conversion}</td>
+              <td>${item.currency || 'USD'} ${Number(item.price || 0).toFixed(2)}</td>
+              <td>${item.isPromoted ? 'Yes' : 'No'}</td>
+              <td>${item.ranking && item.ranking.score ? item.ranking.score : '-'}</td>
             </tr>
           `
           )
           .join('');
       }
 
-      async function createPendingOrder() {
-        const listingId = (els.selectedListingId.value || '').trim();
-        if (!listingId) {
-          log(els.buyerLog, 'Validation', '請先選擇 Listing ID');
-          return;
-        }
-
+      async function loadListings() {
         try {
-          const result = await api('/v1/orders', {
-            method: 'POST',
-            headers: { 'x-user-id': state.buyerId },
-            body: {
-              buyerId: state.buyerId,
-              listingId,
-              currency: 'USD'
-            }
+          const data = await request('/v1/listings?status=all', {
+            headers: { 'x-user-id': 'buyer-demo' }
           });
-
-          log(els.buyerLog, 'Order Created', result);
-          if (result.order && result.order.id) {
-            els.webhookOrderId.value = result.order.id;
+          if (Array.isArray(data.listings) && data.listings.length) {
+            state.listings = data.listings;
+          } else {
+            state.listings = fallbackListings;
           }
-        } catch (err) {
-          log(els.buyerLog, 'Order Failed', String(err));
+          writeConsole(el.customerConsole, 'Listings Loaded', { count: state.listings.length });
+        } catch (error) {
+          state.listings = fallbackListings;
+          writeConsole(el.customerConsole, 'Listings Fallback', String(error));
         }
+
+        renderListings();
+        renderCreatorTable();
+        renderKpis();
       }
 
-      async function buyPromotionPlan() {
-        const listingId = (els.sellerListingId.value || '').trim();
+      async function createOrder() {
+        const listingId = (el.selectedListing.value || '').trim();
         if (!listingId) {
-          log(els.promotionLog, 'Validation', '請輸入 Listing ID');
+          writeConsole(el.customerConsole, 'Validation', 'Listing ID is required.');
           return;
         }
 
         try {
-          const result = await api('/v1/promotions/purchase', {
+          const data = await request('/v1/orders', {
             method: 'POST',
-            headers: { 'x-user-id': state.sellerId },
+            headers: { 'x-user-id': 'buyer-demo' },
             body: {
-              sellerId: state.sellerId,
+              buyerId: 'buyer-demo',
               listingId,
-              planId: els.sellerPlan.value,
               currency: 'USD'
             }
           });
-          log(els.promotionLog, 'Promotion Purchased', result);
-        } catch (err) {
-          log(els.promotionLog, 'Promotion Failed', String(err));
+
+          if (data.order && data.order.id) {
+            el.webhookOrder.value = data.order.id;
+          }
+          writeConsole(el.customerConsole, 'Order Created', data);
+        } catch (error) {
+          writeConsole(el.customerConsole, 'Order Error', String(error));
         }
       }
 
-      async function loadWallet() {
-        try {
-          const result = await api(`/v1/wallets/${state.sellerId}/summary?currency=USD`, {
-            headers: { 'x-user-id': state.sellerId }
-          });
-          log(els.walletLog, 'Wallet Summary', result);
-        } catch (err) {
-          log(els.walletLog, 'Wallet Failed', String(err));
-        }
-      }
-
-      async function withdrawNow() {
-        const amount = Number(els.withdrawAmount.value);
-        if (!Number.isFinite(amount) || amount <= 0) {
-          log(els.walletLog, 'Validation', '提現金額必須 > 0');
+      async function buyPromotion() {
+        const listingId = (el.creatorListing.value || '').trim();
+        if (!listingId) {
+          writeConsole(el.promoConsole, 'Validation', 'Listing ID is required.');
           return;
         }
 
         try {
-          const result = await api(`/v1/wallets/${state.sellerId}/withdrawals`, {
+          const data = await request('/v1/promotions/purchase', {
             method: 'POST',
-            headers: { 'x-user-id': state.sellerId },
+            headers: { 'x-user-id': 'seller-demo' },
+            body: {
+              sellerId: 'seller-demo',
+              listingId,
+              planId: el.planSelect.value,
+              currency: 'USD'
+            }
+          });
+          writeConsole(el.promoConsole, 'Promotion Purchased', data);
+          await loadListings();
+        } catch (error) {
+          writeConsole(el.promoConsole, 'Promotion Error', String(error));
+        }
+      }
+
+      async function loadPromotions() {
+        try {
+          const data = await request('/v1/sellers/seller-demo/promotions', {
+            headers: { 'x-user-id': 'seller-demo' }
+          });
+          writeConsole(el.promoConsole, 'Promotion Summary', data);
+        } catch (error) {
+          writeConsole(el.promoConsole, 'Promotion Load Error', String(error));
+        }
+      }
+
+      async function refreshWallet() {
+        try {
+          const data = await request('/v1/wallets/seller-demo/summary?currency=USD', {
+            headers: { 'x-user-id': 'seller-demo' }
+          });
+          writeConsole(el.walletConsole, 'Wallet Summary', data);
+        } catch (error) {
+          writeConsole(el.walletConsole, 'Wallet Error', String(error));
+        }
+      }
+
+      async function requestWithdrawal() {
+        const amount = Number(el.withdrawAmount.value);
+        if (!Number.isFinite(amount) || amount <= 0) {
+          writeConsole(el.walletConsole, 'Validation', 'Withdraw amount must be positive.');
+          return;
+        }
+
+        try {
+          const data = await request('/v1/wallets/seller-demo/withdrawals', {
+            method: 'POST',
+            headers: { 'x-user-id': 'seller-demo' },
             body: {
               amount,
               currency: 'USD',
               payoutMethod: 'wire'
             }
           });
-          log(els.walletLog, 'Withdrawal Requested', result);
-        } catch (err) {
-          log(els.walletLog, 'Withdrawal Failed', String(err));
+          writeConsole(el.walletConsole, 'Withdrawal Requested', data);
+        } catch (error) {
+          writeConsole(el.walletConsole, 'Withdrawal Error', String(error));
         }
       }
 
       async function sendWebhook() {
-        const orderId = (els.webhookOrderId.value || '').trim();
+        const orderId = (el.webhookOrder.value || '').trim();
         if (!orderId) {
-          log(els.adminLog, 'Validation', '請輸入 Order ID');
+          writeConsole(el.opsConsole, 'Validation', 'Order ID is required.');
           return;
         }
 
         try {
-          const result = await api('/v1/payments/webhooks/high-risk', {
+          const data = await request('/v1/payments/webhooks/high-risk', {
             method: 'POST',
             headers: {
-              'x-webhook-token': els.webhookToken.value
+              'x-webhook-token': el.webhookToken.value
             },
             body: {
               eventId: `evt-${orderId}-${Date.now()}`,
               orderId,
-              paymentStatus: els.webhookStatus.value,
+              paymentStatus: el.webhookStatus.value,
               pspTxnId: `txn-${Date.now()}`
             }
           });
-          log(els.adminLog, 'Webhook Sent', result);
-        } catch (err) {
-          log(els.adminLog, 'Webhook Failed', String(err));
+          writeConsole(el.opsConsole, 'Webhook Sent', data);
+        } catch (error) {
+          writeConsole(el.opsConsole, 'Webhook Error', String(error));
         }
       }
 
-      function hydrateConfig() {
-        const savedApi = localStorage.getItem('saas_api_base');
-        const savedWebhook = localStorage.getItem('saas_webhook_token');
-        if (savedApi) els.apiBase.value = savedApi;
-        if (savedWebhook) els.webhookToken.value = savedWebhook;
+      async function runPayoutRelease() {
+        try {
+          const data = await request('/v1/payouts/release', {
+            method: 'POST',
+            headers: { 'x-user-id': 'admin-demo' },
+            body: { force: true }
+          });
+          writeConsole(el.settlementConsole, 'Payout Release', data);
+          await refreshWallet();
+        } catch (error) {
+          writeConsole(el.settlementConsole, 'Payout Error', String(error));
+        }
+      }
+
+      function bindEvents() {
+        el.navButtons.forEach((button) => {
+          button.addEventListener('click', () => setPanel(button.dataset.panel));
+        });
+
+        document.querySelectorAll('[data-switch-role]').forEach((button) => {
+          button.addEventListener('click', () => setRole(button.getAttribute('data-switch-role')));
+        });
+
+        el.saveConfig.addEventListener('click', () => {
+          persistConfig();
+          appendLog('Config Saved', { apiBase: el.apiBase.value, webhookToken: '***' });
+        });
+
+        el.searchInput.addEventListener('input', renderListings);
+        el.filterSelect.addEventListener('change', renderListings);
+        el.refreshListings.addEventListener('click', loadListings);
+        el.createOrderBtn.addEventListener('click', createOrder);
+        el.buyPromoBtn.addEventListener('click', buyPromotion);
+        el.loadPromotions.addEventListener('click', loadPromotions);
+        el.walletRefresh.addEventListener('click', refreshWallet);
+        el.withdrawBtn.addEventListener('click', requestWithdrawal);
+        el.sendWebhook.addEventListener('click', sendWebhook);
+        el.releasePayout.addEventListener('click', runPayoutRelease);
+
+        el.langSelect.addEventListener('change', (event) => {
+          state.lang = safeLang(event.target.value);
+          renderI18n();
+          persistConfig();
+        });
       }
 
       function boot() {
         hydrateConfig();
-        renderBuyer();
-        renderSellerTable();
+        const query = getQuery();
 
-        els.navButtons.forEach((btn) => {
-          btn.addEventListener('click', () => setActivePanel(btn.dataset.panel));
+        state.lang = safeLang(query.lang || localStorage.getItem('siteLang') || 'en');
+        renderI18n();
+
+        setRole(query.role || 'customer');
+        bindEvents();
+
+        loadListings();
+        refreshWallet();
+
+        appendLog('Boot', {
+          role: state.role,
+          lang: state.lang,
+          apiBase: apiBase()
         });
-        els.buyerSearch.addEventListener('input', renderBuyer);
-        els.buyerFilter.addEventListener('change', renderBuyer);
-        els.saveConfig.addEventListener('click', saveConfig);
-        els.createOrder.addEventListener('click', createPendingOrder);
-        els.buyPromotion.addEventListener('click', buyPromotionPlan);
-        els.refreshWallet.addEventListener('click', loadWallet);
-        els.withdrawNow.addEventListener('click', withdrawNow);
-        els.sendWebhook.addEventListener('click', sendWebhook);
-
-        const query = getQueryParams();
-        if (query.role === 'creator') {
-          setActivePanel('seller');
-        } else if (query.role === 'customer') {
-          setActivePanel('buyer');
-        }
-
-        if (query.lang) {
-          localStorage.setItem('siteLang', query.lang);
-        }
-
-        log(els.buyerLog, 'Ready', 'SaaS console loaded. Connect backend to execute real workflows.');
       }
 
       boot();

@@ -1,153 +1,427 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>快速開始 | High-Risk Marketplace MVP</title>
+    <title>Getting Started - Marketplace Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
-        --bg: #f4f2ea;
-        --card: #ffffff;
-        --text: #1f2937;
-        --accent: #0f766e;
-        --muted: #6b7280;
+        --bg: #f4f4ee;
+        --ink: #0f172a;
+        --muted: #5b6577;
+        --line: #d8e0ea;
+        --surface: #fff;
+        --brand: #0f766e;
+        --brand-soft: #ccfbf1;
+        --shadow: 0 18px 44px rgba(15, 23, 42, 0.12);
       }
+
+      * {
+        box-sizing: border-box;
+      }
+
       body {
         margin: 0;
-        font-family: "Noto Sans TC", "Segoe UI", sans-serif;
-        background: radial-gradient(circle at 10% 0%, #eff6ff 0%, var(--bg) 45%);
-        color: var(--text);
+        font-family: 'Manrope', sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 100% 0%, rgba(15, 118, 110, 0.16), transparent 33%),
+          radial-gradient(circle at 0% 100%, rgba(251, 146, 60, 0.2), transparent 32%),
+          var(--bg);
       }
-      .wrap {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 0 20px;
+
+      .container {
+        width: min(1080px, calc(100% - 28px));
+        margin: 0 auto;
       }
-      .toolbar {
+
+      .topbar {
+        margin-top: 14px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        box-shadow: var(--shadow);
+        padding: 12px;
         display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 16px;
-      }
-      .nav {
-        display: inline-flex;
         align-items: center;
-        gap: 12px;
-        background: var(--card);
-        border-radius: 10px;
-        padding: 10px 12px;
-        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
       }
-      .lang-box {
-        display: inline-flex;
+
+      .left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(140deg, #0f766e, #14b8a6);
+        color: #fff;
+        font: 800 0.9rem/1 'Sora', sans-serif;
+      }
+
+      h1 {
+        margin: 0;
+        font: 800 1.2rem/1.2 'Sora', sans-serif;
+      }
+
+      .sub {
+        margin: 2px 0 0;
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+
+      .controls {
+        display: flex;
         align-items: center;
         gap: 8px;
-        background: var(--card);
-        padding: 10px 12px;
+        flex-wrap: wrap;
+      }
+
+      .select,
+      .btn {
+        border: 1px solid var(--line);
         border-radius: 10px;
-        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+        font: inherit;
+        padding: 10px 12px;
       }
-      .lang-box label {
-        color: var(--muted);
-        font-size: 14px;
-      }
-      .lang-box select {
-        border: 1px solid #d1d5db;
-        border-radius: 6px;
-        padding: 4px 8px;
+
+      .select {
         background: #fff;
       }
-      h1 {
-        margin: 0 0 10px;
-      }
-      .sub {
-        color: var(--muted);
-        margin-bottom: 24px;
-      }
-      .card {
-        background: var(--card);
-        border-radius: 14px;
-        padding: 20px;
-        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
-        margin-bottom: 14px;
-      }
-      a {
-        color: var(--accent);
+
+      .btn {
         text-decoration: none;
+        color: inherit;
+        background: #fff;
+        transition: transform 0.2s ease;
       }
-      a:hover {
-        text-decoration: underline;
+
+      .btn:hover {
+        transform: translateY(-1px);
       }
+
+      .btn.primary {
+        background: var(--brand);
+        color: #fff;
+        border-color: var(--brand);
+      }
+
+      .hero {
+        margin-top: 12px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        padding: 22px;
+      }
+
+      .hero h2 {
+        margin: 0;
+        font: 800 clamp(1.6rem, 3.5vw, 2.4rem) / 1.1 'Sora', sans-serif;
+      }
+
+      .hero p {
+        margin: 10px 0 0;
+        color: var(--muted);
+      }
+
+      .grid {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 16px;
+      }
+
+      .card h3 {
+        margin: 0;
+        font: 700 1.06rem/1.2 'Sora', sans-serif;
+      }
+
+      .card p {
+        margin: 8px 0 0;
+        color: var(--muted);
+      }
+
       ol,
       ul {
-        padding-left: 20px;
+        margin: 10px 0 0;
+        padding-left: 18px;
       }
+
+      li {
+        margin-bottom: 6px;
+      }
+
       pre {
-        margin: 0;
-        padding: 14px;
-        border-radius: 8px;
-        background: #111827;
-        color: #e5e7eb;
+        margin: 10px 0 0;
+        border-radius: 12px;
+        border: 1px solid #0f172a;
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 12px;
         overflow-x: auto;
+        font: 500 0.83rem/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
       }
-      @media (max-width: 768px) {
-        .toolbar {
-          flex-direction: column;
-          align-items: flex-start;
+
+      .arch {
+        margin-top: 10px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .node {
+        border: 1px solid var(--line);
+        background: #f8fafc;
+        border-radius: 11px;
+        padding: 10px;
+      }
+
+      .node strong {
+        display: block;
+      }
+
+      .footer {
+        margin: 18px 0 26px;
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 860px) {
+        .grid {
+          grid-template-columns: 1fr;
         }
       }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <div class="toolbar">
-        <div class="nav">
-          <a href="./index.html" data-i18n="navHome">首頁</a>
-          <a href="./getting-started.html" data-i18n="navStart">快速開始</a>
+    <div class="container">
+      <header class="topbar">
+        <div class="left">
+          <div class="mark">SS</div>
+          <div>
+            <h1 data-i18n="title">Getting Started</h1>
+            <p class="sub" data-i18n="subtitle">Enterprise setup for Landing + Console + Backend flow</p>
+          </div>
         </div>
-        <div class="lang-box">
-          <label for="language-select" data-i18n="langLabel">語言</label>
-          <select id="language-select">
-            <option value="zh-Hant">繁體中文</option>
-            <option value="en">English</option>
-            <option value="hu">Magyar</option>
-            <option value="fr">Francais</option>
+
+        <div class="controls">
+          <select id="langSelect" class="select" aria-label="Language selector">
+            <option value="en">Eng</option>
+            <option value="zh-TW">Zh-TW</option>
+            <option value="hu">Hungarian</option>
+            <option value="fr">French</option>
           </select>
+          <a class="btn" href="./index.html" data-i18n="btnLanding">Landing</a>
+          <a class="btn primary" href="./app.html?role=customer&lang=en" id="openAppBtn" data-i18n="btnOpenApp">Open Console</a>
         </div>
-      </div>
+      </header>
 
-      <h1 data-i18n="title">後端快速開始</h1>
-      <p class="sub" data-i18n="subtitle">三步驟啟動後端並跑完整 smoke test</p>
+      <section class="hero">
+        <h2 data-i18n="heroTitle">Production-style local bring-up in under 5 minutes</h2>
+        <p data-i18n="heroCopy">
+          Run backend APIs, verify end-to-end payment lifecycle, and then open role-based workspaces from the Landing page.
+        </p>
+      </section>
 
-      <div class="card">
-        <h2 data-i18n="stepsTitle">啟動步驟</h2>
-        <ol>
-          <li data-i18n="step1">進入 backend 目錄並安裝套件</li>
-          <li data-i18n="step2">啟動 API 服務（預設 8080）</li>
-          <li data-i18n="step3">在另一個 terminal 執行 smoke test</li>
-        </ol>
-        <pre><code>cd ../backend
+      <section class="grid">
+        <article class="card">
+          <h3 data-i18n="stepTitle">1) Boot backend services</h3>
+          <p data-i18n="stepCopy">Install dependencies and start the API server.</p>
+          <pre><code>cd ../backend
 npm install
-npm start
+npm start</code></pre>
+        </article>
 
-# another terminal
+        <article class="card">
+          <h3 data-i18n="smokeTitle">2) Run full smoke validation</h3>
+          <p data-i18n="smokeCopy">Execute the scripted journey: KYC, listing, order, webhook, payout, wallet, chat.</p>
+          <pre><code># new terminal
+cd ../backend
 npm run smoke</code></pre>
-      </div>
+        </article>
 
-      <div class="card">
-        <h2 data-i18n="notesTitle">注意事項</h2>
-        <ul>
-          <li data-i18n="note1">所有受保護 API 需帶 x-user-id header。</li>
-          <li data-i18n="note2">預設內建 demo 帳號：buyer-demo / seller-demo / admin-demo / ops-demo。</li>
-          <li data-i18n="note3">此版本為 MVP 模擬流程，支付與 KYC 為測試 stub。</li>
-        </ul>
-      </div>
+        <article class="card">
+          <h3 data-i18n="uiTitle">3) Open SaaS interfaces</h3>
+          <ul>
+            <li data-i18n="uiPoint1">Landing: role entry + language selector</li>
+            <li data-i18n="uiPoint2">Console: customer, creator, operations, API logs</li>
+            <li data-i18n="uiPoint3">Set API base to match your local backend</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3 data-i18n="archTitle">Reference architecture (MVP)</h3>
+          <div class="arch">
+            <div class="node">
+              <strong data-i18n="archNode1">Landing + Console UI</strong>
+              <span data-i18n="archNode1Sub">GitHub Pages static frontend</span>
+            </div>
+            <div class="node">
+              <strong data-i18n="archNode2">Backend API Layer</strong>
+              <span data-i18n="archNode2Sub">Order, promotion, wallet, webhook orchestration</span>
+            </div>
+            <div class="node">
+              <strong data-i18n="archNode3">Data and ledger model</strong>
+              <span data-i18n="archNode3Sub">Orders, payments, reserve, payouts, audit events</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <footer class="footer" data-i18n="footer">
+        Tip: enter via Landing role buttons so role/lang is passed into the console URL.
+      </footer>
     </div>
 
-    <script src="./i18n/translations.js"></script>
-    <script src="./i18n/core.js"></script>
     <script>
-      window.initI18nPage('getting_started');
+      const TEXT = {
+        en: {
+          title: 'Getting Started',
+          subtitle: 'Enterprise setup for Landing + Console + Backend flow',
+          btnLanding: 'Landing',
+          btnOpenApp: 'Open Console',
+          heroTitle: 'Production-style local bring-up in under 5 minutes',
+          heroCopy:
+            'Run backend APIs, verify end-to-end payment lifecycle, and then open role-based workspaces from the Landing page.',
+          stepTitle: '1) Boot backend services',
+          stepCopy: 'Install dependencies and start the API server.',
+          smokeTitle: '2) Run full smoke validation',
+          smokeCopy: 'Execute the scripted journey: KYC, listing, order, webhook, payout, wallet, chat.',
+          uiTitle: '3) Open SaaS interfaces',
+          uiPoint1: 'Landing: role entry + language selector',
+          uiPoint2: 'Console: customer, creator, operations, API logs',
+          uiPoint3: 'Set API base to match your local backend',
+          archTitle: 'Reference architecture (MVP)',
+          archNode1: 'Landing + Console UI',
+          archNode1Sub: 'GitHub Pages static frontend',
+          archNode2: 'Backend API Layer',
+          archNode2Sub: 'Order, promotion, wallet, webhook orchestration',
+          archNode3: 'Data and ledger model',
+          archNode3Sub: 'Orders, payments, reserve, payouts, audit events',
+          footer: 'Tip: enter via Landing role buttons so role/lang is passed into the console URL.'
+        },
+        'zh-TW': {
+          title: '快速開始',
+          subtitle: 'Landing + Console + Backend 的企業級啟動流程',
+          btnLanding: '回 Landing',
+          btnOpenApp: '開啟 Console',
+          heroTitle: '5 分鐘內完成接近正式環境的本地啟動',
+          heroCopy: '先跑 API，再驗證完整支付生命週期，最後從 Landing 角色入口進入對應工作台。',
+          stepTitle: '1) 啟動後端服務',
+          stepCopy: '安裝套件並啟動 API server。',
+          smokeTitle: '2) 執行完整 smoke 驗證',
+          smokeCopy: '腳本會跑 KYC、上架、下單、webhook、撥款、錢包與聊天流程。',
+          uiTitle: '3) 開啟 SaaS 介面',
+          uiPoint1: 'Landing：角色入口 + 語言切換',
+          uiPoint2: 'Console：customer / creator / operations / API logs',
+          uiPoint3: '在 Console 中設定 API base 指向本地 backend',
+          archTitle: '參考架構（MVP）',
+          archNode1: 'Landing + Console 前端',
+          archNode1Sub: '部署在 GitHub Pages 的靜態站',
+          archNode2: 'Backend API 層',
+          archNode2Sub: '處理訂單、推廣、錢包與 webhook 協調',
+          archNode3: '資料與帳本模型',
+          archNode3Sub: '訂單、支付、保留金、撥款、稽核事件',
+          footer: '提示：建議從 Landing 角色入口進入，URL 會自動帶入 role/lang。'
+        },
+        hu: {
+          title: 'Gyors kezdes',
+          subtitle: 'Vallalati setup Landing + Console + Backend flow-hoz',
+          btnLanding: 'Landing',
+          btnOpenApp: 'Console megnyitasa',
+          heroTitle: 'Production jellegu local inditas 5 perc alatt',
+          heroCopy: 'Inditsd az API-t, ellenorizd az end-to-end payment lifecycle-t, majd lepj be szerep szerint.',
+          stepTitle: '1) Backend szolgaltatasok inditasa',
+          stepCopy: 'Fuggosegek telepitese es API server inditasa.',
+          smokeTitle: '2) Teljes smoke validacio',
+          smokeCopy: 'A script lefuttatja a KYC, listing, order, webhook, payout, wallet es chat lepeseit.',
+          uiTitle: '3) SaaS feluletek megnyitasa',
+          uiPoint1: 'Landing: szerepbelepes + nyelvvalaszto',
+          uiPoint2: 'Console: customer, creator, operations, API logs',
+          uiPoint3: 'A Console API base cimet allitsd a local backendre',
+          archTitle: 'Referencia architektura (MVP)',
+          archNode1: 'Landing + Console UI',
+          archNode1Sub: 'GitHub Pages statikus frontend',
+          archNode2: 'Backend API reteg',
+          archNode2Sub: 'Order, promotion, wallet, webhook orchestration',
+          archNode3: 'Adat es ledger modell',
+          archNode3Sub: 'Orders, payments, reserve, payouts, audit events',
+          footer: 'Tipp: Landing szerepgombokkal lepj be, igy a role/lang parameterek atadodnak.'
+        },
+        fr: {
+          title: 'Demarrage rapide',
+          subtitle: 'Setup niveau entreprise pour Landing + Console + Backend',
+          btnLanding: 'Landing',
+          btnOpenApp: 'Ouvrir Console',
+          heroTitle: 'Mise en route locale type production en moins de 5 minutes',
+          heroCopy: 'Lancez les APIs, validez le cycle paiement complet, puis ouvrez les workspaces selon le role.',
+          stepTitle: '1) Demarrer les services backend',
+          stepCopy: 'Installer les dependances puis lancer le serveur API.',
+          smokeTitle: '2) Executer la validation smoke complete',
+          smokeCopy: 'Le script couvre KYC, listing, order, webhook, payout, wallet et chat.',
+          uiTitle: '3) Ouvrir les interfaces SaaS',
+          uiPoint1: 'Landing: entree par role + selecteur de langue',
+          uiPoint2: 'Console: customer, creator, operations, API logs',
+          uiPoint3: 'Configurer API base dans la Console vers votre backend local',
+          archTitle: 'Architecture de reference (MVP)',
+          archNode1: 'UI Landing + Console',
+          archNode1Sub: 'Frontend statique sur GitHub Pages',
+          archNode2: 'Couche Backend API',
+          archNode2Sub: 'Orchestration order, promotion, wallet, webhook',
+          archNode3: 'Modele data et ledger',
+          archNode3Sub: 'Orders, payments, reserve, payouts, audit events',
+          footer: 'Astuce: entrez depuis les boutons role du Landing pour transmettre role/lang dans lURL.'
+        }
+      };
+
+      function safeLang(lang) {
+        return Object.prototype.hasOwnProperty.call(TEXT, lang) ? lang : 'en';
+      }
+
+      function applyLang(lang) {
+        const resolved = safeLang(lang);
+        const dict = TEXT[resolved];
+
+        document.documentElement.lang = resolved;
+        document.querySelectorAll('[data-i18n]').forEach((node) => {
+          const key = node.getAttribute('data-i18n');
+          if (dict[key]) node.textContent = dict[key];
+        });
+
+        const appBtn = document.getElementById('openAppBtn');
+        appBtn.href = `./app.html?role=customer&lang=${encodeURIComponent(resolved)}`;
+
+        document.getElementById('langSelect').value = resolved;
+        localStorage.setItem('siteLang', resolved);
+      }
+
+      const langSelect = document.getElementById('langSelect');
+      langSelect.addEventListener('change', (event) => applyLang(event.target.value));
+
+      applyLang(localStorage.getItem('siteLang') || 'en');
     </script>
   </body>
 </html>

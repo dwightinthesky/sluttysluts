@@ -3,291 +3,450 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SluttySluts Marketplace SaaS</title>
+    <title>SluttySluts Marketplace Platform</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg: #faf8f2;
-        --panel: #ffffff;
+        --bg: #f5f5ef;
         --ink: #0f172a;
-        --muted: #64748b;
-        --line: #e2e8f0;
+        --muted: #5b6577;
+        --line: #dbe2ea;
+        --surface: #ffffff;
         --brand: #0f766e;
-        --brand-2: #0ea5a1;
-        --warm: #fb923c;
-        --shadow: 0 18px 45px rgba(15, 23, 42, 0.09);
+        --brand-2: #14b8a6;
+        --accent: #ea580c;
+        --shadow: 0 22px 56px rgba(15, 23, 42, 0.12);
       }
 
       * {
         box-sizing: border-box;
       }
 
+      html,
       body {
         margin: 0;
-        font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Manrope', sans-serif;
         color: var(--ink);
         background:
-          radial-gradient(circle at 100% 0%, #d9f99d 0%, transparent 25%),
-          radial-gradient(circle at 0% 100%, #fed7aa 0%, transparent 30%),
+          radial-gradient(circle at 100% 0%, rgba(20, 184, 166, 0.18), transparent 32%),
+          radial-gradient(circle at 0% 100%, rgba(251, 146, 60, 0.2), transparent 30%),
           var(--bg);
       }
 
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image: linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+        background-size: 34px 34px;
+        mask-image: radial-gradient(circle at center, black 40%, transparent 88%);
+        z-index: -1;
+      }
+
       .container {
-        width: min(1160px, calc(100% - 40px));
+        width: min(1180px, calc(100% - 44px));
         margin: 0 auto;
       }
 
-      .nav {
+      .top {
         position: sticky;
         top: 0;
-        z-index: 20;
-        backdrop-filter: blur(8px);
-        background: rgba(250, 248, 242, 0.8);
-        border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+        z-index: 50;
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(219, 226, 234, 0.75);
+        background: rgba(245, 245, 239, 0.82);
       }
 
-      .nav-row {
+      .topbar {
+        min-height: 76px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 14px;
-        padding: 14px 0;
       }
 
       .brand {
         display: flex;
-        gap: 10px;
         align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: inherit;
       }
 
       .brand-mark {
-        width: 38px;
-        height: 38px;
-        border-radius: 11px;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
         display: grid;
         place-items: center;
-        font-weight: 800;
-        color: #fff;
         background: linear-gradient(140deg, var(--brand), var(--brand-2));
+        color: #fff;
+        font: 800 0.95rem/1 'Sora', sans-serif;
       }
 
-      .brand h1 {
+      .brand-title {
         margin: 0;
-        font-size: 1.02rem;
+        font: 700 1.05rem/1.2 'Sora', sans-serif;
       }
 
-      .brand small {
+      .brand-sub {
+        margin: 1px 0 0;
+        font-size: 0.83rem;
         color: var(--muted);
       }
 
-      .nav-controls {
+      .top-links {
         display: flex;
-        flex-wrap: wrap;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .top-links a {
+        color: #1e293b;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.92rem;
+      }
+
+      .top-links a:hover {
+        color: var(--brand);
+      }
+
+      .controls {
+        display: flex;
         align-items: center;
         gap: 8px;
+        flex-wrap: wrap;
       }
 
       .select,
       .btn {
+        border-radius: 11px;
         border: 1px solid var(--line);
-        border-radius: 10px;
-        font: inherit;
-        padding: 9px 12px;
+        font: 600 0.9rem/1 'Manrope', sans-serif;
       }
 
       .select {
+        min-width: 132px;
+        padding: 10px 11px;
         background: #fff;
       }
 
       .btn {
-        text-decoration: none;
-        color: inherit;
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        padding: 10px 14px;
+        text-decoration: none;
+        transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
         cursor: pointer;
-        transition: all 0.2s ease;
-        background: #fff;
       }
 
       .btn:hover {
         transform: translateY(-1px);
-        border-color: #cbd5e1;
       }
 
-      .btn.primary {
-        background: var(--brand);
-        color: #fff;
-        border-color: var(--brand);
-      }
-
-      .btn.soft {
-        background: #ecfeff;
+      .btn.creator {
+        background: #f0fdfa;
+        color: #0f766e;
         border-color: #99f6e4;
-        color: #115e59;
+      }
+
+      .btn.customer {
+        background: var(--brand);
+        border-color: var(--brand);
+        color: #fff;
+      }
+
+      .btn.ghost {
+        background: #fff;
+        color: #0f172a;
       }
 
       .hero {
-        padding: 54px 0 26px;
+        padding: 62px 0 32px;
         display: grid;
-        grid-template-columns: 1.15fr 0.85fr;
-        gap: 18px;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 14px;
       }
 
-      .hero-panel {
-        background: var(--panel);
+      .hero-main,
+      .hero-aside {
+        background: var(--surface);
         border: 1px solid var(--line);
-        border-radius: 22px;
+        border-radius: 24px;
         box-shadow: var(--shadow);
-        padding: 26px;
+      }
+
+      .hero-main {
+        padding: 28px 28px 24px;
       }
 
       .eyebrow {
-        margin: 0;
+        display: inline-block;
+        padding: 7px 11px;
+        border-radius: 999px;
+        font: 700 0.77rem/1 'Sora', sans-serif;
+        letter-spacing: 0.08em;
         color: #0f766e;
-        font-weight: 700;
-        letter-spacing: 0.03em;
+        border: 1px solid #99f6e4;
+        background: #f0fdfa;
       }
 
-      .hero h2 {
-        margin: 10px 0;
-        font-size: clamp(1.9rem, 3.2vw, 3rem);
-        line-height: 1.05;
+      .hero-title {
+        margin: 14px 0 10px;
+        font: 800 clamp(2rem, 3.8vw, 3.42rem) / 1.05 'Sora', sans-serif;
+        letter-spacing: -0.02em;
       }
 
-      .hero p {
+      .hero-copy {
         margin: 0;
         color: var(--muted);
-        font-size: 1.05rem;
+        max-width: 64ch;
+        font-size: 1.03rem;
       }
 
       .hero-actions {
-        margin-top: 18px;
+        margin-top: 19px;
         display: flex;
-        gap: 9px;
         flex-wrap: wrap;
+        gap: 9px;
       }
 
-      .metrics {
+      .hero-bar {
+        margin-top: 18px;
         display: grid;
-        gap: 10px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 9px;
       }
 
-      .metric {
-        background: #f8fafc;
+      .hero-stat {
         border: 1px solid var(--line);
         border-radius: 14px;
-        padding: 14px;
+        padding: 12px;
+        background: #f8fafc;
       }
 
-      .metric strong {
-        font-size: 1.7rem;
+      .hero-stat strong {
+        font: 800 1.5rem/1 'Sora', sans-serif;
       }
 
-      .metric p {
-        margin: 4px 0 0;
+      .hero-stat p {
+        margin: 5px 0 0;
         color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .hero-aside {
+        padding: 22px;
+        display: grid;
+        gap: 11px;
+      }
+
+      .card-mini {
+        border-radius: 15px;
+        border: 1px solid var(--line);
+        padding: 15px;
+        background: #fff;
+      }
+
+      .card-mini h3 {
+        margin: 0;
+        font: 700 0.95rem/1.2 'Sora', sans-serif;
+      }
+
+      .card-mini p {
+        margin: 8px 0 0;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      .chart {
+        margin-top: 10px;
+        height: 92px;
+        border-radius: 12px;
+        background: linear-gradient(180deg, rgba(20, 184, 166, 0.22), rgba(20, 184, 166, 0));
+        position: relative;
+        overflow: hidden;
+      }
+
+      .chart::before {
+        content: '';
+        position: absolute;
+        inset: 12px 12px 16px;
+        border-left: 1px solid rgba(15, 23, 42, 0.15);
+        border-bottom: 1px solid rgba(15, 23, 42, 0.15);
+      }
+
+      .chart svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
       }
 
       .section {
-        padding: 16px 0 10px;
+        padding: 16px 0 14px;
       }
 
-      .section h3 {
-        margin: 0 0 8px;
-        font-size: 1.55rem;
+      .section-title {
+        margin: 0;
+        font: 800 clamp(1.4rem, 2.3vw, 2.1rem) / 1.14 'Sora', sans-serif;
       }
 
-      .section > p {
-        margin: 0 0 14px;
+      .section-sub {
+        margin: 8px 0 0;
         color: var(--muted);
       }
 
-      .cards {
+      .feature-grid {
+        margin-top: 14px;
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
+        gap: 11px;
       }
 
-      .card {
-        background: var(--panel);
+      .feature {
+        background: #fff;
         border: 1px solid var(--line);
         border-radius: 16px;
         padding: 16px;
         box-shadow: var(--shadow);
       }
 
-      .card h4 {
-        margin: 0 0 8px;
+      .feature h4 {
+        margin: 0;
+        font: 700 1.02rem/1.24 'Sora', sans-serif;
       }
 
-      .card p {
-        margin: 0;
+      .feature p {
+        margin: 8px 0 0;
         color: var(--muted);
       }
 
       .roles {
+        margin-top: 14px;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
       }
 
-      .role-card {
+      .role {
         background: #fff;
         border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 18px;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: var(--shadow);
       }
 
-      .role-card h4 {
-        margin: 0 0 8px;
+      .role h4 {
+        margin: 0;
+        font: 700 1.25rem/1.22 'Sora', sans-serif;
       }
 
-      .role-card ul {
-        margin: 0 0 14px;
-        padding-left: 18px;
+      .role p {
+        margin: 8px 0 0;
         color: var(--muted);
+      }
+
+      .role ul {
+        margin: 10px 0 14px;
+        padding-left: 18px;
+        color: #334155;
+      }
+
+      .role li {
+        margin-bottom: 6px;
+      }
+
+      .proof {
+        margin-top: 12px;
+        background: #0f172a;
+        border-radius: 22px;
+        color: #e2e8f0;
+        padding: 22px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .proof strong {
+        display: block;
+        font: 800 1.35rem/1 'Sora', sans-serif;
+        color: #f8fafc;
+      }
+
+      .proof span {
+        display: block;
+        margin-top: 6px;
+        color: #93c5fd;
+        font-size: 0.86rem;
       }
 
       .cta {
         margin: 22px 0 36px;
-        background: linear-gradient(120deg, #0f172a 0%, #134e4a 100%);
+        background: linear-gradient(115deg, #0f766e, #0f172a);
         color: #fff;
-        border-radius: 22px;
-        padding: 22px;
+        border-radius: 24px;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        padding: 24px;
         display: flex;
-        align-items: center;
         justify-content: space-between;
+        align-items: center;
         gap: 12px;
       }
 
       .cta h3 {
         margin: 0;
+        font: 800 clamp(1.32rem, 2.2vw, 2rem) / 1.2 'Sora', sans-serif;
       }
 
       .cta p {
-        margin: 4px 0 0;
-        color: #cbd5e1;
+        margin: 7px 0 0;
+        color: #dbeafe;
       }
 
       .footer {
         border-top: 1px solid var(--line);
         color: var(--muted);
         font-size: 0.9rem;
-        padding: 16px 0 28px;
+        padding: 15px 0 28px;
       }
 
-      @media (max-width: 980px) {
+      .reveal {
+        opacity: 0;
+        transform: translateY(22px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+
+      .reveal.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 1120px) {
         .hero {
           grid-template-columns: 1fr;
         }
 
-        .cards {
+        .proof {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 920px) {
+        .feature-grid {
           grid-template-columns: 1fr;
         }
 
@@ -299,322 +458,494 @@
           flex-direction: column;
           align-items: flex-start;
         }
+
+        .top-links {
+          display: none;
+        }
       }
 
-      @media (max-width: 760px) {
+      @media (max-width: 720px) {
         .container {
           width: calc(100% - 24px);
         }
 
-        .nav-row {
+        .topbar {
+          padding: 8px 0;
+          min-height: 66px;
           align-items: flex-start;
           flex-direction: column;
+        }
+
+        .controls {
+          width: 100%;
+        }
+
+        .controls .btn,
+        .controls .select {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .hero-main,
+        .hero-aside {
+          border-radius: 18px;
+          padding: 18px;
+        }
+
+        .hero-bar {
+          grid-template-columns: 1fr;
+        }
+
+        .proof {
+          grid-template-columns: 1fr;
         }
       }
     </style>
   </head>
   <body>
-    <header class="nav">
-      <div class="container nav-row">
-        <div class="brand">
-          <div class="brand-mark">SS</div>
-          <div>
-            <h1 data-i18n="brandTitle">SluttySluts SaaS</h1>
-            <small data-i18n="brandSub">Marketplace platform for creators and customers</small>
-          </div>
-        </div>
+    <header class="top">
+      <div class="container topbar">
+        <a class="brand" href="#hero" aria-label="Homepage">
+          <span class="brand-mark">SS</span>
+          <span>
+            <h1 class="brand-title" data-i18n="brandTitle">SluttySluts Platform</h1>
+            <p class="brand-sub" data-i18n="brandSub">Enterprise-grade creator marketplace infrastructure</p>
+          </span>
+        </a>
 
-        <div class="nav-controls">
-          <select id="langSelect" class="select" aria-label="Language">
+        <nav class="top-links">
+          <a href="#platform" data-i18n="navPlatform">Platform</a>
+          <a href="#roles" data-i18n="navRoles">Workspaces</a>
+          <a href="#security" data-i18n="navSecurity">Security</a>
+          <a href="./getting-started.html" data-i18n="navStart">Getting Started</a>
+        </nav>
+
+        <div class="controls">
+          <select id="langSelect" class="select" aria-label="Language selector">
             <option value="en">Eng</option>
             <option value="zh-TW">Zh-TW</option>
             <option value="hu">Hungarian</option>
             <option value="fr">French</option>
           </select>
-          <a class="btn soft" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="creatorEntry">Enter Creator</a>
-          <a class="btn primary" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="customerEntry">Enter Customer</a>
+          <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="btnCreator">Creator</a>
+          <a class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="btnCustomer">Customer</a>
         </div>
       </div>
     </header>
 
     <main class="container">
-      <section class="hero">
-        <article class="hero-panel">
-          <p class="eyebrow" data-i18n="eyebrow">PAYMENTS + PROMOTION + COMPLIANCE</p>
-          <h2 data-i18n="heroTitle">Launch a two-sided marketplace with built-in monetization.</h2>
-          <p data-i18n="heroDesc">
-            Inspired by modern fintech landing structure: a clean value proposition, role-based entry, and fast route to action.
-            This hub gives creators and customers dedicated workflows from the first click.
+      <section id="hero" class="hero">
+        <article class="hero-main reveal">
+          <span class="eyebrow" data-i18n="eyebrow">ENTERPRISE MARKETPLACE OS</span>
+          <h2 class="hero-title" data-i18n="heroTitle">Scale creator commerce with compliance, promotion, and payout control.</h2>
+          <p class="hero-copy" data-i18n="heroCopy">
+            A complete two-sided marketplace stack designed for high-risk payment workflows: role-based onboarding, hosted checkout,
+            reconciliation-ready ledgers, and promotion monetization in one surface.
           </p>
           <div class="hero-actions">
-            <a class="btn primary" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroCreator">Start as Creator</a>
-            <a class="btn" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroCustomer">Start as Customer</a>
+            <a class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroCustomer">Open Customer Workspace</a>
+            <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroCreator">Open Creator Workspace</a>
+            <a class="btn ghost" data-role-link="admin" href="./app.html?role=admin&lang=en" data-i18n="heroAdmin">Open Operations Console</a>
+          </div>
+
+          <div class="hero-bar">
+            <div class="hero-stat">
+              <strong>99.95%</strong>
+              <p data-i18n="stat1">event-delivery reliability target</p>
+            </div>
+            <div class="hero-stat">
+              <strong>120d</strong>
+              <p data-i18n="stat2">rolling reserve support window</p>
+            </div>
+            <div class="hero-stat">
+              <strong>4 roles</strong>
+              <p data-i18n="stat3">Customer, Creator, Admin, Ops</p>
+            </div>
           </div>
         </article>
 
-        <aside class="hero-panel metrics">
-          <div class="metric">
-            <strong>+15%</strong>
-            <p data-i18n="metric1">Platform commission baseline for creator transactions.</p>
+        <aside class="hero-aside reveal">
+          <div class="card-mini">
+            <h3 data-i18n="asideTitle1">Revenue Stack</h3>
+            <p data-i18n="asideCopy1">Buyer fee + creator commission + promotion inventory unified in one ledgered model.</p>
+            <div class="chart" aria-hidden="true">
+              <svg viewBox="0 0 320 120" preserveAspectRatio="none">
+                <polyline
+                  fill="none"
+                  stroke="#0f766e"
+                  stroke-width="4"
+                  points="12,96 56,80 90,84 128,60 168,56 210,44 244,52 282,30 312,24"
+                />
+              </svg>
+            </div>
           </div>
-          <div class="metric">
-            <strong>5%</strong>
-            <p data-i18n="metric2">Customer service fee model with transparent order breakdown.</p>
+          <div class="card-mini">
+            <h3 data-i18n="asideTitle2">Operational Controls</h3>
+            <p data-i18n="asideCopy2">Role-based entry points with language-aware onboarding and workflow-specific dashboards.</p>
           </div>
-          <div class="metric">
-            <strong>24/7</strong>
-            <p data-i18n="metric3">Webhook-based payment status updates and moderation signals.</p>
+          <div class="card-mini">
+            <h3 data-i18n="asideTitle3">Compliance by Design</h3>
+            <p data-i18n="asideCopy3">KYC gates, moderation events, webhook idempotency, dispute and payout state transitions.</p>
           </div>
         </aside>
       </section>
 
-      <section class="section">
-        <h3 data-i18n="flowTitle">How this SaaS flow works</h3>
-        <p data-i18n="flowDesc">From catalog discovery to hosted checkout and payout ledger, everything is traceable.</p>
-        <div class="cards">
-          <article class="card">
-            <h4 data-i18n="flow1Title">1. Discover and convert</h4>
-            <p data-i18n="flow1Desc">Customers browse promoted and organic listings, then create pending orders with fee preview.</p>
+      <section id="platform" class="section reveal">
+        <h3 class="section-title" data-i18n="platformTitle">Platform modules built for commercial discipline</h3>
+        <p class="section-sub" data-i18n="platformSub">Each capability is mapped to business KPIs and financial reconciliation readiness.</p>
+        <div class="feature-grid">
+          <article class="feature">
+            <h4 data-i18n="feature1Title">Two-sided transactions</h4>
+            <p data-i18n="feature1Copy">Hosted checkout creates pending orders first, then webhook confirms payment and unlocks fulfillment.</p>
           </article>
-          <article class="card">
-            <h4 data-i18n="flow2Title">2. Hosted payment events</h4>
-            <p data-i18n="flow2Desc">Gateway webhooks update order/payment status asynchronously with idempotent event handling.</p>
+          <article class="feature">
+            <h4 data-i18n="feature2Title">Promotion monetization</h4>
+            <p data-i18n="feature2Copy">Creators can buy ranking plans (duration or click-based) directly from the dashboard.</p>
           </article>
-          <article class="card">
-            <h4 data-i18n="flow3Title">3. Creator revenue control</h4>
-            <p data-i18n="flow3Desc">Commission, reserve, and payoutable balance feed wallet and withdrawal workflows.</p>
+          <article class="feature">
+            <h4 data-i18n="feature3Title">Wallet and payouts</h4>
+            <p data-i18n="feature3Copy">Commission, reserve, and payoutable amounts are separated for audit-safe withdrawal operations.</p>
           </article>
         </div>
       </section>
 
-      <section class="section">
-        <h3 data-i18n="rolesTitle">Choose your workspace</h3>
-        <p data-i18n="rolesDesc">Role-specific entry at top-right also appears here for quick onboarding.</p>
+      <section id="roles" class="section reveal">
+        <h3 class="section-title" data-i18n="rolesTitle">Role-first user journeys</h3>
+        <p class="section-sub" data-i18n="rolesSub">Top-right identity buttons route every user into the correct workspace immediately.</p>
         <div class="roles">
-          <article class="role-card">
-            <h4 data-i18n="creatorCardTitle">Creator Workspace</h4>
+          <article class="role">
+            <h4 data-i18n="creatorTitle">Creator Workspace</h4>
+            <p data-i18n="creatorCopy">For supply-side operators managing products, promotion budget, and payout flow.</p>
             <ul>
-              <li data-i18n="creatorPoint1">Manage listings and pricing.</li>
-              <li data-i18n="creatorPoint2">Buy promotion plans for ranking boost.</li>
-              <li data-i18n="creatorPoint3">Track wallet, reserve, and withdrawals.</li>
+              <li data-i18n="creatorPoint1">Catalog and price management</li>
+              <li data-i18n="creatorPoint2">Promotion purchase and exposure tracking</li>
+              <li data-i18n="creatorPoint3">Wallet, reserve, and withdrawal requests</li>
             </ul>
-            <a class="btn soft" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="creatorEntry">Enter Creator</a>
+            <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="btnCreator">Creator</a>
           </article>
-          <article class="role-card">
-            <h4 data-i18n="customerCardTitle">Customer Workspace</h4>
+          <article class="role">
+            <h4 data-i18n="customerTitle">Customer Workspace</h4>
+            <p data-i18n="customerCopy">For demand-side users exploring listings and placing verified hosted-checkout orders.</p>
             <ul>
-              <li data-i18n="customerPoint1">Explore catalog with promoted priority.</li>
-              <li data-i18n="customerPoint2">Create pending orders and pay via hosted checkout.</li>
-              <li data-i18n="customerPoint3">Follow order, dispute, and delivery states.</li>
+              <li data-i18n="customerPoint1">Explore promoted and organic listings</li>
+              <li data-i18n="customerPoint2">Create pending orders with transparent fee breakdown</li>
+              <li data-i18n="customerPoint3">Track order, dispute, and delivery states</li>
             </ul>
-            <a class="btn primary" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="customerEntry">Enter Customer</a>
+            <a class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="btnCustomer">Customer</a>
           </article>
         </div>
       </section>
 
-      <section class="cta">
-        <div>
-          <h3 data-i18n="ctaTitle">Ready to run the marketplace?</h3>
-          <p data-i18n="ctaDesc">Use role entry on the right and connect your API base in the console.</p>
+      <section id="security" class="section reveal">
+        <h3 class="section-title" data-i18n="securityTitle">Operational confidence at scale</h3>
+        <p class="section-sub" data-i18n="securitySub">Designed to align product behavior with real-world high-risk payment constraints.</p>
+        <div class="proof">
+          <div>
+            <strong>Idempotent</strong>
+            <span data-i18n="proof1">webhook event processing</span>
+          </div>
+          <div>
+            <strong>Append-only</strong>
+            <span data-i18n="proof2">ledger-style financial records</span>
+          </div>
+          <div>
+            <strong>Dual-fee</strong>
+            <span data-i18n="proof3">customer fee + creator commission</span>
+          </div>
+          <div>
+            <strong>Reserve-aware</strong>
+            <span data-i18n="proof4">available vs pending wallet balance</span>
+          </div>
         </div>
-        <div class="nav-controls">
-          <a class="btn soft" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroCreator">Start as Creator</a>
-          <a class="btn" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroCustomer">Start as Customer</a>
+      </section>
+
+      <section class="cta reveal">
+        <div>
+          <h3 data-i18n="ctaTitle">Move from concept to production operations.</h3>
+          <p data-i18n="ctaCopy">Select role, choose language, and enter the workspace aligned to your operational responsibility.</p>
+        </div>
+        <div class="controls">
+          <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroCreator">Open Creator Workspace</a>
+          <a class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroCustomer">Open Customer Workspace</a>
         </div>
       </section>
 
       <footer class="footer">
-        <span data-i18n="footer">SaaS Landing for SluttySluts Marketplace MVP. Built for Creator + Customer role onboarding.</span>
+        <span data-i18n="footer">SluttySluts Marketplace Platform. Enterprise UI revamp with role-based entry and multilingual navigation.</span>
       </footer>
     </main>
 
     <script>
       const translations = {
         en: {
-          pageTitle: 'SluttySluts Marketplace SaaS',
-          brandTitle: 'SluttySluts SaaS',
-          brandSub: 'Marketplace platform for creators and customers',
-          creatorEntry: 'Enter Creator',
-          customerEntry: 'Enter Customer',
-          eyebrow: 'PAYMENTS + PROMOTION + COMPLIANCE',
-          heroTitle: 'Launch a two-sided marketplace with built-in monetization.',
-          heroDesc:
-            'Inspired by modern fintech landing structure: a clean value proposition, role-based entry, and fast route to action. This hub gives creators and customers dedicated workflows from the first click.',
-          heroCreator: 'Start as Creator',
-          heroCustomer: 'Start as Customer',
-          metric1: 'Platform commission baseline for creator transactions.',
-          metric2: 'Customer service fee model with transparent order breakdown.',
-          metric3: 'Webhook-based payment status updates and moderation signals.',
-          flowTitle: 'How this SaaS flow works',
-          flowDesc: 'From catalog discovery to hosted checkout and payout ledger, everything is traceable.',
-          flow1Title: '1. Discover and convert',
-          flow1Desc: 'Customers browse promoted and organic listings, then create pending orders with fee preview.',
-          flow2Title: '2. Hosted payment events',
-          flow2Desc: 'Gateway webhooks update order/payment status asynchronously with idempotent event handling.',
-          flow3Title: '3. Creator revenue control',
-          flow3Desc: 'Commission, reserve, and payoutable balance feed wallet and withdrawal workflows.',
-          rolesTitle: 'Choose your workspace',
-          rolesDesc: 'Role-specific entry at top-right also appears here for quick onboarding.',
-          creatorCardTitle: 'Creator Workspace',
-          creatorPoint1: 'Manage listings and pricing.',
-          creatorPoint2: 'Buy promotion plans for ranking boost.',
-          creatorPoint3: 'Track wallet, reserve, and withdrawals.',
-          customerCardTitle: 'Customer Workspace',
-          customerPoint1: 'Explore catalog with promoted priority.',
-          customerPoint2: 'Create pending orders and pay via hosted checkout.',
-          customerPoint3: 'Follow order, dispute, and delivery states.',
-          ctaTitle: 'Ready to run the marketplace?',
-          ctaDesc: 'Use role entry on the right and connect your API base in the console.',
-          footer: 'SaaS Landing for SluttySluts Marketplace MVP. Built for Creator + Customer role onboarding.'
+          brandTitle: 'SluttySluts Platform',
+          brandSub: 'Enterprise-grade creator marketplace infrastructure',
+          navPlatform: 'Platform',
+          navRoles: 'Workspaces',
+          navSecurity: 'Security',
+          navStart: 'Getting Started',
+          btnCreator: 'Creator',
+          btnCustomer: 'Customer',
+          eyebrow: 'ENTERPRISE MARKETPLACE OS',
+          heroTitle: 'Scale creator commerce with compliance, promotion, and payout control.',
+          heroCopy:
+            'A complete two-sided marketplace stack designed for high-risk payment workflows: role-based onboarding, hosted checkout, reconciliation-ready ledgers, and promotion monetization in one surface.',
+          heroCustomer: 'Open Customer Workspace',
+          heroCreator: 'Open Creator Workspace',
+          heroAdmin: 'Open Operations Console',
+          stat1: 'event-delivery reliability target',
+          stat2: 'rolling reserve support window',
+          stat3: 'Customer, Creator, Admin, Ops',
+          asideTitle1: 'Revenue Stack',
+          asideCopy1: 'Buyer fee + creator commission + promotion inventory unified in one ledgered model.',
+          asideTitle2: 'Operational Controls',
+          asideCopy2: 'Role-based entry points with language-aware onboarding and workflow-specific dashboards.',
+          asideTitle3: 'Compliance by Design',
+          asideCopy3: 'KYC gates, moderation events, webhook idempotency, dispute and payout state transitions.',
+          platformTitle: 'Platform modules built for commercial discipline',
+          platformSub: 'Each capability is mapped to business KPIs and financial reconciliation readiness.',
+          feature1Title: 'Two-sided transactions',
+          feature1Copy: 'Hosted checkout creates pending orders first, then webhook confirms payment and unlocks fulfillment.',
+          feature2Title: 'Promotion monetization',
+          feature2Copy: 'Creators can buy ranking plans (duration or click-based) directly from the dashboard.',
+          feature3Title: 'Wallet and payouts',
+          feature3Copy: 'Commission, reserve, and payoutable amounts are separated for audit-safe withdrawal operations.',
+          rolesTitle: 'Role-first user journeys',
+          rolesSub: 'Top-right identity buttons route every user into the correct workspace immediately.',
+          creatorTitle: 'Creator Workspace',
+          creatorCopy: 'For supply-side operators managing products, promotion budget, and payout flow.',
+          creatorPoint1: 'Catalog and price management',
+          creatorPoint2: 'Promotion purchase and exposure tracking',
+          creatorPoint3: 'Wallet, reserve, and withdrawal requests',
+          customerTitle: 'Customer Workspace',
+          customerCopy: 'For demand-side users exploring listings and placing verified hosted-checkout orders.',
+          customerPoint1: 'Explore promoted and organic listings',
+          customerPoint2: 'Create pending orders with transparent fee breakdown',
+          customerPoint3: 'Track order, dispute, and delivery states',
+          securityTitle: 'Operational confidence at scale',
+          securitySub: 'Designed to align product behavior with real-world high-risk payment constraints.',
+          proof1: 'webhook event processing',
+          proof2: 'ledger-style financial records',
+          proof3: 'customer fee + creator commission',
+          proof4: 'available vs pending wallet balance',
+          ctaTitle: 'Move from concept to production operations.',
+          ctaCopy: 'Select role, choose language, and enter the workspace aligned to your operational responsibility.',
+          footer: 'SluttySluts Marketplace Platform. Enterprise UI revamp with role-based entry and multilingual navigation.'
         },
         'zh-TW': {
-          pageTitle: 'SluttySluts 市集 SaaS',
-          brandTitle: 'SluttySluts SaaS',
-          brandSub: 'Creator 與 Customer 的雙邊市集平台',
-          creatorEntry: '進入 Creator',
-          customerEntry: '進入 Customer',
-          eyebrow: 'PAYMENTS + PROMOTION + COMPLIANCE',
-          heroTitle: '打造可變現的雙邊市場 SaaS。',
-          heroDesc:
-            '參考現代金融官網的清晰結構，先給價值主張，再用角色入口直接導向工作台。Creator 與 Customer 都能從第一步就進入正確流程。',
-          heroCreator: '以 Creator 開始',
-          heroCustomer: '以 Customer 開始',
-          metric1: '平台對 Creator 交易的基準抽成模型。',
-          metric2: 'Customer 手續費透明拆帳，可追蹤。',
-          metric3: '以 webhook 即時回寫付款與風控狀態。',
-          flowTitle: 'SaaS 核心流程',
-          flowDesc: '從探索商品、Hosted Checkout 到錢包撥款，全部可追蹤。',
-          flow1Title: '1. 探索與轉換',
-          flow1Desc: 'Customer 瀏覽置頂與一般商品，建立待付款訂單並預覽費用拆解。',
-          flow2Title: '2. Hosted Payment 事件',
-          flow2Desc: '金流 webhook 非同步回寫訂單與支付狀態，並做重送去重處理。',
-          flow3Title: '3. Creator 收益管理',
-          flow3Desc: '佣金、保留金與可撥款金額自動流入錢包與提現流程。',
-          rolesTitle: '選擇你的工作台',
-          rolesDesc: '右上角角色入口與下方卡片皆可快速進入。',
-          creatorCardTitle: 'Creator 工作台',
-          creatorPoint1: '管理商品與價格。',
-          creatorPoint2: '購買置頂方案提升排序。',
-          creatorPoint3: '追蹤錢包、保留金與提現。',
-          customerCardTitle: 'Customer 工作台',
-          customerPoint1: '瀏覽商品並看見置頂優先。',
-          customerPoint2: '建立 pending 訂單並進入 Hosted Checkout。',
-          customerPoint3: '追蹤訂單、爭議與交付狀態。',
-          ctaTitle: '準備開始營運了嗎？',
-          ctaDesc: '使用右上角色入口，進到 Console 後接上 API Base 即可操作。',
-          footer: 'SluttySluts Marketplace MVP 的 SaaS Landing，為 Creator + Customer 角色導流。'
+          brandTitle: 'SluttySluts 平台',
+          brandSub: '企業級 Creator Marketplace 基礎設施',
+          navPlatform: '平台能力',
+          navRoles: '工作台',
+          navSecurity: '風控合規',
+          navStart: '快速開始',
+          btnCreator: 'Creator',
+          btnCustomer: 'Customer',
+          eyebrow: 'ENTERPRISE MARKETPLACE OS',
+          heroTitle: '以合規、推廣與撥款控制，擴展 Creator 商業模式。',
+          heroCopy:
+            '這是一套完整雙邊市場堆疊，專為高風險支付流程設計：角色導向導流、Hosted Checkout、可對帳 Ledger 與推廣變現在同一個操作面。',
+          heroCustomer: '進入 Customer 工作台',
+          heroCreator: '進入 Creator 工作台',
+          heroAdmin: '進入營運 Console',
+          stat1: '事件投遞可靠度目標',
+          stat2: '保留金支援天數',
+          stat3: 'Customer、Creator、Admin、Ops',
+          asideTitle1: '營收結構',
+          asideCopy1: '買家手續費、Creator 佣金與推廣費統一進入同一套記帳模型。',
+          asideTitle2: '營運控制',
+          asideCopy2: '角色入口與語言導流，讓每一種使用者進到對應流程。',
+          asideTitle3: '合規內建',
+          asideCopy3: 'KYC 關卡、內容審核、webhook 去重、爭議與撥款狀態機。',
+          platformTitle: '對齊商業紀律的平台模組',
+          platformSub: '每個能力都直接對應 KPI 與財務對帳需求。',
+          feature1Title: '雙邊交易引擎',
+          feature1Copy: '先建 pending 訂單，再由 webhook 回寫付款成功並推進履約。',
+          feature2Title: '推廣變現模組',
+          feature2Copy: 'Creator 可在後台購買置頂方案（天數或點擊式）。',
+          feature3Title: '錢包與撥款',
+          feature3Copy: '佣金、保留金、可撥款金額分離，提現流程可稽核。',
+          rolesTitle: '角色優先的使用旅程',
+          rolesSub: '右上角身份入口可直接把使用者導到正確工作台。',
+          creatorTitle: 'Creator 工作台',
+          creatorCopy: '供給側營運者管理商品、推廣預算與撥款。',
+          creatorPoint1: '商品與價格管理',
+          creatorPoint2: '推廣購買與曝光追蹤',
+          creatorPoint3: '錢包、保留金與提現申請',
+          customerTitle: 'Customer 工作台',
+          customerCopy: '需求側用戶探索商品，建立可驗證的 Hosted Checkout 訂單。',
+          customerPoint1: '瀏覽置頂與一般商品',
+          customerPoint2: '建立含費用拆解的待付款訂單',
+          customerPoint3: '追蹤訂單、爭議與交付狀態',
+          securityTitle: '可規模化的營運信心',
+          securitySub: '產品行為與高風險金流現實條件對齊。',
+          proof1: 'webhook 事件處理',
+          proof2: '帳本式財務紀錄',
+          proof3: '雙向費率模型',
+          proof4: 'available / pending 錢包餘額',
+          ctaTitle: '從概念直接走到可營運。',
+          ctaCopy: '選角色、選語言，直接進入對應責任工作台。',
+          footer: 'SluttySluts Marketplace Platform，企業級改版，支援角色導流與多語系。'
         },
         hu: {
-          pageTitle: 'SluttySluts piacter SaaS',
-          brandTitle: 'SluttySluts SaaS',
-          brandSub: 'Ketoldalu piacter Creator es Customer szerepkorokkel',
-          creatorEntry: 'Belepes Creator',
-          customerEntry: 'Belepes Customer',
-          eyebrow: 'PAYMENTS + PROMOTION + COMPLIANCE',
-          heroTitle: 'Indits ketoldalu piacter SaaS-t beepitett monetizacioval.',
-          heroDesc:
-            'Modern fintech nyitooldal mintajara: tiszta ertekajanlat, szerepalapu belepes, gyors tovabblepes. A Creator es Customer kulon workflow-t kap mar az elso kattintastol.',
-          heroCreator: 'Start Creator',
-          heroCustomer: 'Start Customer',
-          metric1: 'Alap jutalekmodell a Creator tranzakciokhoz.',
-          metric2: 'Attekintheto Customer dijmodell rendelesi bontassal.',
-          metric3: 'Webhook alapu fizetesi statusz es moderacios jelzesek.',
-          flowTitle: 'Hogyan mukodik a SaaS folyamat',
-          flowDesc: 'Katalogusbol hosted checkouton at a kifizetesi ledgerig minden nyomon kovetheto.',
-          flow1Title: '1. Felfedezes es konverzio',
-          flow1Desc: 'A Customer promotalt es organikus listakat bongeszik, majd pending rendelest hoz letre.',
-          flow2Title: '2. Hosted fizetesi esemenyek',
-          flow2Desc: 'A gateway webhook aszinkron modon frissiti a statuszokat idempotens kezelessel.',
-          flow3Title: '3. Creator bevetelkezeles',
-          flow3Desc: 'Jutalek, reserve es kifizetheto egyenleg wallet es kiutalas workflow-ba kerul.',
-          rolesTitle: 'Valaszd ki a workspace-t',
-          rolesDesc: 'A jobb felso szerep-gombok es az also kartyak ugyanoda vezetnek.',
-          creatorCardTitle: 'Creator Workspace',
-          creatorPoint1: 'Lista es arkezeles.',
-          creatorPoint2: 'Promocio vasarlasa rangsor boosthoz.',
-          creatorPoint3: 'Wallet, reserve es kiutalas kovetese.',
-          customerCardTitle: 'Customer Workspace',
-          customerPoint1: 'Katalogus bongeszese promotalt prioritassal.',
-          customerPoint2: 'Pending rendeles es hosted checkout fizetes.',
-          customerPoint3: 'Rendeles, dispute es szallitas statusz kovetese.',
-          ctaTitle: 'Keszen allsz a piacter futtatasara?',
-          ctaDesc: 'Hasznald a szerepbelepest jobb felul, majd allitsd be az API Base cimet a konzolban.',
-          footer: 'SaaS landing a SluttySluts Marketplace MVP-hez Creator + Customer belepessel.'
+          brandTitle: 'SluttySluts Platform',
+          brandSub: 'Vallalati szintu Creator marketplace infrastruktura',
+          navPlatform: 'Platform',
+          navRoles: 'Workspacek',
+          navSecurity: 'Biztonsag',
+          navStart: 'Gyors kezdes',
+          btnCreator: 'Creator',
+          btnCustomer: 'Customer',
+          eyebrow: 'ENTERPRISE MARKETPLACE OS',
+          heroTitle: 'Skalazd a creator commerce modellt compliance es payout kontrollal.',
+          heroCopy:
+            'Komplett ketoldalu marketplace stack high-risk payment workflow-hoz: szerepalapu belepes, hosted checkout, egyeztetheto ledger es promotion monetizacio egy feluleten.',
+          heroCustomer: 'Customer Workspace megnyitasa',
+          heroCreator: 'Creator Workspace megnyitasa',
+          heroAdmin: 'Operations Console megnyitasa',
+          stat1: 'esemeny kezbesitesi megbizhatosag cel',
+          stat2: 'rolling reserve tamogatasi idoszak',
+          stat3: 'Customer, Creator, Admin, Ops',
+          asideTitle1: 'Revenue Stack',
+          asideCopy1: 'Buyer fee + creator jutalek + promotion inventory egy ledger modellben.',
+          asideTitle2: 'Operational Controls',
+          asideCopy2: 'Szerepalapu belepes nyelvi onboardinggal es workflow dashboardokkal.',
+          asideTitle3: 'Compliance by Design',
+          asideCopy3: 'KYC gate, moderacios esemenyek, webhook idempotencia, dispute es payout allapotok.',
+          platformTitle: 'Uzleti fegyelemre epitett platform modulok',
+          platformSub: 'Minden kepesseg KPI-hoz es penzugyi egyezteteshez kapcsolodik.',
+          feature1Title: 'Ketoldalu tranzakciok',
+          feature1Copy: 'Hosted checkout eloszor pending rendelest hoz letre, majd webhook frissit.',
+          feature2Title: 'Promotion monetizacio',
+          feature2Copy: 'A Creator dashboardrol idotartos vagy kattintas alapu plan vasarolhato.',
+          feature3Title: 'Wallet es payout',
+          feature3Copy: 'Jutalek, reserve es payoutable osszeg szetvalasztva audit-biztos kifizeteshez.',
+          rolesTitle: 'Szerep-kozpontu user journey',
+          rolesSub: 'A jobb felso szerep gombok mindenkit a megfelelo workspace-be visznek.',
+          creatorTitle: 'Creator Workspace',
+          creatorCopy: 'Kinalati oldal: katalogus, promotion budget, payout kezeles.',
+          creatorPoint1: 'Katalogus es ar menedzsment',
+          creatorPoint2: 'Promotion vasarlas es eleres kovetes',
+          creatorPoint3: 'Wallet, reserve es kiutalas igenyek',
+          customerTitle: 'Customer Workspace',
+          customerCopy: 'Keresleti oldal: listing felfedezes es hosted-checkout rendeles.',
+          customerPoint1: 'Promotalt es organikus listingek attekintese',
+          customerPoint2: 'Pending rendeles atlatott dij bontassal',
+          customerPoint3: 'Rendeles, dispute es szallitas statusz kovetese',
+          securityTitle: 'Operational confidence nagy meretben',
+          securitySub: 'A termek viselkedese osszehangolva a high-risk payment korulmenyekkel.',
+          proof1: 'webhook esemeny feldolgozas',
+          proof2: 'ledger stilusu penzugyi rekord',
+          proof3: 'customer fee + creator jutalek',
+          proof4: 'elerheto es pending wallet egyenleg',
+          ctaTitle: 'Lepj a koncepciotol az uzemszeru mukodesig.',
+          ctaCopy: 'Valassz szerepet es nyelvet, majd lepj be a megfelelo workspace-be.',
+          footer: 'SluttySluts Marketplace Platform vallalati UI frissites szerepalapu belepessel es tobbnyelvu navigacioval.'
         },
         fr: {
-          pageTitle: 'SaaS marketplace SluttySluts',
-          brandTitle: 'SluttySluts SaaS',
-          brandSub: 'Plateforme marketplace pour roles Creator et Customer',
-          creatorEntry: 'Entrer Creator',
-          customerEntry: 'Entrer Customer',
-          eyebrow: 'PAYMENTS + PROMOTION + COMPLIANCE',
-          heroTitle: 'Lancez une marketplace bi-face avec monetisation integree.',
-          heroDesc:
-            'Inspire dune structure fintech moderne: proposition de valeur claire, entree par role, et acces rapide a laction. Creator et Customer ont chacun leur parcours.',
-          heroCreator: 'Demarrer Creator',
-          heroCustomer: 'Demarrer Customer',
-          metric1: 'Modele de commission plateforme pour transactions Creator.',
-          metric2: 'Frais Customer transparents avec decomposition de commande.',
-          metric3: 'Mises a jour webhook pour paiement et moderation.',
-          flowTitle: 'Fonctionnement du flux SaaS',
-          flowDesc: 'De la decouverte catalogue au hosted checkout puis ledger payout, tout est tracable.',
-          flow1Title: '1. Decouverte et conversion',
-          flow1Desc: 'Le Customer explore les listings promus ou organiques puis cree une commande pending.',
-          flow2Title: '2. Evenements de paiement hosted',
-          flow2Desc: 'Les webhooks gateway mettent a jour commandes et paiements de facon asynchrone.',
-          flow3Title: '3. Controle revenus Creator',
-          flow3Desc: 'Commission, reserve et solde payable alimentent wallet et retraits.',
-          rolesTitle: 'Choisissez votre espace',
-          rolesDesc: 'Lentree par role en haut a droite est aussi disponible ci-dessous.',
-          creatorCardTitle: 'Espace Creator',
-          creatorPoint1: 'Gerer listings et prix.',
-          creatorPoint2: 'Acheter des plans promotionnels pour booster le ranking.',
-          creatorPoint3: 'Suivre wallet, reserve et retraits.',
-          customerCardTitle: 'Espace Customer',
-          customerPoint1: 'Explorer le catalogue avec priorite promue.',
-          customerPoint2: 'Creer commande pending et payer via hosted checkout.',
-          customerPoint3: 'Suivre commande, litige et livraison.',
-          ctaTitle: 'Pret a operer la marketplace ?',
-          ctaDesc: 'Utilisez lentree par role a droite puis connectez votre API Base dans la console.',
-          footer: 'Landing SaaS pour SluttySluts Marketplace MVP avec onboarding Creator + Customer.'
+          brandTitle: 'SluttySluts Platform',
+          brandSub: 'Infrastructure marketplace Creator niveau entreprise',
+          navPlatform: 'Plateforme',
+          navRoles: 'Workspaces',
+          navSecurity: 'Securite',
+          navStart: 'Demarrage',
+          btnCreator: 'Creator',
+          btnCustomer: 'Customer',
+          eyebrow: 'ENTERPRISE MARKETPLACE OS',
+          heroTitle: 'Scalez le commerce creator avec controle compliance, promotion et payouts.',
+          heroCopy:
+            'Stack marketplace bi-face complet pour flux high-risk payment: entree par role, hosted checkout, ledger reconciliable et monetisation promotion dans une seule surface.',
+          heroCustomer: 'Ouvrir Customer Workspace',
+          heroCreator: 'Ouvrir Creator Workspace',
+          heroAdmin: 'Ouvrir Console Operations',
+          stat1: 'objectif fiabilite de livraison des evenements',
+          stat2: 'fenetre de support rolling reserve',
+          stat3: 'Customer, Creator, Admin, Ops',
+          asideTitle1: 'Revenue Stack',
+          asideCopy1: 'Buyer fee + commission creator + promotion inventory unifies dans un modele ledger.',
+          asideTitle2: 'Operational Controls',
+          asideCopy2: 'Points dentree par role avec onboarding multilingue et dashboards dedies.',
+          asideTitle3: 'Compliance by Design',
+          asideCopy3: 'KYC gates, moderation, webhook idempotence, dispute et etats payout.',
+          platformTitle: 'Modules plateforme avec discipline commerciale',
+          platformSub: 'Chaque capacite est liee aux KPI business et a la reconciliation financiere.',
+          feature1Title: 'Transactions bi-face',
+          feature1Copy: 'Hosted checkout cree une commande pending, puis webhook confirme le paiement.',
+          feature2Title: 'Monetisation promotion',
+          feature2Copy: 'Les creators achetent des plans de ranking (duree ou clic) depuis le dashboard.',
+          feature3Title: 'Wallet et payouts',
+          feature3Copy: 'Commission, reserve et montant payable separes pour des retraits auditables.',
+          rolesTitle: 'Parcours utilisateur oriente role',
+          rolesSub: 'Les boutons didentite en haut a droite dirigent chaque profil vers le bon workspace.',
+          creatorTitle: 'Creator Workspace',
+          creatorCopy: 'Pour les operateurs cote offre gerant produits, promotion et payouts.',
+          creatorPoint1: 'Gestion catalogue et prix',
+          creatorPoint2: 'Achat promotion et suivi dexposition',
+          creatorPoint3: 'Wallet, reserve et demandes de retrait',
+          customerTitle: 'Customer Workspace',
+          customerCopy: 'Pour les utilisateurs cote demande explorant listings et commandes hosted-checkout.',
+          customerPoint1: 'Explorer listings promus et organiques',
+          customerPoint2: 'Creer commandes pending avec decomposition des frais',
+          customerPoint3: 'Suivre commande, litige et livraison',
+          securityTitle: 'Confiance operationnelle a grande echelle',
+          securitySub: 'Concu pour aligner le comportement produit avec les contraintes high-risk payment.',
+          proof1: 'traitement de webhook',
+          proof2: 'enregistrements financiers type ledger',
+          proof3: 'frais customer + commission creator',
+          proof4: 'soldes wallet available vs pending',
+          ctaTitle: 'Passez du concept aux operations de production.',
+          ctaCopy: 'Selectionnez role et langue, puis entrez dans le workspace correspondant.',
+          footer: 'SluttySluts Marketplace Platform. Refonte UI entreprise avec entree par role et navigation multilingue.'
         }
       };
 
-      const preferred = localStorage.getItem('siteLang') || 'en';
-      const langSelect = document.getElementById('langSelect');
-
-      function safeLang(raw) {
+      function normalizedLang(raw) {
         return Object.prototype.hasOwnProperty.call(translations, raw) ? raw : 'en';
       }
 
-      function updateRoleLinks(lang) {
-        document.querySelectorAll('[data-role-link]').forEach((el) => {
-          const role = el.getAttribute('data-role-link');
-          el.setAttribute('href', `./app.html?role=${role}&lang=${encodeURIComponent(lang)}`);
-        });
-      }
-
       function applyLang(lang) {
-        const resolved = safeLang(lang);
-        const dict = translations[resolved];
+        const chosen = normalizedLang(lang);
+        const dict = translations[chosen];
 
-        document.documentElement.lang = resolved;
-        document.title = dict.pageTitle;
+        document.documentElement.lang = chosen;
         document.querySelectorAll('[data-i18n]').forEach((node) => {
           const key = node.getAttribute('data-i18n');
           if (dict[key]) node.textContent = dict[key];
         });
 
-        updateRoleLinks(resolved);
-        langSelect.value = resolved;
-        localStorage.setItem('siteLang', resolved);
+        document.querySelectorAll('[data-role-link]').forEach((node) => {
+          const role = node.getAttribute('data-role-link');
+          node.setAttribute('href', `./app.html?role=${encodeURIComponent(role)}&lang=${encodeURIComponent(chosen)}`);
+        });
+
+        document.getElementById('langSelect').value = chosen;
+        localStorage.setItem('siteLang', chosen);
       }
 
-      langSelect.addEventListener('change', (e) => {
-        applyLang(e.target.value);
-      });
+      function bootReveal() {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add('show');
+              observer.unobserve(entry.target);
+            });
+          },
+          { threshold: 0.2 }
+        );
 
-      applyLang(preferred);
+        document.querySelectorAll('.reveal').forEach((el, idx) => {
+          el.style.transitionDelay = `${Math.min(300, idx * 70)}ms`;
+          observer.observe(el);
+        });
+      }
+
+      const langSelect = document.getElementById('langSelect');
+      langSelect.addEventListener('change', (event) => applyLang(event.target.value));
+
+      const savedLang = localStorage.getItem('siteLang') || 'en';
+      applyLang(savedLang);
+      bootReveal();
     </script>
   </body>
 </html>

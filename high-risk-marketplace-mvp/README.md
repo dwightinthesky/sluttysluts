@@ -119,6 +119,7 @@ npm run smoke
 - Landing 路徑：`/high-risk-marketplace-mvp/web/index.html`
 - Console 路徑：`/high-risk-marketplace-mvp/web/app.html`
 - Landing 右上角提供 `Creator / Customer` 角色入口與語言切換（Eng / Zh-TW / Hungarian / French）。
+- 2026/02 改版：Landing、Console、Getting Started 已統一為企業級視覺語言與響應式 UI。
 
 ### Docker（後端 API）
 ```bash
