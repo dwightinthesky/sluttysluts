@@ -1,0 +1,8 @@
+# Node
+backend/node_modules/
+
+# Local runtime data
+backend/data/dev-db.json
+
+# OS
+.DS_Store

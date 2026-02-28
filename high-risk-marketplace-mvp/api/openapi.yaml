@@ -1,0 +1,203 @@
+openapi: 3.1.0
+info:
+  title: High-Risk Marketplace API
+  version: 0.1.0
+  description: |
+    Compliance-first marketplace API draft.
+servers:
+  - url: https://api.example.com
+security:
+  - bearerAuth: []
+
+paths:
+  /v1/age/verify:
+    post:
+      summary: Start buyer age verification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, provider]
+              properties:
+                userId:
+                  type: string
+                provider:
+                  type: string
+      responses:
+        "202":
+          description: Verification started
+
+  /v1/sellers/kyc:
+    post:
+      summary: Submit seller KYC/KYB data pointer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sellerId, providerCaseId]
+              properties:
+                sellerId:
+                  type: string
+                providerCaseId:
+                  type: string
+      responses:
+        "202":
+          description: KYC submitted
+
+  /v1/listings:
+    post:
+      summary: Create listing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateListingRequest'
+      responses:
+        "201":
+          description: Listing created
+    get:
+      summary: Search listings
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+        - in: query
+          name: minPrice
+          schema:
+            type: number
+        - in: query
+          name: maxPrice
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Listing results
+
+  /v1/orders:
+    post:
+      summary: Place order and initiate payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        "201":
+          description: Order created
+
+  /v1/orders/{orderId}/delivery-confirmation:
+    post:
+      summary: Confirm delivery and release payout eligibility
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+      responses:
+        "202":
+          description: Delivery confirmed
+
+  /v1/disputes:
+    post:
+      summary: Open dispute
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDisputeRequest'
+      responses:
+        "201":
+          description: Dispute created
+
+  /v1/payouts/release:
+    post:
+      summary: Release eligible seller balances
+      responses:
+        "202":
+          description: Payout job started
+
+  /v1/moderation/screen:
+    post:
+      summary: Screen text/image metadata
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [entityType, entityId]
+              properties:
+                entityType:
+                  type: string
+                  enum: [listing, chat_message, profile]
+                entityId:
+                  type: string
+      responses:
+        "200":
+          description: Moderation score result
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    CreateListingRequest:
+      type: object
+      required: [sellerId, title, price, currency]
+      properties:
+        sellerId:
+          type: string
+        title:
+          type: string
+          maxLength: 120
+        description:
+          type: string
+          maxLength: 4000
+        price:
+          type: number
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+        tags:
+          type: array
+          items:
+            type: string
+    CreateOrderRequest:
+      type: object
+      required: [buyerId, listingId, amount, currency]
+      properties:
+        buyerId:
+          type: string
+        listingId:
+          type: string
+        amount:
+          type: number
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+    CreateDisputeRequest:
+      type: object
+      required: [orderId, reason]
+      properties:
+        orderId:
+          type: string
+        reason:
+          type: string
+        evidenceUrls:
+          type: array
+          items:
+            type: string
+            format: uri

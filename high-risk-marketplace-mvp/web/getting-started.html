@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>快速開始 | High-Risk Marketplace MVP</title>
+    <style>
+      :root {
+        --bg: #f4f2ea;
+        --card: #ffffff;
+        --text: #1f2937;
+        --accent: #0f766e;
+        --muted: #6b7280;
+      }
+      body {
+        margin: 0;
+        font-family: "Noto Sans TC", "Segoe UI", sans-serif;
+        background: radial-gradient(circle at 10% 0%, #eff6ff 0%, var(--bg) 45%);
+        color: var(--text);
+      }
+      .wrap {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .nav {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--card);
+        border-radius: 10px;
+        padding: 10px 12px;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+      }
+      .lang-box {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--card);
+        padding: 10px 12px;
+        border-radius: 10px;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+      }
+      .lang-box label {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .lang-box select {
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 4px 8px;
+        background: #fff;
+      }
+      h1 {
+        margin: 0 0 10px;
+      }
+      .sub {
+        color: var(--muted);
+        margin-bottom: 24px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+        margin-bottom: 14px;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      ol,
+      ul {
+        padding-left: 20px;
+      }
+      pre {
+        margin: 0;
+        padding: 14px;
+        border-radius: 8px;
+        background: #111827;
+        color: #e5e7eb;
+        overflow-x: auto;
+      }
+      @media (max-width: 768px) {
+        .toolbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="toolbar">
+        <div class="nav">
+          <a href="./index.html" data-i18n="navHome">首頁</a>
+          <a href="./getting-started.html" data-i18n="navStart">快速開始</a>
+        </div>
+        <div class="lang-box">
+          <label for="language-select" data-i18n="langLabel">語言</label>
+          <select id="language-select">
+            <option value="zh-Hant">繁體中文</option>
+            <option value="en">English</option>
+            <option value="hu">Magyar</option>
+            <option value="fr">Francais</option>
+          </select>
+        </div>
+      </div>
+
+      <h1 data-i18n="title">後端快速開始</h1>
+      <p class="sub" data-i18n="subtitle">三步驟啟動後端並跑完整 smoke test</p>
+
+      <div class="card">
+        <h2 data-i18n="stepsTitle">啟動步驟</h2>
+        <ol>
+          <li data-i18n="step1">進入 backend 目錄並安裝套件</li>
+          <li data-i18n="step2">啟動 API 服務（預設 8080）</li>
+          <li data-i18n="step3">在另一個 terminal 執行 smoke test</li>
+        </ol>
+        <pre><code>cd ../backend
+npm install
+npm start
+
+# another terminal
+npm run smoke</code></pre>
+      </div>
+
+      <div class="card">
+        <h2 data-i18n="notesTitle">注意事項</h2>
+        <ul>
+          <li data-i18n="note1">所有受保護 API 需帶 x-user-id header。</li>
+          <li data-i18n="note2">預設內建 demo 帳號：buyer-demo / seller-demo / admin-demo / ops-demo。</li>
+          <li data-i18n="note3">此版本為 MVP 模擬流程，支付與 KYC 為測試 stub。</li>
+        </ul>
+      </div>
+    </div>
+
+    <script src="./i18n/translations.js"></script>
+    <script src="./i18n/core.js"></script>
+    <script>
+      window.initI18nPage('getting_started');
+    </script>
+  </body>
+</html>

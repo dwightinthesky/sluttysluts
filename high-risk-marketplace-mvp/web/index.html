@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>High-Risk Marketplace MVP</title>
+    <style>
+      :root {
+        --bg: #f4f2ea;
+        --card: #ffffff;
+        --text: #1f2937;
+        --accent: #0f766e;
+        --muted: #6b7280;
+      }
+      body {
+        margin: 0;
+        font-family: "Noto Sans TC", "Segoe UI", sans-serif;
+        background: radial-gradient(circle at 20% 0%, #e6fffa 0%, var(--bg) 45%);
+        color: var(--text);
+      }
+      .wrap {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .nav {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--card);
+        border-radius: 10px;
+        padding: 10px 12px;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+      }
+      .lang-box {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--card);
+        padding: 10px 12px;
+        border-radius: 10px;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+      }
+      .lang-box label {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .lang-box select {
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 4px 8px;
+        background: #fff;
+      }
+      h1 {
+        margin: 0 0 10px;
+      }
+      .sub {
+        color: var(--muted);
+        margin-bottom: 24px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+        margin-bottom: 14px;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      ul {
+        padding-left: 20px;
+      }
+      .notice {
+        border-left: 4px solid #f59e0b;
+        background: #fffbeb;
+      }
+      @media (max-width: 768px) {
+        .toolbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="toolbar">
+        <div class="nav">
+          <a href="./index.html" data-i18n="navHome">首頁</a>
+          <a href="./getting-started.html" data-i18n="navStart">快速開始</a>
+        </div>
+        <div class="lang-box">
+          <label id="lang-label" for="language-select" data-i18n="langLabel">語言</label>
+          <select id="language-select">
+            <option value="zh-Hant">繁體中文</option>
+            <option value="en">English</option>
+            <option value="hu">Magyar</option>
+            <option value="fr">Francais</option>
+          </select>
+        </div>
+      </div>
+
+      <h1 id="title" data-i18n="title">High-Risk Marketplace MVP</h1>
+      <p id="subtitle" class="sub" data-i18n="subtitle">法遵優先、風險驅動的新專案骨架</p>
+
+      <div class="card notice">
+        <strong id="notice-title" data-i18n="noticeTitle">提醒：</strong>
+        <span id="notice-body" data-i18n="noticeBody">此專案為產品與技術框架，不構成法律意見。上線前請完成律師與合規顧問審查。</span>
+      </div>
+
+      <div class="card">
+        <h2 id="docs-title" data-i18n="docsTitle">文件導覽</h2>
+        <ul>
+          <li><a id="doc-readme" href="../README.md" data-i18n="docReadme">README</a></li>
+          <li><a id="doc-prd" href="../docs/PRD_zh-TW.md" data-i18n="docPrd">產品需求文件（PRD）</a></li>
+          <li><a id="doc-compliance" href="../docs/COMPLIANCE_CHECKLIST_zh-TW.md" data-i18n="docCompliance">法遵清單</a></li>
+          <li><a id="doc-risk" href="../docs/RISK_REGISTER_zh-TW.md" data-i18n="docRisk">風險登錄</a></li>
+          <li><a id="doc-roadmap" href="../docs/ROADMAP_90D_zh-TW.md" data-i18n="docRoadmap">90 天路線圖</a></li>
+          <li><a id="doc-kpi" href="../ops/KPI_DASHBOARD_TEMPLATE_zh-TW.md" data-i18n="docKpi">KPI 儀表板模板</a></li>
+          <li><a id="doc-openapi" href="../api/openapi.yaml" data-i18n="docOpenapi">OpenAPI 規格</a></li>
+          <li><a id="doc-schema" href="../sql/schema.sql" data-i18n="docSchema">資料庫 Schema</a></li>
+          <li><a id="doc-backend" href="./getting-started.html" data-i18n="docBackend">後端快速開始頁</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <script src="./i18n/translations.js"></script>
+    <script src="./i18n/core.js"></script>
+    <script>
+      window.initI18nPage('index');
+    </script>
+  </body>
+</html>
