@@ -23,6 +23,7 @@
         --creator: #cf345f;
         --card: rgba(16, 17, 22, 0.8);
         --shadow: 0 26px 56px rgba(0, 0, 0, 0.42);
+        --hero-ease: cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       * {
@@ -178,6 +179,8 @@
       }
 
       .hero {
+        --hero-left: 50%;
+        --hero-right: 50%;
         margin-top: 18px;
         border-radius: 26px;
         border: 1px solid var(--line);
@@ -198,6 +201,18 @@
         z-index: 2;
       }
 
+      .hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 6;
+        opacity: 0.18;
+        mix-blend-mode: soft-light;
+        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0.45px, transparent 0.55px);
+        background-size: 3px 3px;
+      }
+
       .hero-center {
         position: absolute;
         top: 26px;
@@ -206,6 +221,7 @@
         z-index: 7;
         text-align: center;
         pointer-events: none;
+        mix-blend-mode: difference;
       }
 
       .hero-pill {
@@ -235,27 +251,29 @@
 
       .hero-panel {
         position: relative;
-        flex: 1 1 50%;
+        flex: 0 0 50%;
         min-width: 0;
-        transition: flex-basis 0.62s cubic-bezier(0.22, 1, 0.36, 1);
+        transition: flex-basis 0.78s var(--hero-ease);
         overflow: hidden;
         isolation: isolate;
       }
 
-      body[data-active-role='customer'] .hero-panel.customer-panel {
-        flex: 0 0 63%;
+      .hero-panel.customer-panel {
+        flex-basis: var(--hero-left);
       }
 
-      body[data-active-role='customer'] .hero-panel.creator-panel {
-        flex: 0 0 37%;
+      .hero-panel.creator-panel {
+        flex-basis: var(--hero-right);
       }
 
-      body[data-active-role='creator'] .hero-panel.customer-panel {
-        flex: 0 0 37%;
+      body[data-active-role='customer'] .hero {
+        --hero-left: 70%;
+        --hero-right: 30%;
       }
 
-      body[data-active-role='creator'] .hero-panel.creator-panel {
-        flex: 0 0 63%;
+      body[data-active-role='creator'] .hero {
+        --hero-left: 30%;
+        --hero-right: 70%;
       }
 
       .hero-panel + .hero-panel {
@@ -268,17 +286,17 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        filter: grayscale(1) contrast(1.05);
-        transform: scale(1.01);
-        transition: transform 0.72s ease, opacity 0.6s ease, filter 0.6s ease;
-        opacity: 0.45;
+        filter: grayscale(1) contrast(1.08) brightness(0.36);
+        transform: scale(1.08);
+        transition: transform 0.78s var(--hero-ease), opacity 0.64s var(--hero-ease), filter 0.64s var(--hero-ease);
+        opacity: 0.38;
       }
 
       body[data-active-role='customer'] .customer-panel .panel-image,
       body[data-active-role='creator'] .creator-panel .panel-image {
-        opacity: 0.72;
-        filter: grayscale(0.15) contrast(1.08);
-        transform: scale(1.08);
+        opacity: 0.82;
+        filter: grayscale(0.16) contrast(1.13) brightness(0.64);
+        transform: scale(1.04);
       }
 
       .panel-tint {
@@ -302,9 +320,9 @@
       .panel-content {
         position: absolute;
         inset: auto 32px 34px;
-        z-index: 4;
+        z-index: 7;
         max-width: 560px;
-        transition: opacity 0.42s ease, transform 0.42s ease;
+        transition: opacity 0.48s var(--hero-ease), transform 0.48s var(--hero-ease);
       }
 
       .creator-panel .panel-content {
@@ -315,9 +333,22 @@
       .panel-kicker {
         margin: 0 0 10px;
         text-transform: uppercase;
-        letter-spacing: 0.24em;
-        font-size: 0.7rem;
+        letter-spacing: 0.4em;
+        font-size: 0.6rem;
         color: #c8cddf;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .panel-kicker::before {
+        content: '';
+        display: inline-block;
+        width: 30px;
+        height: 1px;
+        background: currentColor;
+        opacity: 0.7;
       }
 
       .creator-panel .panel-kicker {
@@ -336,34 +367,57 @@
       }
 
       .panel-copy {
-        margin: 18px 0 0;
+        margin: 0;
         color: #d8dce8;
-        font-size: 0.98rem;
+        font-size: 0.93rem;
         max-width: 36ch;
-        line-height: 1.6;
+        line-height: 1.7;
       }
 
       .creator-panel .panel-copy {
         margin-left: auto;
       }
 
+      .panel-extra {
+        margin-top: 18px;
+        display: grid;
+        gap: 14px;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.52s var(--hero-ease), opacity 0.42s var(--hero-ease);
+      }
+
+      body[data-active-role='customer'] .customer-panel .panel-extra,
+      body[data-active-role='creator'] .creator-panel .panel-extra {
+        max-height: 220px;
+        opacity: 1;
+      }
+
       .panel-link {
-        margin-top: 20px;
         display: inline-flex;
         align-items: center;
         gap: 8px;
         text-decoration: none;
         color: #fff;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.9);
-        padding-bottom: 4px;
-        letter-spacing: 0.1em;
-        font-size: 0.74rem;
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        background: rgba(8, 9, 14, 0.5);
+        backdrop-filter: blur(10px);
+        border-radius: 999px;
+        padding: 11px 16px;
+        letter-spacing: 0.16em;
+        font-size: 0.66rem;
         text-transform: uppercase;
+        width: fit-content;
+        transition: background 0.28s var(--hero-ease), border-color 0.28s var(--hero-ease), color 0.28s var(--hero-ease),
+          box-shadow 0.28s var(--hero-ease);
       }
 
       .panel-link:hover {
-        color: #f6d4da;
-        border-color: #f6d4da;
+        color: #f8f9ff;
+        border-color: rgba(255, 255, 255, 0.8);
+        background: rgba(23, 24, 33, 0.72);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.24);
       }
 
       .panel-link svg {
@@ -373,8 +427,8 @@
 
       body[data-active-role='customer'] .creator-panel .panel-content,
       body[data-active-role='creator'] .customer-panel .panel-content {
-        opacity: 0.64;
-        transform: translateY(10px);
+        opacity: 0.58;
+        transform: translateY(12px);
       }
 
       body[data-active-role='customer'] .customer-panel .panel-content,
@@ -429,8 +483,8 @@
 
       .hero-stat {
         border: 1px solid rgba(255, 255, 255, 0.14);
-        background: rgba(8, 10, 16, 0.66);
-        backdrop-filter: blur(8px);
+        background: rgba(8, 10, 16, 0.52);
+        backdrop-filter: blur(12px);
         border-radius: 13px;
         padding: 11px 12px;
       }
@@ -445,6 +499,24 @@
         margin-top: 6px;
         font-size: 0.78rem;
         color: #c6cbda;
+      }
+
+      .hero-progress {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 9;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      .hero-progress > span {
+        display: block;
+        height: 100%;
+        width: 25%;
+        background: linear-gradient(90deg, #9caad1, #ffd6df);
+        transition: width 0.45s var(--hero-ease);
       }
 
       .section {
@@ -663,6 +735,11 @@
           bottom: 14px;
         }
 
+        .panel-extra {
+          max-height: 220px;
+          opacity: 1;
+        }
+
         .story-grid,
         .flows {
           grid-template-columns: 1fr;
@@ -695,6 +772,10 @@
         .hero-pill {
           font-size: 0.57rem;
           letter-spacing: 0.22em;
+        }
+
+        .panel-kicker {
+          letter-spacing: 0.26em;
         }
 
         .panel-content {
@@ -774,17 +855,19 @@
           <div class="panel-tint"></div>
           <div class="panel-content">
             <p class="panel-kicker" data-i18n="heroCustomerKicker">Demand Side</p>
-            <h2 class="panel-title" data-i18n="heroCustomerTitle">The <em>Vault</em></h2>
-            <p class="panel-copy" data-i18n="heroCustomerCopy">
-              Explore curated listings with transparent checkout fees, private communication, and verified delivery states.
-            </p>
-            <a class="panel-link" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroEnterCustomer"
-              >Enter as Customer
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14" />
-                <path d="m13 6 6 6-6 6" />
-              </svg>
-            </a>
+            <h2 class="panel-title"><span data-i18n="heroCustomerTitleLead">THE</span> <em data-i18n="heroCustomerTitleEm">VAULT</em></h2>
+            <div class="panel-extra">
+              <p class="panel-copy" data-i18n="heroCustomerCopy">
+                Explore curated listings with transparent checkout fees, private communication, and verified delivery states.
+              </p>
+              <a class="panel-link" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroEnterCustomer"
+                >Enter as Customer
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" />
+                </svg>
+              </a>
+            </div>
           </div>
         </article>
 
@@ -797,17 +880,19 @@
           <div class="panel-tint"></div>
           <div class="panel-content">
             <p class="panel-kicker" data-i18n="heroCreatorKicker">Supply Side</p>
-            <h2 class="panel-title" data-i18n="heroCreatorTitle">The <em>Syndicate</em></h2>
-            <p class="panel-copy" data-i18n="heroCreatorCopy">
-              Monetize with promotion inventory, reserve-aware wallets, dispute-ready ledgers, and controlled payouts.
-            </p>
-            <a class="panel-link" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroEnterCreator"
-              >Enter as Creator
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 12H5" />
-                <path d="m11 6-6 6 6 6" />
-              </svg>
-            </a>
+            <h2 class="panel-title"><span data-i18n="heroCreatorTitleLead">THE</span> <em data-i18n="heroCreatorTitleEm">SYNDICATE</em></h2>
+            <div class="panel-extra">
+              <p class="panel-copy" data-i18n="heroCreatorCopy">
+                Monetize with promotion inventory, reserve-aware wallets, dispute-ready ledgers, and controlled payouts.
+              </p>
+              <a class="panel-link" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroEnterCreator"
+                >Enter as Creator
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 12H5" />
+                  <path d="m11 6-6 6 6 6" />
+                </svg>
+              </a>
+            </div>
           </div>
         </article>
 
@@ -830,6 +915,7 @@
             <span data-i18n="metric3">promotion lift from inventory-based ranking plans</span>
           </div>
         </div>
+        <div class="hero-progress" aria-hidden="true"><span id="heroProgressBar"></span></div>
       </section>
 
       <section id="story" class="section reveal">
@@ -957,10 +1043,14 @@
           heroBadge: 'Role-first marketplace routing',
           heroCustomerKicker: 'Demand Side',
           heroCustomerTitle: 'The Vault',
+          heroCustomerTitleLead: 'THE',
+          heroCustomerTitleEm: 'VAULT',
           heroCustomerCopy:
             'Explore curated listings with transparent checkout fees, private communication, and verified delivery states.',
           heroCreatorKicker: 'Supply Side',
           heroCreatorTitle: 'The Syndicate',
+          heroCreatorTitleLead: 'THE',
+          heroCreatorTitleEm: 'SYNDICATE',
           heroCreatorCopy:
             'Monetize with promotion inventory, reserve-aware wallets, dispute-ready ledgers, and controlled payouts.',
           heroEnterCustomer: 'Enter as Customer',
@@ -1030,9 +1120,13 @@
           heroBadge: '角色優先分流入口',
           heroCustomerKicker: '需求側',
           heroCustomerTitle: 'The Vault',
+          heroCustomerTitleLead: 'THE',
+          heroCustomerTitleEm: 'VAULT',
           heroCustomerCopy: '探索精選商品，清楚看見費用拆解、私訊溝通與可驗證的交付狀態。',
           heroCreatorKicker: '供給側',
           heroCreatorTitle: 'The Syndicate',
+          heroCreatorTitleLead: 'THE',
+          heroCreatorTitleEm: 'SYNDICATE',
           heroCreatorCopy: '透過推廣版位、保留金可視化錢包與爭議防禦帳本，穩定放大收入。',
           heroEnterCustomer: '以 Customer 身份進入',
           heroEnterCreator: '以 Creator 身份進入',
@@ -1093,10 +1187,14 @@
           heroBadge: 'Role-first marketplace routing',
           heroCustomerKicker: 'Demand Side',
           heroCustomerTitle: 'The Vault',
+          heroCustomerTitleLead: 'THE',
+          heroCustomerTitleEm: 'VAULT',
           heroCustomerCopy:
             'Explore curated listings with transparent checkout fees, private communication, and verified delivery states.',
           heroCreatorKicker: 'Supply Side',
           heroCreatorTitle: 'The Syndicate',
+          heroCreatorTitleLead: 'THE',
+          heroCreatorTitleEm: 'SYNDICATE',
           heroCreatorCopy:
             'Monetize with promotion inventory, reserve-aware wallets, dispute-ready ledgers, and controlled payouts.',
           heroEnterCustomer: 'Enter as Customer',
@@ -1166,10 +1264,14 @@
           heroBadge: 'Routage marketplace oriente role',
           heroCustomerKicker: 'Demand Side',
           heroCustomerTitle: 'The Vault',
+          heroCustomerTitleLead: 'THE',
+          heroCustomerTitleEm: 'VAULT',
           heroCustomerCopy:
             'Explore curated listings with transparent checkout fees, private communication, and verified delivery states.',
           heroCreatorKicker: 'Supply Side',
           heroCreatorTitle: 'The Syndicate',
+          heroCreatorTitleLead: 'THE',
+          heroCreatorTitleEm: 'SYNDICATE',
           heroCreatorCopy:
             'Monetize with promotion inventory, reserve-aware wallets, dispute-ready ledgers, and controlled payouts.',
           heroEnterCustomer: 'Entrer en Customer',
@@ -1237,15 +1339,52 @@
         return translations.en[key] || '';
       }
 
-      let activeRole = 'customer';
+      const heroElement = document.getElementById('hero');
+      const heroProgressBar = document.getElementById('heroProgressBar');
+      const desktopQuery = window.matchMedia('(min-width: 981px)');
+      const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-      function setActiveRole(role) {
+      let activeRole = 'customer';
+      let pendingMouseX = null;
+      let fluidFrame = 0;
+
+      function updateHeroProgress() {
+        if (!heroProgressBar) return;
+        heroProgressBar.style.width = activeRole === 'creator' ? '100%' : '50%';
+      }
+
+      function clearFluidSplit() {
+        if (!heroElement) return;
+        heroElement.style.removeProperty('--hero-left');
+        heroElement.style.removeProperty('--hero-right');
+      }
+
+      function setActiveRole(role, options = {}) {
         activeRole = role === 'creator' ? 'creator' : 'customer';
         document.body.setAttribute('data-active-role', activeRole);
 
         document.querySelectorAll('[data-hero-role]').forEach((button) => {
           button.classList.toggle('active', button.getAttribute('data-hero-role') === activeRole);
         });
+
+        if (!options.keepFluid) clearFluidSplit();
+        updateHeroProgress();
+      }
+
+      function updateFluidSplit() {
+        fluidFrame = 0;
+        if (!heroElement || pendingMouseX === null) return;
+        if (!desktopQuery.matches || reduceMotionQuery.matches) return;
+
+        const rect = heroElement.getBoundingClientRect();
+        if (rect.width <= 0) return;
+        const ratio = Math.max(0, Math.min(1, (pendingMouseX - rect.left) / rect.width));
+        const leftPercent = Math.max(30, Math.min(70, (1 - ratio) * 100));
+        const rightPercent = 100 - leftPercent;
+
+        heroElement.style.setProperty('--hero-left', `${leftPercent.toFixed(2)}%`);
+        heroElement.style.setProperty('--hero-right', `${rightPercent.toFixed(2)}%`);
+        setActiveRole(leftPercent >= 50 ? 'customer' : 'creator', { keepFluid: true });
       }
 
       function applyLang(lang) {
@@ -1305,9 +1444,28 @@
           }
         });
 
+        panel.addEventListener('mousemove', (event) => {
+          if (!desktopQuery.matches || reduceMotionQuery.matches) return;
+          pendingMouseX = event.clientX;
+          if (!fluidFrame) fluidFrame = requestAnimationFrame(updateFluidSplit);
+        });
+
         panel.addEventListener('focusin', () => {
           setActiveRole(panel.getAttribute('data-role-panel'));
         });
+      });
+
+      heroElement.addEventListener('mouseleave', () => {
+        pendingMouseX = null;
+        clearFluidSplit();
+        setActiveRole(activeRole);
+      });
+
+      window.addEventListener('resize', () => {
+        if (!desktopQuery.matches) {
+          pendingMouseX = null;
+          clearFluidSplit();
+        }
       });
 
       const query = new URLSearchParams(window.location.search);
