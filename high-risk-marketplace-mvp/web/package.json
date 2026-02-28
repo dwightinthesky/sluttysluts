@@ -1,0 +1,12 @@
+{
+  "name": "high-risk-marketplace-web",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build:ts": "tsc -p tsconfig.json",
+    "watch:ts": "tsc -p tsconfig.json --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}

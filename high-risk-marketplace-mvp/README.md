@@ -139,6 +139,21 @@ npm run smoke
 - Landing 右上角提供 `Creator / Customer` 角色入口與語言切換（Eng / Zh-TW / Hungarian / French）。
 - 2026/02 改版：Landing、Console、Getting Started 已統一為企業級視覺語言與響應式 UI。
 
+### Frontend TypeScript（web）
+- 前端頁面腳本已改為 TypeScript 原始碼：
+  - `web/ts/app.ts`
+  - `web/ts/index.ts`
+  - `web/ts/checkout.ts`
+  - `web/ts/product-detail.ts`
+  - `web/ts/getting-started.ts`
+- 編譯輸出：`web/js/*.js`（HTML 以 `<script type="module">` 載入）
+- 編譯指令：
+```bash
+cd web
+npm install
+npm run build:ts
+```
+
 ### Docker（後端 API）
 ```bash
 docker compose up --build -d
