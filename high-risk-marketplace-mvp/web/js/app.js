@@ -1,4 +1,3 @@
-// @ts-nocheck
 const I18N = {
     en: {
         personaLabel: 'Persona',
@@ -590,71 +589,74 @@ const PROMOTION_PLAN_CATALOG = {
         }
     ]
 };
+function byId(id) {
+    return document.getElementById(id);
+}
 const el = {
     navButtons: document.querySelectorAll('.nav-btn'),
     panels: {
-        overview: document.getElementById('panel-overview'),
-        customer: document.getElementById('panel-customer'),
-        creator: document.getElementById('panel-creator'),
-        operations: document.getElementById('panel-operations'),
-        logs: document.getElementById('panel-logs')
+        overview: byId('panel-overview'),
+        customer: byId('panel-customer'),
+        creator: byId('panel-creator'),
+        operations: byId('panel-operations'),
+        logs: byId('panel-logs')
     },
-    persona: document.getElementById('persona'),
-    langSelect: document.getElementById('langSelect'),
-    apiBase: document.getElementById('apiBase'),
-    webhookToken: document.getElementById('webhookToken'),
-    saveConfig: document.getElementById('saveConfig'),
-    kpiListings: document.getElementById('kpiListings'),
-    kpiPromoted: document.getElementById('kpiPromoted'),
-    kpiAov: document.getElementById('kpiAov'),
-    kpiRole: document.getElementById('kpiRole'),
-    searchInput: document.getElementById('searchInput'),
-    filterSelect: document.getElementById('filterSelect'),
-    refreshListings: document.getElementById('refreshListings'),
-    listingGrid: document.getElementById('listingGrid'),
-    selectedListing: document.getElementById('selectedListing'),
-    createOrderBtn: document.getElementById('createOrderBtn'),
-    customerConsole: document.getElementById('customerConsole'),
-    planSelect: document.getElementById('planSelect'),
-    creatorListing: document.getElementById('creatorListing'),
-    promoModeDuration: document.getElementById('promoModeDuration'),
-    promoModeClick: document.getElementById('promoModeClick'),
-    promoPlanOptions: document.getElementById('promoPlanOptions'),
-    activePromotionsList: document.getElementById('activePromotionsList'),
-    promoMetricViews: document.getElementById('promoMetricViews'),
-    promoMetricViewsDelta: document.getElementById('promoMetricViewsDelta'),
-    promoMetricBoosts: document.getElementById('promoMetricBoosts'),
-    promoMetricBoostsNote: document.getElementById('promoMetricBoostsNote'),
-    promoMetricLift: document.getElementById('promoMetricLift'),
-    promoMetricLiftNote: document.getElementById('promoMetricLiftNote'),
-    walletAvailable: document.getElementById('walletAvailable'),
-    walletAvailablePrimary: document.getElementById('walletAvailablePrimary'),
-    walletReserveTotal: document.getElementById('walletReserveTotal'),
-    walletReserveDays: document.getElementById('walletReserveDays'),
-    walletReserveReleases: document.getElementById('walletReserveReleases'),
-    walletLedgerBody: document.getElementById('walletLedgerBody'),
-    buyPromoBtn: document.getElementById('buyPromoBtn'),
-    loadPromotions: document.getElementById('loadPromotions'),
-    promoConsole: document.getElementById('promoConsole'),
-    walletRefresh: document.getElementById('walletRefresh'),
-    walletLedgerRefresh: document.getElementById('walletLedgerRefresh'),
-    withdrawAmount: document.getElementById('withdrawAmount'),
-    withdrawBtn: document.getElementById('withdrawBtn'),
-    walletConsole: document.getElementById('walletConsole'),
-    creatorTableBody: document.getElementById('creatorTableBody'),
-    webhookOrder: document.getElementById('webhookOrder'),
-    webhookStatus: document.getElementById('webhookStatus'),
-    sendWebhook: document.getElementById('sendWebhook'),
-    opsConsole: document.getElementById('opsConsole'),
-    releasePayout: document.getElementById('releasePayout'),
-    settlementConsole: document.getElementById('settlementConsole'),
-    loadModerationQueue: document.getElementById('loadModerationQueue'),
-    moderationKpiPending: document.getElementById('moderationKpiPending'),
-    moderationKpiHighRisk: document.getElementById('moderationKpiHighRisk'),
-    moderationKpiSlaRisk: document.getElementById('moderationKpiSlaRisk'),
-    moderationQueueGrid: document.getElementById('moderationQueueGrid'),
-    moderationConsole: document.getElementById('moderationConsole'),
-    globalLog: document.getElementById('globalLog')
+    persona: byId('persona'),
+    langSelect: byId('langSelect'),
+    apiBase: byId('apiBase'),
+    webhookToken: byId('webhookToken'),
+    saveConfig: byId('saveConfig'),
+    kpiListings: byId('kpiListings'),
+    kpiPromoted: byId('kpiPromoted'),
+    kpiAov: byId('kpiAov'),
+    kpiRole: byId('kpiRole'),
+    searchInput: byId('searchInput'),
+    filterSelect: byId('filterSelect'),
+    refreshListings: byId('refreshListings'),
+    listingGrid: byId('listingGrid'),
+    selectedListing: byId('selectedListing'),
+    createOrderBtn: byId('createOrderBtn'),
+    customerConsole: byId('customerConsole'),
+    planSelect: byId('planSelect'),
+    creatorListing: byId('creatorListing'),
+    promoModeDuration: byId('promoModeDuration'),
+    promoModeClick: byId('promoModeClick'),
+    promoPlanOptions: byId('promoPlanOptions'),
+    activePromotionsList: byId('activePromotionsList'),
+    promoMetricViews: byId('promoMetricViews'),
+    promoMetricViewsDelta: byId('promoMetricViewsDelta'),
+    promoMetricBoosts: byId('promoMetricBoosts'),
+    promoMetricBoostsNote: byId('promoMetricBoostsNote'),
+    promoMetricLift: byId('promoMetricLift'),
+    promoMetricLiftNote: byId('promoMetricLiftNote'),
+    walletAvailable: byId('walletAvailable'),
+    walletAvailablePrimary: byId('walletAvailablePrimary'),
+    walletReserveTotal: byId('walletReserveTotal'),
+    walletReserveDays: byId('walletReserveDays'),
+    walletReserveReleases: byId('walletReserveReleases'),
+    walletLedgerBody: byId('walletLedgerBody'),
+    buyPromoBtn: byId('buyPromoBtn'),
+    loadPromotions: byId('loadPromotions'),
+    promoConsole: byId('promoConsole'),
+    walletRefresh: byId('walletRefresh'),
+    walletLedgerRefresh: byId('walletLedgerRefresh'),
+    withdrawAmount: byId('withdrawAmount'),
+    withdrawBtn: byId('withdrawBtn'),
+    walletConsole: byId('walletConsole'),
+    creatorTableBody: byId('creatorTableBody'),
+    webhookOrder: byId('webhookOrder'),
+    webhookStatus: byId('webhookStatus'),
+    sendWebhook: byId('sendWebhook'),
+    opsConsole: byId('opsConsole'),
+    releasePayout: byId('releasePayout'),
+    settlementConsole: byId('settlementConsole'),
+    loadModerationQueue: byId('loadModerationQueue'),
+    moderationKpiPending: byId('moderationKpiPending'),
+    moderationKpiHighRisk: byId('moderationKpiHighRisk'),
+    moderationKpiSlaRisk: byId('moderationKpiSlaRisk'),
+    moderationQueueGrid: byId('moderationQueueGrid'),
+    moderationConsole: byId('moderationConsole'),
+    globalLog: byId('globalLog')
 };
 function safeLang(raw) {
     return Object.prototype.hasOwnProperty.call(I18N, raw) ? raw : 'en';
@@ -862,7 +864,8 @@ function renderListings() {
         .join('');
     document.querySelectorAll('.listing[data-select]').forEach((card) => {
         card.addEventListener('click', (event) => {
-            if (event.target.closest('[data-view]'))
+            const target = event.target;
+            if (target?.closest('[data-view]'))
                 return;
             const listingId = card.getAttribute('data-select') || '';
             state.selectedListingId = listingId;
@@ -872,7 +875,8 @@ function renderListings() {
             renderListings();
         });
         card.addEventListener('keydown', (event) => {
-            if (event.target.closest('[data-view]'))
+            const target = event.target;
+            if (target?.closest('[data-view]'))
                 return;
             if (event.key !== 'Enter' && event.key !== ' ')
                 return;
@@ -1545,7 +1549,8 @@ function bindEvents() {
     }
     if (el.moderationQueueGrid) {
         el.moderationQueueGrid.addEventListener('click', async (event) => {
-            const btn = event.target.closest('[data-mod-action][data-mod-id]');
+            const target = event.target;
+            const btn = target?.closest('[data-mod-action][data-mod-id]');
             if (!btn)
                 return;
             const listingId = btn.getAttribute('data-mod-id') || '';
@@ -1570,7 +1575,7 @@ function bindEvents() {
         });
     }
     el.langSelect.addEventListener('change', (event) => {
-        state.lang = safeLang(event.target.value);
+        state.lang = safeLang(event.currentTarget.value);
         renderI18n();
         renderCreatorMonetization();
         renderModerationQueue();

@@ -1,4 +1,3 @@
-// @ts-nocheck
       const I18N = {
         en: {
           personaLabel: 'Persona',
@@ -597,71 +596,81 @@
         ]
       };
 
+      type RequestOptions = {
+        method?: string;
+        headers?: Record<string, string>;
+        body?: unknown;
+      };
+
+      function byId<T extends HTMLElement>(id: string) {
+        return document.getElementById(id) as T;
+      }
+
       const el = {
-        navButtons: document.querySelectorAll('.nav-btn'),
+        navButtons: document.querySelectorAll<HTMLButtonElement>('.nav-btn'),
         panels: {
-          overview: document.getElementById('panel-overview'),
-          customer: document.getElementById('panel-customer'),
-          creator: document.getElementById('panel-creator'),
-          operations: document.getElementById('panel-operations'),
-          logs: document.getElementById('panel-logs')
+          overview: byId<HTMLElement>('panel-overview'),
+          customer: byId<HTMLElement>('panel-customer'),
+          creator: byId<HTMLElement>('panel-creator'),
+          operations: byId<HTMLElement>('panel-operations'),
+          logs: byId<HTMLElement>('panel-logs')
         },
-        persona: document.getElementById('persona'),
-        langSelect: document.getElementById('langSelect'),
-        apiBase: document.getElementById('apiBase'),
-        webhookToken: document.getElementById('webhookToken'),
-        saveConfig: document.getElementById('saveConfig'),
-        kpiListings: document.getElementById('kpiListings'),
-        kpiPromoted: document.getElementById('kpiPromoted'),
-        kpiAov: document.getElementById('kpiAov'),
-        kpiRole: document.getElementById('kpiRole'),
-        searchInput: document.getElementById('searchInput'),
-        filterSelect: document.getElementById('filterSelect'),
-        refreshListings: document.getElementById('refreshListings'),
-        listingGrid: document.getElementById('listingGrid'),
-        selectedListing: document.getElementById('selectedListing'),
-        createOrderBtn: document.getElementById('createOrderBtn'),
-        customerConsole: document.getElementById('customerConsole'),
-        planSelect: document.getElementById('planSelect'),
-        creatorListing: document.getElementById('creatorListing'),
-        promoModeDuration: document.getElementById('promoModeDuration'),
-        promoModeClick: document.getElementById('promoModeClick'),
-        promoPlanOptions: document.getElementById('promoPlanOptions'),
-        activePromotionsList: document.getElementById('activePromotionsList'),
-        promoMetricViews: document.getElementById('promoMetricViews'),
-        promoMetricViewsDelta: document.getElementById('promoMetricViewsDelta'),
-        promoMetricBoosts: document.getElementById('promoMetricBoosts'),
-        promoMetricBoostsNote: document.getElementById('promoMetricBoostsNote'),
-        promoMetricLift: document.getElementById('promoMetricLift'),
-        promoMetricLiftNote: document.getElementById('promoMetricLiftNote'),
-        walletAvailable: document.getElementById('walletAvailable'),
-        walletAvailablePrimary: document.getElementById('walletAvailablePrimary'),
-        walletReserveTotal: document.getElementById('walletReserveTotal'),
-        walletReserveDays: document.getElementById('walletReserveDays'),
-        walletReserveReleases: document.getElementById('walletReserveReleases'),
-        walletLedgerBody: document.getElementById('walletLedgerBody'),
-        buyPromoBtn: document.getElementById('buyPromoBtn'),
-        loadPromotions: document.getElementById('loadPromotions'),
-        promoConsole: document.getElementById('promoConsole'),
-        walletRefresh: document.getElementById('walletRefresh'),
-        walletLedgerRefresh: document.getElementById('walletLedgerRefresh'),
-        withdrawAmount: document.getElementById('withdrawAmount'),
-        withdrawBtn: document.getElementById('withdrawBtn'),
-        walletConsole: document.getElementById('walletConsole'),
-        creatorTableBody: document.getElementById('creatorTableBody'),
-        webhookOrder: document.getElementById('webhookOrder'),
-        webhookStatus: document.getElementById('webhookStatus'),
-        sendWebhook: document.getElementById('sendWebhook'),
-        opsConsole: document.getElementById('opsConsole'),
-        releasePayout: document.getElementById('releasePayout'),
-        settlementConsole: document.getElementById('settlementConsole'),
-        loadModerationQueue: document.getElementById('loadModerationQueue'),
-        moderationKpiPending: document.getElementById('moderationKpiPending'),
-        moderationKpiHighRisk: document.getElementById('moderationKpiHighRisk'),
-        moderationKpiSlaRisk: document.getElementById('moderationKpiSlaRisk'),
-        moderationQueueGrid: document.getElementById('moderationQueueGrid'),
-        moderationConsole: document.getElementById('moderationConsole'),
-        globalLog: document.getElementById('globalLog')
+        persona: byId<HTMLElement>('persona'),
+        langSelect: byId<HTMLSelectElement>('langSelect'),
+        apiBase: byId<HTMLInputElement>('apiBase'),
+        webhookToken: byId<HTMLInputElement>('webhookToken'),
+        saveConfig: byId<HTMLButtonElement>('saveConfig'),
+        kpiListings: byId<HTMLElement>('kpiListings'),
+        kpiPromoted: byId<HTMLElement>('kpiPromoted'),
+        kpiAov: byId<HTMLElement>('kpiAov'),
+        kpiRole: byId<HTMLElement>('kpiRole'),
+        searchInput: byId<HTMLInputElement>('searchInput'),
+        filterSelect: byId<HTMLSelectElement>('filterSelect'),
+        refreshListings: byId<HTMLButtonElement>('refreshListings'),
+        listingGrid: byId<HTMLElement>('listingGrid'),
+        selectedListing: byId<HTMLInputElement>('selectedListing'),
+        createOrderBtn: byId<HTMLButtonElement>('createOrderBtn'),
+        customerConsole: byId<HTMLElement>('customerConsole'),
+        planSelect: byId<HTMLSelectElement>('planSelect'),
+        creatorListing: byId<HTMLSelectElement>('creatorListing'),
+        promoModeDuration: byId<HTMLButtonElement>('promoModeDuration'),
+        promoModeClick: byId<HTMLButtonElement>('promoModeClick'),
+        promoPlanOptions: byId<HTMLElement>('promoPlanOptions'),
+        activePromotionsList: byId<HTMLElement>('activePromotionsList'),
+        promoMetricViews: byId<HTMLElement>('promoMetricViews'),
+        promoMetricViewsDelta: byId<HTMLElement>('promoMetricViewsDelta'),
+        promoMetricBoosts: byId<HTMLElement>('promoMetricBoosts'),
+        promoMetricBoostsNote: byId<HTMLElement>('promoMetricBoostsNote'),
+        promoMetricLift: byId<HTMLElement>('promoMetricLift'),
+        promoMetricLiftNote: byId<HTMLElement>('promoMetricLiftNote'),
+        walletAvailable: byId<HTMLElement>('walletAvailable'),
+        walletAvailablePrimary: byId<HTMLElement>('walletAvailablePrimary'),
+        walletReserveTotal: byId<HTMLElement>('walletReserveTotal'),
+        walletReserveDays: byId<HTMLElement>('walletReserveDays'),
+        walletReserveReleases: byId<HTMLElement>('walletReserveReleases'),
+        walletLedgerBody: byId<HTMLElement>('walletLedgerBody'),
+        buyPromoBtn: byId<HTMLButtonElement>('buyPromoBtn'),
+        loadPromotions: byId<HTMLButtonElement>('loadPromotions'),
+        promoConsole: byId<HTMLElement>('promoConsole'),
+        walletRefresh: byId<HTMLButtonElement>('walletRefresh'),
+        walletLedgerRefresh: byId<HTMLButtonElement>('walletLedgerRefresh'),
+        withdrawAmount: byId<HTMLInputElement>('withdrawAmount'),
+        withdrawBtn: byId<HTMLButtonElement>('withdrawBtn'),
+        walletConsole: byId<HTMLElement>('walletConsole'),
+        creatorTableBody: byId<HTMLElement>('creatorTableBody'),
+        webhookOrder: byId<HTMLInputElement>('webhookOrder'),
+        webhookStatus: byId<HTMLSelectElement>('webhookStatus'),
+        sendWebhook: byId<HTMLButtonElement>('sendWebhook'),
+        opsConsole: byId<HTMLElement>('opsConsole'),
+        releasePayout: byId<HTMLButtonElement>('releasePayout'),
+        settlementConsole: byId<HTMLElement>('settlementConsole'),
+        loadModerationQueue: byId<HTMLButtonElement>('loadModerationQueue'),
+        moderationKpiPending: byId<HTMLElement>('moderationKpiPending'),
+        moderationKpiHighRisk: byId<HTMLElement>('moderationKpiHighRisk'),
+        moderationKpiSlaRisk: byId<HTMLElement>('moderationKpiSlaRisk'),
+        moderationQueueGrid: byId<HTMLElement>('moderationQueueGrid'),
+        moderationConsole: byId<HTMLElement>('moderationConsole'),
+        globalLog: byId<HTMLElement>('globalLog')
       };
 
       function safeLang(raw) {
@@ -710,7 +719,7 @@
         return (el.apiBase.value || '').replace(/\/$/, '');
       }
 
-      async function request(path, options = {}) {
+      async function request(path: string, options: RequestOptions = {}) {
         const response = await fetch(`${apiBase()}${path}`, {
           method: options.method || 'GET',
           headers: {
@@ -893,9 +902,10 @@
           })
           .join('');
 
-        document.querySelectorAll('.listing[data-select]').forEach((card) => {
-          card.addEventListener('click', (event) => {
-            if (event.target.closest('[data-view]')) return;
+        document.querySelectorAll<HTMLElement>('.listing[data-select]').forEach((card) => {
+          card.addEventListener('click', (event: MouseEvent) => {
+            const target = event.target as HTMLElement | null;
+            if (target?.closest('[data-view]')) return;
             const listingId = card.getAttribute('data-select') || '';
             state.selectedListingId = listingId;
             el.selectedListing.value = listingId;
@@ -904,8 +914,9 @@
             renderListings();
           });
 
-          card.addEventListener('keydown', (event) => {
-            if (event.target.closest('[data-view]')) return;
+          card.addEventListener('keydown', (event: KeyboardEvent) => {
+            const target = event.target as HTMLElement | null;
+            if (target?.closest('[data-view]')) return;
             if (event.key !== 'Enter' && event.key !== ' ') return;
             event.preventDefault();
             const listingId = card.getAttribute('data-select') || '';
@@ -917,7 +928,7 @@
           });
         });
 
-        document.querySelectorAll('[data-listing-image]').forEach((img) => {
+        document.querySelectorAll<HTMLImageElement>('[data-listing-image]').forEach((img) => {
           img.addEventListener('error', () => {
             const fallback = img.getAttribute('data-fallback');
             if (fallback && img.getAttribute('src') !== fallback) {
@@ -1602,7 +1613,7 @@
           button.addEventListener('click', () => setPanel(button.dataset.panel));
         });
 
-        document.querySelectorAll('[data-switch-role]').forEach((button) => {
+        document.querySelectorAll<HTMLElement>('[data-switch-role]').forEach((button) => {
           button.addEventListener('click', () => setRole(button.getAttribute('data-switch-role')));
         });
 
@@ -1643,8 +1654,9 @@
           el.loadModerationQueue.addEventListener('click', () => loadModerationQueue(false));
         }
         if (el.moderationQueueGrid) {
-          el.moderationQueueGrid.addEventListener('click', async (event) => {
-            const btn = event.target.closest('[data-mod-action][data-mod-id]');
+          el.moderationQueueGrid.addEventListener('click', async (event: MouseEvent) => {
+            const target = event.target as HTMLElement | null;
+            const btn = target?.closest<HTMLButtonElement>('[data-mod-action][data-mod-id]');
             if (!btn) return;
 
             const listingId = btn.getAttribute('data-mod-id') || '';
@@ -1669,7 +1681,7 @@
         }
 
         el.langSelect.addEventListener('change', (event) => {
-          state.lang = safeLang(event.target.value);
+          state.lang = safeLang((event.currentTarget as HTMLSelectElement).value);
           renderI18n();
           renderCreatorMonetization();
           renderModerationQueue();
