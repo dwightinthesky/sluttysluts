@@ -1,27 +1,26 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Marketplace SaaS Console</title>
+    <title>SluttySluts Marketplace SaaS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg: #f7f4ec;
+        --bg: #faf8f2;
         --panel: #ffffff;
-        --ink: #1e2228;
-        --muted: #6b7280;
-        --line: #e5dfcf;
-        --brand: #c2410c;
-        --brand-soft: #ffedd5;
-        --success: #166534;
-        --danger: #b91c1c;
-        --shadow: 0 14px 38px rgba(15, 23, 42, 0.08);
+        --ink: #0f172a;
+        --muted: #64748b;
+        --line: #e2e8f0;
+        --brand: #0f766e;
+        --brand-2: #0ea5a1;
+        --warm: #fb923c;
+        --shadow: 0 18px 45px rgba(15, 23, 42, 0.09);
       }
 
       * {
@@ -30,91 +29,95 @@
 
       body {
         margin: 0;
-        font-family: 'Space Grotesk', 'Noto Sans TC', sans-serif;
+        font-family: 'Outfit', 'Noto Sans TC', sans-serif;
         color: var(--ink);
         background:
-          radial-gradient(circle at 95% 0%, #ffe0b2 0%, transparent 36%),
-          radial-gradient(circle at 0% 100%, #fde68a 0%, transparent 28%),
+          radial-gradient(circle at 100% 0%, #d9f99d 0%, transparent 25%),
+          radial-gradient(circle at 0% 100%, #fed7aa 0%, transparent 30%),
           var(--bg);
       }
 
-      .shell {
-        min-height: 100vh;
-        padding: 24px;
+      .container {
+        width: min(1160px, calc(100% - 40px));
+        margin: 0 auto;
       }
 
-      .topbar {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        box-shadow: var(--shadow);
-        padding: 16px 18px;
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(8px);
+        background: rgba(250, 248, 242, 0.8);
+        border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+      }
+
+      .nav-row {
         display: flex;
-        flex-wrap: wrap;
-        gap: 14px;
         align-items: center;
         justify-content: space-between;
+        gap: 14px;
+        padding: 14px 0;
       }
 
       .brand {
         display: flex;
-        align-items: center;
         gap: 10px;
+        align-items: center;
       }
 
-      .brand-chip {
+      .brand-mark {
         width: 38px;
         height: 38px;
-        border-radius: 12px;
+        border-radius: 11px;
         display: grid;
         place-items: center;
-        background: var(--brand-soft);
-        color: var(--brand);
-        font-weight: 700;
+        font-weight: 800;
+        color: #fff;
+        background: linear-gradient(140deg, var(--brand), var(--brand-2));
       }
 
       .brand h1 {
         margin: 0;
-        font-size: 1.1rem;
-        line-height: 1.1;
+        font-size: 1.02rem;
       }
 
-      .brand p {
-        margin: 2px 0 0;
+      .brand small {
         color: var(--muted);
-        font-size: 0.85rem;
       }
 
-      .topbar-controls {
+      .nav-controls {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
         align-items: center;
+        gap: 8px;
       }
 
-      .input,
       .select,
       .btn {
-        border-radius: 10px;
         border: 1px solid var(--line);
-        padding: 10px 12px;
+        border-radius: 10px;
         font: inherit;
+        padding: 9px 12px;
       }
 
-      .input,
       .select {
         background: #fff;
       }
 
       .btn {
+        text-decoration: none;
+        color: inherit;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
+        transition: all 0.2s ease;
         background: #fff;
-        transition: all 0.18s ease;
       }
 
       .btn:hover {
         transform: translateY(-1px);
-        border-color: #d8cdb7;
+        border-color: #cbd5e1;
       }
 
       .btn.primary {
@@ -123,79 +126,92 @@
         border-color: var(--brand);
       }
 
-      .btn.ghost {
-        background: transparent;
+      .btn.soft {
+        background: #ecfeff;
+        border-color: #99f6e4;
+        color: #115e59;
       }
 
-      .layout {
-        margin-top: 16px;
+      .hero {
+        padding: 54px 0 26px;
         display: grid;
-        grid-template-columns: 240px minmax(0, 1fr);
-        gap: 16px;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 18px;
       }
 
-      .sidebar {
+      .hero-panel {
         background: var(--panel);
         border: 1px solid var(--line);
-        border-radius: 16px;
+        border-radius: 22px;
         box-shadow: var(--shadow);
-        padding: 10px;
+        padding: 26px;
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: #0f766e;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+      }
+
+      .hero h2 {
+        margin: 10px 0;
+        font-size: clamp(1.9rem, 3.2vw, 3rem);
+        line-height: 1.05;
+      }
+
+      .hero p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 1.05rem;
+      }
+
+      .hero-actions {
+        margin-top: 18px;
         display: flex;
-        flex-direction: column;
-        gap: 8px;
+        gap: 9px;
+        flex-wrap: wrap;
       }
 
-      .nav-btn {
-        width: 100%;
-        text-align: left;
-        border: 1px solid transparent;
-        background: transparent;
-        border-radius: 12px;
-        padding: 10px 12px;
-        font: inherit;
-        cursor: pointer;
-        color: #111827;
+      .metrics {
+        display: grid;
+        gap: 10px;
       }
 
-      .nav-btn strong {
-        display: block;
-        font-size: 0.95rem;
+      .metric {
+        background: #f8fafc;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px;
       }
 
-      .nav-btn small {
+      .metric strong {
+        font-size: 1.7rem;
+      }
+
+      .metric p {
+        margin: 4px 0 0;
         color: var(--muted);
       }
 
-      .nav-btn.active {
-        background: #fff7ed;
-        border-color: #fed7aa;
+      .section {
+        padding: 16px 0 10px;
       }
 
-      .content {
+      .section h3 {
+        margin: 0 0 8px;
+        font-size: 1.55rem;
+      }
+
+      .section > p {
+        margin: 0 0 14px;
+        color: var(--muted);
+      }
+
+      .cards {
         display: grid;
-        gap: 14px;
-      }
-
-      .panel {
-        display: none;
-        gap: 14px;
-      }
-
-      .panel.active {
-        display: grid;
-      }
-
-      .grid {
-        display: grid;
-        gap: 12px;
-      }
-
-      .grid.metrics {
         grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .grid.cards {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
       }
 
       .card {
@@ -206,675 +222,399 @@
         box-shadow: var(--shadow);
       }
 
-      .card h2,
-      .card h3 {
-        margin: 0 0 10px;
+      .card h4 {
+        margin: 0 0 8px;
       }
 
-      .muted {
-        color: var(--muted);
-      }
-
-      .kpi {
-        font-size: 1.8rem;
-        margin: 6px 0;
-      }
-
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        border-radius: 999px;
-        padding: 3px 10px;
-        font-size: 0.78rem;
-        font-weight: 600;
-        border: 1px solid #fcd34d;
-        background: #fffbeb;
-      }
-
-      .pill.ok {
-        border-color: #bbf7d0;
-        background: #f0fdf4;
-        color: #166534;
-      }
-
-      .pill.bad {
-        border-color: #fecaca;
-        background: #fef2f2;
-        color: #991b1b;
-      }
-
-      .stack {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .row {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-
-      .listings {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-      }
-
-      .listing {
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        padding: 12px;
-        background: #fff;
-      }
-
-      .listing h4 {
-        margin: 0 0 6px;
-      }
-
-      .listing p {
-        margin: 6px 0;
-      }
-
-      .listing .price {
-        font-weight: 700;
-        font-size: 1.1rem;
-      }
-
-      .table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.93rem;
-      }
-
-      .table th,
-      .table td {
-        text-align: left;
-        padding: 10px 8px;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .table th {
-        color: var(--muted);
-        font-weight: 600;
-      }
-
-      .console {
+      .card p {
         margin: 0;
-        border-radius: 10px;
-        border: 1px solid #111827;
-        background: #111827;
-        color: #e5e7eb;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
-        font-size: 0.78rem;
-        padding: 12px;
-        min-height: 180px;
-        max-height: 280px;
-        overflow: auto;
+        color: var(--muted);
       }
 
-      .link {
-        color: var(--brand);
-        text-decoration: none;
+      .roles {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
       }
 
-      .link:hover {
-        text-decoration: underline;
+      .role-card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
       }
 
-      @media (max-width: 1100px) {
-        .listings {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
+      .role-card h4 {
+        margin: 0 0 8px;
       }
 
-      @media (max-width: 900px) {
-        .layout {
+      .role-card ul {
+        margin: 0 0 14px;
+        padding-left: 18px;
+        color: var(--muted);
+      }
+
+      .cta {
+        margin: 22px 0 36px;
+        background: linear-gradient(120deg, #0f172a 0%, #134e4a 100%);
+        color: #fff;
+        border-radius: 22px;
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .cta h3 {
+        margin: 0;
+      }
+
+      .cta p {
+        margin: 4px 0 0;
+        color: #cbd5e1;
+      }
+
+      .footer {
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.9rem;
+        padding: 16px 0 28px;
+      }
+
+      @media (max-width: 980px) {
+        .hero {
           grid-template-columns: 1fr;
         }
 
-        .sidebar {
-          flex-direction: row;
-          overflow: auto;
-          padding: 8px;
-        }
-
-        .nav-btn {
-          min-width: 210px;
-        }
-
-        .grid.metrics {
+        .cards {
           grid-template-columns: 1fr;
         }
 
-        .grid.cards,
-        .listings {
+        .roles {
           grid-template-columns: 1fr;
+        }
+
+        .cta {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .container {
+          width: calc(100% - 24px);
+        }
+
+        .nav-row {
+          align-items: flex-start;
+          flex-direction: column;
         }
       }
     </style>
   </head>
   <body>
-    <div class="shell">
-      <header class="topbar">
+    <header class="nav">
+      <div class="container nav-row">
         <div class="brand">
-          <div class="brand-chip">SS</div>
+          <div class="brand-mark">SS</div>
           <div>
-            <h1>Marketplace SaaS Console</h1>
-            <p>Buyer / Seller / Admin unified cockpit</p>
+            <h1 data-i18n="brandTitle">SluttySluts SaaS</h1>
+            <small data-i18n="brandSub">Marketplace platform for creators and customers</small>
           </div>
         </div>
 
-        <div class="topbar-controls">
-          <input id="apiBase" class="input" style="min-width: 260px" value="http://localhost:8080" />
-          <input id="webhookToken" class="input" style="min-width: 170px" value="dev-webhook-token" />
-          <button id="saveConfig" class="btn">保存連線設定</button>
-          <a class="btn ghost link" href="./getting-started.html">後端啟動教學</a>
+        <div class="nav-controls">
+          <select id="langSelect" class="select" aria-label="Language">
+            <option value="en">Eng</option>
+            <option value="zh-TW">Zh-TW</option>
+            <option value="hu">Hungarian</option>
+            <option value="fr">French</option>
+          </select>
+          <a class="btn soft" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="creatorEntry">Enter Creator</a>
+          <a class="btn primary" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="customerEntry">Enter Customer</a>
         </div>
-      </header>
-
-      <div class="layout">
-        <aside class="sidebar">
-          <button class="nav-btn active" data-panel="buyer">
-            <strong>Buyer Portal</strong>
-            <small>Explore, 下單, 追蹤付款</small>
-          </button>
-          <button class="nav-btn" data-panel="seller">
-            <strong>Seller Dashboard</strong>
-            <small>商品, 置頂, 錢包提現</small>
-          </button>
-          <button class="nav-btn" data-panel="admin">
-            <strong>Admin Panel</strong>
-            <small>Webhook, 風控, 爭議處理</small>
-          </button>
-          <button class="nav-btn" data-panel="docs">
-            <strong>Docs Shortcuts</strong>
-            <small>PRD, API, Schema</small>
-          </button>
-        </aside>
-
-        <main class="content">
-          <section id="panel-buyer" class="panel active">
-            <div class="grid metrics">
-              <article class="card">
-                <h3>Explore Listings</h3>
-                <div class="kpi" id="kpiListings">0</div>
-                <div class="muted">目前可瀏覽商品數</div>
-              </article>
-              <article class="card">
-                <h3>Promoted Slots</h3>
-                <div class="kpi" id="kpiPromoted">0</div>
-                <div class="muted">付費置頂中的商品</div>
-              </article>
-              <article class="card">
-                <h3>Estimated Ticket</h3>
-                <div class="kpi" id="kpiTicket">$0</div>
-                <div class="muted">含 buyer fee 的平均客單</div>
-              </article>
-            </div>
-
-            <article class="card stack">
-              <div class="row">
-                <input id="buyerSearch" class="input" placeholder="搜尋商品標題或描述" style="flex: 1" />
-                <select id="buyerFilter" class="select">
-                  <option value="all">全部</option>
-                  <option value="promoted">只看置頂</option>
-                  <option value="normal">只看一般</option>
-                </select>
-              </div>
-              <div id="listingGrid" class="listings"></div>
-            </article>
-
-            <article class="card stack">
-              <h3>下單工作台（Pending Order + Hosted Checkout）</h3>
-              <div class="row">
-                <input id="selectedListingId" class="input" placeholder="Listing ID" style="flex: 1" />
-                <button id="createOrder" class="btn primary">建立待付款訂單</button>
-              </div>
-              <div class="muted">系統會呼叫 <code>/v1/orders</code>，回傳 hosted checkout URL。</div>
-              <pre id="buyerLog" class="console"></pre>
-            </article>
-          </section>
-
-          <section id="panel-seller" class="panel">
-            <div class="grid cards">
-              <article class="card">
-                <h3>Promotion Center</h3>
-                <p class="muted">快速購買置頂方案，提升 Explore 權重。</p>
-                <div class="row">
-                  <select id="sellerPlan" class="select">
-                    <option value="top-24h">Top Placement 24h</option>
-                    <option value="top-7d">Top Placement 7d</option>
-                    <option value="boost-200-clicks">Boost 200 Clicks</option>
-                  </select>
-                  <input id="sellerListingId" class="input" placeholder="Listing ID" style="flex: 1" />
-                  <button id="buyPromotion" class="btn primary">購買</button>
-                </div>
-                <pre id="promotionLog" class="console"></pre>
-              </article>
-
-              <article class="card">
-                <h3>Wallet & Withdraw</h3>
-                <p class="muted">查詢 available / pending balance，並送出提現。</p>
-                <div class="row">
-                  <button id="refreshWallet" class="btn">刷新錢包</button>
-                  <input id="withdrawAmount" class="input" placeholder="提現金額" value="20" style="width: 120px" />
-                  <button id="withdrawNow" class="btn primary">申請提現</button>
-                </div>
-                <pre id="walletLog" class="console"></pre>
-              </article>
-            </div>
-
-            <article class="card">
-              <h3>Seller Operational Snapshot</h3>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Listing</th>
-                    <th>Status</th>
-                    <th>Price</th>
-                    <th>Promoted</th>
-                    <th>Conversion</th>
-                  </tr>
-                </thead>
-                <tbody id="sellerTableBody"></tbody>
-              </table>
-            </article>
-          </section>
-
-          <section id="panel-admin" class="panel">
-            <article class="card stack">
-              <h3>Webhook Simulator</h3>
-              <div class="row">
-                <input id="webhookOrderId" class="input" placeholder="Order ID" style="flex: 1" />
-                <select id="webhookStatus" class="select">
-                  <option value="paid">paid</option>
-                  <option value="failed">failed</option>
-                  <option value="chargeback">chargeback</option>
-                </select>
-                <button id="sendWebhook" class="btn primary">送出 webhook</button>
-              </div>
-              <pre id="adminLog" class="console"></pre>
-            </article>
-
-            <article class="card">
-              <h3>Moderation Queue</h3>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Entity</th>
-                    <th>Type</th>
-                    <th>Risk</th>
-                    <th>Action</th>
-                    <th>Owner</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>lst_demo_192</td>
-                    <td>listing</td>
-                    <td><span class="pill">65</span></td>
-                    <td>review</td>
-                    <td>seller-demo</td>
-                  </tr>
-                  <tr>
-                    <td>msg_demo_88</td>
-                    <td>chat_message</td>
-                    <td><span class="pill bad">99.9</span></td>
-                    <td>block</td>
-                    <td>buyer-demo</td>
-                  </tr>
-                  <tr>
-                    <td>profile_demo_11</td>
-                    <td>profile</td>
-                    <td><span class="pill ok">5</span></td>
-                    <td>allow</td>
-                    <td>seller-demo</td>
-                  </tr>
-                </tbody>
-              </table>
-            </article>
-          </section>
-
-          <section id="panel-docs" class="panel">
-            <article class="card stack">
-              <h3>Project Assets</h3>
-              <a class="link" href="../README.md" target="_blank" rel="noreferrer">README</a>
-              <a class="link" href="../docs/PRD_zh-TW.md" target="_blank" rel="noreferrer">PRD</a>
-              <a class="link" href="../docs/COMPLIANCE_CHECKLIST_zh-TW.md" target="_blank" rel="noreferrer">Compliance Checklist</a>
-              <a class="link" href="../api/openapi.yaml" target="_blank" rel="noreferrer">OpenAPI</a>
-              <a class="link" href="../sql/schema.sql" target="_blank" rel="noreferrer">PostgreSQL Schema</a>
-              <a class="link" href="./getting-started.html" target="_blank" rel="noreferrer">Backend Quick Start</a>
-            </article>
-          </section>
-        </main>
       </div>
-    </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <article class="hero-panel">
+          <p class="eyebrow" data-i18n="eyebrow">PAYMENTS + PROMOTION + COMPLIANCE</p>
+          <h2 data-i18n="heroTitle">Launch a two-sided marketplace with built-in monetization.</h2>
+          <p data-i18n="heroDesc">
+            Inspired by modern fintech landing structure: a clean value proposition, role-based entry, and fast route to action.
+            This hub gives creators and customers dedicated workflows from the first click.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroCreator">Start as Creator</a>
+            <a class="btn" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroCustomer">Start as Customer</a>
+          </div>
+        </article>
+
+        <aside class="hero-panel metrics">
+          <div class="metric">
+            <strong>+15%</strong>
+            <p data-i18n="metric1">Platform commission baseline for creator transactions.</p>
+          </div>
+          <div class="metric">
+            <strong>5%</strong>
+            <p data-i18n="metric2">Customer service fee model with transparent order breakdown.</p>
+          </div>
+          <div class="metric">
+            <strong>24/7</strong>
+            <p data-i18n="metric3">Webhook-based payment status updates and moderation signals.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section">
+        <h3 data-i18n="flowTitle">How this SaaS flow works</h3>
+        <p data-i18n="flowDesc">From catalog discovery to hosted checkout and payout ledger, everything is traceable.</p>
+        <div class="cards">
+          <article class="card">
+            <h4 data-i18n="flow1Title">1. Discover and convert</h4>
+            <p data-i18n="flow1Desc">Customers browse promoted and organic listings, then create pending orders with fee preview.</p>
+          </article>
+          <article class="card">
+            <h4 data-i18n="flow2Title">2. Hosted payment events</h4>
+            <p data-i18n="flow2Desc">Gateway webhooks update order/payment status asynchronously with idempotent event handling.</p>
+          </article>
+          <article class="card">
+            <h4 data-i18n="flow3Title">3. Creator revenue control</h4>
+            <p data-i18n="flow3Desc">Commission, reserve, and payoutable balance feed wallet and withdrawal workflows.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h3 data-i18n="rolesTitle">Choose your workspace</h3>
+        <p data-i18n="rolesDesc">Role-specific entry at top-right also appears here for quick onboarding.</p>
+        <div class="roles">
+          <article class="role-card">
+            <h4 data-i18n="creatorCardTitle">Creator Workspace</h4>
+            <ul>
+              <li data-i18n="creatorPoint1">Manage listings and pricing.</li>
+              <li data-i18n="creatorPoint2">Buy promotion plans for ranking boost.</li>
+              <li data-i18n="creatorPoint3">Track wallet, reserve, and withdrawals.</li>
+            </ul>
+            <a class="btn soft" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="creatorEntry">Enter Creator</a>
+          </article>
+          <article class="role-card">
+            <h4 data-i18n="customerCardTitle">Customer Workspace</h4>
+            <ul>
+              <li data-i18n="customerPoint1">Explore catalog with promoted priority.</li>
+              <li data-i18n="customerPoint2">Create pending orders and pay via hosted checkout.</li>
+              <li data-i18n="customerPoint3">Follow order, dispute, and delivery states.</li>
+            </ul>
+            <a class="btn primary" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="customerEntry">Enter Customer</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div>
+          <h3 data-i18n="ctaTitle">Ready to run the marketplace?</h3>
+          <p data-i18n="ctaDesc">Use role entry on the right and connect your API base in the console.</p>
+        </div>
+        <div class="nav-controls">
+          <a class="btn soft" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroCreator">Start as Creator</a>
+          <a class="btn" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroCustomer">Start as Customer</a>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span data-i18n="footer">SaaS Landing for SluttySluts Marketplace MVP. Built for Creator + Customer role onboarding.</span>
+      </footer>
+    </main>
 
     <script>
-      const state = {
-        activePanel: 'buyer',
-        buyerId: 'buyer-demo',
-        sellerId: 'seller-demo',
-        listings: [
-          {
-            id: 'sample-lst-001',
-            title: 'Limited Custom Bundle',
-            description: 'Personalized packaging with verified seller fulfillment.',
-            price: 120,
-            currency: 'USD',
-            promoted: true,
-            rating: 4.9,
-            conversion: '13.8%'
-          },
-          {
-            id: 'sample-lst-002',
-            title: 'Express Premium Item',
-            description: 'Fast dispatch workflow with compliance checks.',
-            price: 95,
-            currency: 'USD',
-            promoted: false,
-            rating: 4.7,
-            conversion: '9.4%'
-          },
-          {
-            id: 'sample-lst-003',
-            title: 'Collector Edition',
-            description: 'High-margin niche SKU for repeat buyers.',
-            price: 145,
-            currency: 'USD',
-            promoted: true,
-            rating: 4.8,
-            conversion: '16.1%'
-          }
-        ]
-      };
-
-      const els = {
-        navButtons: document.querySelectorAll('.nav-btn'),
-        panels: {
-          buyer: document.getElementById('panel-buyer'),
-          seller: document.getElementById('panel-seller'),
-          admin: document.getElementById('panel-admin'),
-          docs: document.getElementById('panel-docs')
+      const translations = {
+        en: {
+          pageTitle: 'SluttySluts Marketplace SaaS',
+          brandTitle: 'SluttySluts SaaS',
+          brandSub: 'Marketplace platform for creators and customers',
+          creatorEntry: 'Enter Creator',
+          customerEntry: 'Enter Customer',
+          eyebrow: 'PAYMENTS + PROMOTION + COMPLIANCE',
+          heroTitle: 'Launch a two-sided marketplace with built-in monetization.',
+          heroDesc:
+            'Inspired by modern fintech landing structure: a clean value proposition, role-based entry, and fast route to action. This hub gives creators and customers dedicated workflows from the first click.',
+          heroCreator: 'Start as Creator',
+          heroCustomer: 'Start as Customer',
+          metric1: 'Platform commission baseline for creator transactions.',
+          metric2: 'Customer service fee model with transparent order breakdown.',
+          metric3: 'Webhook-based payment status updates and moderation signals.',
+          flowTitle: 'How this SaaS flow works',
+          flowDesc: 'From catalog discovery to hosted checkout and payout ledger, everything is traceable.',
+          flow1Title: '1. Discover and convert',
+          flow1Desc: 'Customers browse promoted and organic listings, then create pending orders with fee preview.',
+          flow2Title: '2. Hosted payment events',
+          flow2Desc: 'Gateway webhooks update order/payment status asynchronously with idempotent event handling.',
+          flow3Title: '3. Creator revenue control',
+          flow3Desc: 'Commission, reserve, and payoutable balance feed wallet and withdrawal workflows.',
+          rolesTitle: 'Choose your workspace',
+          rolesDesc: 'Role-specific entry at top-right also appears here for quick onboarding.',
+          creatorCardTitle: 'Creator Workspace',
+          creatorPoint1: 'Manage listings and pricing.',
+          creatorPoint2: 'Buy promotion plans for ranking boost.',
+          creatorPoint3: 'Track wallet, reserve, and withdrawals.',
+          customerCardTitle: 'Customer Workspace',
+          customerPoint1: 'Explore catalog with promoted priority.',
+          customerPoint2: 'Create pending orders and pay via hosted checkout.',
+          customerPoint3: 'Follow order, dispute, and delivery states.',
+          ctaTitle: 'Ready to run the marketplace?',
+          ctaDesc: 'Use role entry on the right and connect your API base in the console.',
+          footer: 'SaaS Landing for SluttySluts Marketplace MVP. Built for Creator + Customer role onboarding.'
         },
-        apiBase: document.getElementById('apiBase'),
-        webhookToken: document.getElementById('webhookToken'),
-        saveConfig: document.getElementById('saveConfig'),
-        buyerSearch: document.getElementById('buyerSearch'),
-        buyerFilter: document.getElementById('buyerFilter'),
-        listingGrid: document.getElementById('listingGrid'),
-        selectedListingId: document.getElementById('selectedListingId'),
-        createOrder: document.getElementById('createOrder'),
-        buyerLog: document.getElementById('buyerLog'),
-        sellerTableBody: document.getElementById('sellerTableBody'),
-        sellerPlan: document.getElementById('sellerPlan'),
-        sellerListingId: document.getElementById('sellerListingId'),
-        buyPromotion: document.getElementById('buyPromotion'),
-        promotionLog: document.getElementById('promotionLog'),
-        refreshWallet: document.getElementById('refreshWallet'),
-        withdrawNow: document.getElementById('withdrawNow'),
-        withdrawAmount: document.getElementById('withdrawAmount'),
-        walletLog: document.getElementById('walletLog'),
-        webhookOrderId: document.getElementById('webhookOrderId'),
-        webhookStatus: document.getElementById('webhookStatus'),
-        sendWebhook: document.getElementById('sendWebhook'),
-        adminLog: document.getElementById('adminLog'),
-        kpiListings: document.getElementById('kpiListings'),
-        kpiPromoted: document.getElementById('kpiPromoted'),
-        kpiTicket: document.getElementById('kpiTicket')
+        'zh-TW': {
+          pageTitle: 'SluttySluts 市集 SaaS',
+          brandTitle: 'SluttySluts SaaS',
+          brandSub: 'Creator 與 Customer 的雙邊市集平台',
+          creatorEntry: '進入 Creator',
+          customerEntry: '進入 Customer',
+          eyebrow: 'PAYMENTS + PROMOTION + COMPLIANCE',
+          heroTitle: '打造可變現的雙邊市場 SaaS。',
+          heroDesc:
+            '參考現代金融官網的清晰結構，先給價值主張，再用角色入口直接導向工作台。Creator 與 Customer 都能從第一步就進入正確流程。',
+          heroCreator: '以 Creator 開始',
+          heroCustomer: '以 Customer 開始',
+          metric1: '平台對 Creator 交易的基準抽成模型。',
+          metric2: 'Customer 手續費透明拆帳，可追蹤。',
+          metric3: '以 webhook 即時回寫付款與風控狀態。',
+          flowTitle: 'SaaS 核心流程',
+          flowDesc: '從探索商品、Hosted Checkout 到錢包撥款，全部可追蹤。',
+          flow1Title: '1. 探索與轉換',
+          flow1Desc: 'Customer 瀏覽置頂與一般商品，建立待付款訂單並預覽費用拆解。',
+          flow2Title: '2. Hosted Payment 事件',
+          flow2Desc: '金流 webhook 非同步回寫訂單與支付狀態，並做重送去重處理。',
+          flow3Title: '3. Creator 收益管理',
+          flow3Desc: '佣金、保留金與可撥款金額自動流入錢包與提現流程。',
+          rolesTitle: '選擇你的工作台',
+          rolesDesc: '右上角角色入口與下方卡片皆可快速進入。',
+          creatorCardTitle: 'Creator 工作台',
+          creatorPoint1: '管理商品與價格。',
+          creatorPoint2: '購買置頂方案提升排序。',
+          creatorPoint3: '追蹤錢包、保留金與提現。',
+          customerCardTitle: 'Customer 工作台',
+          customerPoint1: '瀏覽商品並看見置頂優先。',
+          customerPoint2: '建立 pending 訂單並進入 Hosted Checkout。',
+          customerPoint3: '追蹤訂單、爭議與交付狀態。',
+          ctaTitle: '準備開始營運了嗎？',
+          ctaDesc: '使用右上角色入口，進到 Console 後接上 API Base 即可操作。',
+          footer: 'SluttySluts Marketplace MVP 的 SaaS Landing，為 Creator + Customer 角色導流。'
+        },
+        hu: {
+          pageTitle: 'SluttySluts piacter SaaS',
+          brandTitle: 'SluttySluts SaaS',
+          brandSub: 'Ketoldalu piacter Creator es Customer szerepkorokkel',
+          creatorEntry: 'Belepes Creator',
+          customerEntry: 'Belepes Customer',
+          eyebrow: 'PAYMENTS + PROMOTION + COMPLIANCE',
+          heroTitle: 'Indits ketoldalu piacter SaaS-t beepitett monetizacioval.',
+          heroDesc:
+            'Modern fintech nyitooldal mintajara: tiszta ertekajanlat, szerepalapu belepes, gyors tovabblepes. A Creator es Customer kulon workflow-t kap mar az elso kattintastol.',
+          heroCreator: 'Start Creator',
+          heroCustomer: 'Start Customer',
+          metric1: 'Alap jutalekmodell a Creator tranzakciokhoz.',
+          metric2: 'Attekintheto Customer dijmodell rendelesi bontassal.',
+          metric3: 'Webhook alapu fizetesi statusz es moderacios jelzesek.',
+          flowTitle: 'Hogyan mukodik a SaaS folyamat',
+          flowDesc: 'Katalogusbol hosted checkouton at a kifizetesi ledgerig minden nyomon kovetheto.',
+          flow1Title: '1. Felfedezes es konverzio',
+          flow1Desc: 'A Customer promotalt es organikus listakat bongeszik, majd pending rendelest hoz letre.',
+          flow2Title: '2. Hosted fizetesi esemenyek',
+          flow2Desc: 'A gateway webhook aszinkron modon frissiti a statuszokat idempotens kezelessel.',
+          flow3Title: '3. Creator bevetelkezeles',
+          flow3Desc: 'Jutalek, reserve es kifizetheto egyenleg wallet es kiutalas workflow-ba kerul.',
+          rolesTitle: 'Valaszd ki a workspace-t',
+          rolesDesc: 'A jobb felso szerep-gombok es az also kartyak ugyanoda vezetnek.',
+          creatorCardTitle: 'Creator Workspace',
+          creatorPoint1: 'Lista es arkezeles.',
+          creatorPoint2: 'Promocio vasarlasa rangsor boosthoz.',
+          creatorPoint3: 'Wallet, reserve es kiutalas kovetese.',
+          customerCardTitle: 'Customer Workspace',
+          customerPoint1: 'Katalogus bongeszese promotalt prioritassal.',
+          customerPoint2: 'Pending rendeles es hosted checkout fizetes.',
+          customerPoint3: 'Rendeles, dispute es szallitas statusz kovetese.',
+          ctaTitle: 'Keszen allsz a piacter futtatasara?',
+          ctaDesc: 'Hasznald a szerepbelepest jobb felul, majd allitsd be az API Base cimet a konzolban.',
+          footer: 'SaaS landing a SluttySluts Marketplace MVP-hez Creator + Customer belepessel.'
+        },
+        fr: {
+          pageTitle: 'SaaS marketplace SluttySluts',
+          brandTitle: 'SluttySluts SaaS',
+          brandSub: 'Plateforme marketplace pour roles Creator et Customer',
+          creatorEntry: 'Entrer Creator',
+          customerEntry: 'Entrer Customer',
+          eyebrow: 'PAYMENTS + PROMOTION + COMPLIANCE',
+          heroTitle: 'Lancez une marketplace bi-face avec monetisation integree.',
+          heroDesc:
+            'Inspire dune structure fintech moderne: proposition de valeur claire, entree par role, et acces rapide a laction. Creator et Customer ont chacun leur parcours.',
+          heroCreator: 'Demarrer Creator',
+          heroCustomer: 'Demarrer Customer',
+          metric1: 'Modele de commission plateforme pour transactions Creator.',
+          metric2: 'Frais Customer transparents avec decomposition de commande.',
+          metric3: 'Mises a jour webhook pour paiement et moderation.',
+          flowTitle: 'Fonctionnement du flux SaaS',
+          flowDesc: 'De la decouverte catalogue au hosted checkout puis ledger payout, tout est tracable.',
+          flow1Title: '1. Decouverte et conversion',
+          flow1Desc: 'Le Customer explore les listings promus ou organiques puis cree une commande pending.',
+          flow2Title: '2. Evenements de paiement hosted',
+          flow2Desc: 'Les webhooks gateway mettent a jour commandes et paiements de facon asynchrone.',
+          flow3Title: '3. Controle revenus Creator',
+          flow3Desc: 'Commission, reserve et solde payable alimentent wallet et retraits.',
+          rolesTitle: 'Choisissez votre espace',
+          rolesDesc: 'Lentree par role en haut a droite est aussi disponible ci-dessous.',
+          creatorCardTitle: 'Espace Creator',
+          creatorPoint1: 'Gerer listings et prix.',
+          creatorPoint2: 'Acheter des plans promotionnels pour booster le ranking.',
+          creatorPoint3: 'Suivre wallet, reserve et retraits.',
+          customerCardTitle: 'Espace Customer',
+          customerPoint1: 'Explorer le catalogue avec priorite promue.',
+          customerPoint2: 'Creer commande pending et payer via hosted checkout.',
+          customerPoint3: 'Suivre commande, litige et livraison.',
+          ctaTitle: 'Pret a operer la marketplace ?',
+          ctaDesc: 'Utilisez lentree par role a droite puis connectez votre API Base dans la console.',
+          footer: 'Landing SaaS pour SluttySluts Marketplace MVP avec onboarding Creator + Customer.'
+        }
       };
 
-      function log(el, label, payload) {
-        const line = `[${new Date().toLocaleTimeString()}] ${label}\n${
-          typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2)
-        }\n\n`;
-        el.textContent = line + el.textContent;
+      const preferred = localStorage.getItem('siteLang') || 'en';
+      const langSelect = document.getElementById('langSelect');
+
+      function safeLang(raw) {
+        return Object.prototype.hasOwnProperty.call(translations, raw) ? raw : 'en';
       }
 
-      function getApiBase() {
-        return (els.apiBase.value || '').replace(/\/$/, '');
-      }
-
-      function saveConfig() {
-        localStorage.setItem('saas_api_base', els.apiBase.value);
-        localStorage.setItem('saas_webhook_token', els.webhookToken.value);
-        log(els.buyerLog, 'Config', { apiBase: els.apiBase.value, webhookToken: '***saved***' });
-      }
-
-      async function api(path, options = {}) {
-        const url = `${getApiBase()}${path}`;
-        const headers = {
-          'Content-Type': 'application/json',
-          ...(options.headers || {})
-        };
-
-        const res = await fetch(url, {
-          method: options.method || 'GET',
-          headers,
-          body: options.body ? JSON.stringify(options.body) : undefined
-        });
-
-        const text = await res.text();
-        const data = text ? JSON.parse(text) : {};
-        if (!res.ok) {
-          throw new Error(`${res.status} ${res.statusText} ${JSON.stringify(data)}`);
-        }
-
-        return data;
-      }
-
-      function setActivePanel(panel) {
-        state.activePanel = panel;
-        Object.entries(els.panels).forEach(([key, panelEl]) => {
-          panelEl.classList.toggle('active', key === panel);
-        });
-        els.navButtons.forEach((btn) => {
-          btn.classList.toggle('active', btn.dataset.panel === panel);
+      function updateRoleLinks(lang) {
+        document.querySelectorAll('[data-role-link]').forEach((el) => {
+          const role = el.getAttribute('data-role-link');
+          el.setAttribute('href', `./app.html?role=${role}&lang=${encodeURIComponent(lang)}`);
         });
       }
 
-      function renderBuyer() {
-        const q = (els.buyerSearch.value || '').trim().toLowerCase();
-        const filter = els.buyerFilter.value;
-        const rows = state.listings.filter((item) => {
-          const searchable = `${item.title} ${item.description}`.toLowerCase();
-          const matchSearch = !q || searchable.includes(q);
-          const matchFilter =
-            filter === 'all' || (filter === 'promoted' && item.promoted) || (filter === 'normal' && !item.promoted);
-          return matchSearch && matchFilter;
+      function applyLang(lang) {
+        const resolved = safeLang(lang);
+        const dict = translations[resolved];
+
+        document.documentElement.lang = resolved;
+        document.title = dict.pageTitle;
+        document.querySelectorAll('[data-i18n]').forEach((node) => {
+          const key = node.getAttribute('data-i18n');
+          if (dict[key]) node.textContent = dict[key];
         });
 
-        els.listingGrid.innerHTML = rows
-          .map(
-            (item) => `
-            <article class="listing">
-              <div class="row" style="justify-content: space-between;">
-                <h4>${item.title}</h4>
-                ${item.promoted ? '<span class="pill">Promoted</span>' : ''}
-              </div>
-              <p class="muted">${item.description}</p>
-              <p class="price">${item.currency} ${item.price.toFixed(2)}</p>
-              <p class="muted">Seller rating ${item.rating} / Conversion ${item.conversion}</p>
-              <button class="btn" data-select-id="${item.id}">選擇下單</button>
-            </article>
-          `
-          )
-          .join('');
-
-        const promotedCount = rows.filter((item) => item.promoted).length;
-        const avgTicket = rows.length
-          ? rows.reduce((sum, item) => sum + item.price * 1.05, 0) / rows.length
-          : 0;
-
-        els.kpiListings.textContent = String(rows.length);
-        els.kpiPromoted.textContent = String(promotedCount);
-        els.kpiTicket.textContent = `$${avgTicket.toFixed(2)}`;
-
-        document.querySelectorAll('[data-select-id]').forEach((btn) => {
-          btn.addEventListener('click', () => {
-            els.selectedListingId.value = btn.dataset.selectId;
-            log(els.buyerLog, 'Selected Listing', { listingId: btn.dataset.selectId });
-          });
-        });
+        updateRoleLinks(resolved);
+        langSelect.value = resolved;
+        localStorage.setItem('siteLang', resolved);
       }
 
-      function renderSellerTable() {
-        els.sellerTableBody.innerHTML = state.listings
-          .map(
-            (item) => `
-            <tr>
-              <td>${item.id}</td>
-              <td>${item.promoted ? '<span class="pill">promoted</span>' : '<span class="pill ok">active</span>'}</td>
-              <td>${item.currency} ${item.price.toFixed(2)}</td>
-              <td>${item.promoted ? 'Yes' : 'No'}</td>
-              <td>${item.conversion}</td>
-            </tr>
-          `
-          )
-          .join('');
-      }
+      langSelect.addEventListener('change', (e) => {
+        applyLang(e.target.value);
+      });
 
-      async function createPendingOrder() {
-        const listingId = (els.selectedListingId.value || '').trim();
-        if (!listingId) {
-          log(els.buyerLog, 'Validation', '請先選擇 Listing ID');
-          return;
-        }
-
-        try {
-          const result = await api('/v1/orders', {
-            method: 'POST',
-            headers: { 'x-user-id': state.buyerId },
-            body: {
-              buyerId: state.buyerId,
-              listingId,
-              currency: 'USD'
-            }
-          });
-
-          log(els.buyerLog, 'Order Created', result);
-          if (result.order && result.order.id) {
-            els.webhookOrderId.value = result.order.id;
-          }
-        } catch (err) {
-          log(els.buyerLog, 'Order Failed', String(err));
-        }
-      }
-
-      async function buyPromotionPlan() {
-        const listingId = (els.sellerListingId.value || '').trim();
-        if (!listingId) {
-          log(els.promotionLog, 'Validation', '請輸入 Listing ID');
-          return;
-        }
-
-        try {
-          const result = await api('/v1/promotions/purchase', {
-            method: 'POST',
-            headers: { 'x-user-id': state.sellerId },
-            body: {
-              sellerId: state.sellerId,
-              listingId,
-              planId: els.sellerPlan.value,
-              currency: 'USD'
-            }
-          });
-          log(els.promotionLog, 'Promotion Purchased', result);
-        } catch (err) {
-          log(els.promotionLog, 'Promotion Failed', String(err));
-        }
-      }
-
-      async function loadWallet() {
-        try {
-          const result = await api(`/v1/wallets/${state.sellerId}/summary?currency=USD`, {
-            headers: { 'x-user-id': state.sellerId }
-          });
-          log(els.walletLog, 'Wallet Summary', result);
-        } catch (err) {
-          log(els.walletLog, 'Wallet Failed', String(err));
-        }
-      }
-
-      async function withdrawNow() {
-        const amount = Number(els.withdrawAmount.value);
-        if (!Number.isFinite(amount) || amount <= 0) {
-          log(els.walletLog, 'Validation', '提現金額必須 > 0');
-          return;
-        }
-
-        try {
-          const result = await api(`/v1/wallets/${state.sellerId}/withdrawals`, {
-            method: 'POST',
-            headers: { 'x-user-id': state.sellerId },
-            body: {
-              amount,
-              currency: 'USD',
-              payoutMethod: 'wire'
-            }
-          });
-          log(els.walletLog, 'Withdrawal Requested', result);
-        } catch (err) {
-          log(els.walletLog, 'Withdrawal Failed', String(err));
-        }
-      }
-
-      async function sendWebhook() {
-        const orderId = (els.webhookOrderId.value || '').trim();
-        if (!orderId) {
-          log(els.adminLog, 'Validation', '請輸入 Order ID');
-          return;
-        }
-
-        try {
-          const result = await api('/v1/payments/webhooks/high-risk', {
-            method: 'POST',
-            headers: {
-              'x-webhook-token': els.webhookToken.value
-            },
-            body: {
-              eventId: `evt-${orderId}-${Date.now()}`,
-              orderId,
-              paymentStatus: els.webhookStatus.value,
-              pspTxnId: `txn-${Date.now()}`
-            }
-          });
-          log(els.adminLog, 'Webhook Sent', result);
-        } catch (err) {
-          log(els.adminLog, 'Webhook Failed', String(err));
-        }
-      }
-
-      function hydrateConfig() {
-        const savedApi = localStorage.getItem('saas_api_base');
-        const savedWebhook = localStorage.getItem('saas_webhook_token');
-        if (savedApi) els.apiBase.value = savedApi;
-        if (savedWebhook) els.webhookToken.value = savedWebhook;
-      }
-
-      function boot() {
-        hydrateConfig();
-        renderBuyer();
-        renderSellerTable();
-
-        els.navButtons.forEach((btn) => {
-          btn.addEventListener('click', () => setActivePanel(btn.dataset.panel));
-        });
-        els.buyerSearch.addEventListener('input', renderBuyer);
-        els.buyerFilter.addEventListener('change', renderBuyer);
-        els.saveConfig.addEventListener('click', saveConfig);
-        els.createOrder.addEventListener('click', createPendingOrder);
-        els.buyPromotion.addEventListener('click', buyPromotionPlan);
-        els.refreshWallet.addEventListener('click', loadWallet);
-        els.withdrawNow.addEventListener('click', withdrawNow);
-        els.sendWebhook.addEventListener('click', sendWebhook);
-
-        log(els.buyerLog, 'Ready', 'SaaS console loaded. Connect backend to execute real workflows.');
-      }
-
-      boot();
+      applyLang(preferred);
     </script>
   </body>
 </html>
