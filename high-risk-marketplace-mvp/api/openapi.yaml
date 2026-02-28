@@ -108,6 +108,14 @@ paths:
           required: true
           schema:
             type: string
+        - in: header
+          name: x-webhook-timestamp
+          required: false
+          schema:
+            oneOf:
+              - type: integer
+              - type: string
+          description: Optional event timestamp for replay-window validation (unix seconds/ms or ISO-8601)
       requestBody:
         required: true
         content:
@@ -115,8 +123,14 @@ paths:
             schema:
               $ref: '#/components/schemas/PaymentWebhookRequest'
       responses:
+        "200":
+          description: Duplicate webhook ignored
         "202":
-          description: Webhook processed
+          description: Webhook processed or ignored due to state mismatch
+        "400":
+          description: Invalid payload or stale/future webhook timestamp
+        "409":
+          description: Event ID conflict with different payload hash
 
   /v1/orders/{orderId}/delivery-confirmation:
     post:
@@ -453,6 +467,16 @@ components:
         paymentStatus:
           type: string
           enum: [paid, failed, chargeback]
+        eventCreatedAt:
+          description: Optional event creation timestamp used for replay-window validation
+          oneOf:
+            - type: integer
+            - type: string
+        timestamp:
+          description: Optional alias for eventCreatedAt
+          oneOf:
+            - type: integer
+            - type: string
         pspTxnId:
           type: string
         failureReason:

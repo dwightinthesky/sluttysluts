@@ -1,4 +1,5 @@
 const express = require('express');
+const { createHash } = require('crypto');
 const { loadDb, mutateDb, resetDb, DATA_FILE } = require('./store');
 const { moderateText, simulatePayment, commissionRate } = require('./rules');
 const {
@@ -59,6 +60,8 @@ const SELLER_COMMISSION_RATE = parseRate('SELLER_COMMISSION_RATE', 0.15);
 const ROLLING_RESERVE_RATE = parseRate('ROLLING_RESERVE_RATE', 0.1);
 const ROLLING_RESERVE_DAYS = Math.max(1, Number(process.env.ROLLING_RESERVE_DAYS || 120));
 const HIGH_RISK_WEBHOOK_TOKEN = process.env.HIGH_RISK_WEBHOOK_TOKEN || 'dev-webhook-token';
+const WEBHOOK_REPLAY_WINDOW_SECONDS = Math.max(60, Number(process.env.WEBHOOK_REPLAY_WINDOW_SECONDS || 60 * 60 * 24));
+const WEBHOOK_MAX_FUTURE_SKEW_SECONDS = Math.max(0, Number(process.env.WEBHOOK_MAX_FUTURE_SKEW_SECONDS || 300));
 const HOSTED_CHECKOUT_BASE_URL =
   process.env.HOSTED_CHECKOUT_BASE_URL || 'https://checkout.highrisk-pay.example/session';
 
@@ -343,6 +346,75 @@ function calculateOrderPricing({ basePrice, sellerCommissionRate }) {
 
 function findOrderPayment(db, orderId) {
   return db.payments.find((item) => item.orderId === orderId && (!item.kind || item.kind === 'order')) || null;
+}
+
+function normalizeForHash(value) {
+  if (Array.isArray(value)) return value.map((item) => normalizeForHash(item));
+  if (!value || typeof value !== 'object') return value;
+  const out = {};
+  for (const key of Object.keys(value).sort()) {
+    out[key] = normalizeForHash(value[key]);
+  }
+  return out;
+}
+
+function hashPayload(payload) {
+  const normalized = normalizeForHash(payload);
+  return createHash('sha256').update(JSON.stringify(normalized)).digest('hex');
+}
+
+function parseTimestampMs(value) {
+  if (value === undefined || value === null) return NaN;
+
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value)) return NaN;
+    if (value > 1e12) return Math.round(value);
+    if (value > 1e9) return Math.round(value * 1000);
+    return NaN;
+  }
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed) return NaN;
+
+    const asNumber = Number(trimmed);
+    if (Number.isFinite(asNumber)) {
+      if (asNumber > 1e12) return Math.round(asNumber);
+      if (asNumber > 1e9) return Math.round(asNumber * 1000);
+    }
+
+    const asDate = Date.parse(trimmed);
+    if (Number.isFinite(asDate)) return asDate;
+  }
+
+  return NaN;
+}
+
+function parseWebhookEventTimestamp(req, payload) {
+  const headerTimestamp = req.header('x-webhook-timestamp');
+  const candidates = [payload && payload.eventCreatedAt, payload && payload.createdAt, payload && payload.timestamp, headerTimestamp];
+  for (const candidate of candidates) {
+    const parsedMs = parseTimestampMs(candidate);
+    if (Number.isFinite(parsedMs)) return parsedMs;
+  }
+  return NaN;
+}
+
+function isWebhookEventFresh(eventMs, nowMs) {
+  if (!Number.isFinite(eventMs)) return true;
+  const oldestAccepted = nowMs - WEBHOOK_REPLAY_WINDOW_SECONDS * 1000;
+  const newestAccepted = nowMs + WEBHOOK_MAX_FUTURE_SKEW_SECONDS * 1000;
+  return eventMs >= oldestAccepted && eventMs <= newestAccepted;
+}
+
+function isOrderStatusAllowedForWebhook(orderStatus, paymentStatus) {
+  const allowedByStatus = {
+    paid: new Set(['pending', 'held', 'delivered', 'released']),
+    failed: new Set(['pending', 'cancelled']),
+    chargeback: new Set(['pending', 'held', 'delivered', 'released', 'disputed'])
+  };
+  const allowed = allowedByStatus[paymentStatus];
+  return Boolean(allowed && allowed.has(orderStatus));
 }
 
 app.get('/health', (_, res) => {
@@ -723,31 +795,118 @@ app.post('/v1/payments/webhooks/high-risk', (req, res) => {
     return sendError(res, 400, 'VALIDATION_ERROR', 'Unsupported paymentStatus');
   }
 
+  const receivedAtMs = Date.now();
+  const eventTimestampMs = parseWebhookEventTimestamp(req, payload);
+  if (!isWebhookEventFresh(eventTimestampMs, receivedAtMs)) {
+    return sendError(res, 400, 'WEBHOOK_EVENT_EXPIRED', 'Webhook event timestamp outside accepted replay window', {
+      replayWindowSeconds: WEBHOOK_REPLAY_WINDOW_SECONDS,
+      maxFutureSkewSeconds: WEBHOOK_MAX_FUTURE_SKEW_SECONDS
+    });
+  }
+
+  const eventId = String(payload.eventId);
+  const incomingPayloadHash = hashPayload(payload);
+  const eventTimestampIso = Number.isFinite(eventTimestampMs) ? new Date(eventTimestampMs).toISOString() : null;
+
   return mutateDb((db) => {
-    const duplicate = db.paymentWebhookEvents.find((event) => event.eventId === payload.eventId);
-    if (duplicate) {
-      return res.status(200).json({ message: 'Duplicate webhook ignored', eventId: payload.eventId });
+    const now = nowIso();
+    let webhookEvent = db.paymentWebhookEvents.find((event) => event.eventId === eventId);
+
+    if (webhookEvent) {
+      webhookEvent.lastSeenAt = now;
+      webhookEvent.lastPayload = payload;
+      webhookEvent.attemptCount = Number(webhookEvent.attemptCount || 1) + 1;
+      webhookEvent.updatedAt = now;
+
+      if (webhookEvent.payloadHash && webhookEvent.payloadHash !== incomingPayloadHash) {
+        webhookEvent.status = 'ignored';
+        webhookEvent.ignoreReason = 'payload_hash_mismatch';
+        addAudit(db, 'payment_webhook_conflict', 'order', webhookEvent.orderId || String(payload.orderId), null, {
+          eventId,
+          existingPayloadHash: webhookEvent.payloadHash,
+          incomingPayloadHash
+        });
+        return sendError(res, 409, 'WEBHOOK_PAYLOAD_CONFLICT', 'Event ID already exists with different payload');
+      }
+
+      if (webhookEvent.status === 'completed' || webhookEvent.status === 'ignored') {
+        return res.status(200).json({
+          message: 'Duplicate webhook ignored',
+          eventId,
+          status: webhookEvent.status
+        });
+      }
+
+      if (webhookEvent.status === 'processing') {
+        return res.status(202).json({
+          message: 'Webhook already processing',
+          eventId
+        });
+      }
+
+      webhookEvent.status = 'processing';
+      webhookEvent.retryCount = Number(webhookEvent.retryCount || 0) + 1;
+    } else {
+      webhookEvent = {
+        id: makeId('pwh'),
+        eventId,
+        orderId: String(payload.orderId),
+        paymentStatus,
+        payloadHash: incomingPayloadHash,
+        status: 'processing',
+        attemptCount: 1,
+        retryCount: 0,
+        receivedAt: now,
+        eventCreatedAt: eventTimestampIso,
+        firstSeenAt: now,
+        lastSeenAt: now,
+        processedAt: null,
+        ignoreReason: null,
+        rawPayload: payload,
+        lastPayload: payload,
+        createdAt: now,
+        updatedAt: now
+      };
+      db.paymentWebhookEvents.push(webhookEvent);
     }
 
     const order = db.orders.find((item) => item.id === payload.orderId);
     if (!order) {
+      webhookEvent.status = 'failed';
+      webhookEvent.errorCode = 'ORDER_NOT_FOUND';
+      webhookEvent.updatedAt = now;
       return sendError(res, 404, 'ORDER_NOT_FOUND', 'Order not found');
     }
 
     const payment = findOrderPayment(db, order.id);
     if (!payment) {
+      webhookEvent.status = 'failed';
+      webhookEvent.errorCode = 'PAYMENT_NOT_FOUND';
+      webhookEvent.updatedAt = now;
       return sendError(res, 404, 'PAYMENT_NOT_FOUND', 'Payment not found for order');
     }
 
-    const now = nowIso();
-    const webhookEvent = {
-      id: makeId('pwh'),
-      eventId: String(payload.eventId),
-      orderId: order.id,
-      paymentStatus,
-      receivedAt: now,
-      rawPayload: payload
-    };
+    webhookEvent.orderId = order.id;
+    webhookEvent.paymentStatus = paymentStatus;
+    webhookEvent.rawPayload = payload;
+
+    if (!isOrderStatusAllowedForWebhook(order.status, paymentStatus)) {
+      webhookEvent.status = 'ignored';
+      webhookEvent.ignoreReason = `order_status_${order.status}_incompatible_with_${paymentStatus}`;
+      webhookEvent.processedAt = now;
+      webhookEvent.updatedAt = now;
+      addAudit(db, 'payment_webhook_ignored', 'order', order.id, null, {
+        eventId,
+        paymentStatus,
+        orderStatus: order.status
+      });
+      return res.status(202).json({
+        message: 'Webhook ignored due to state mismatch',
+        eventId,
+        orderStatus: order.status,
+        paymentStatus: payment.status
+      });
+    }
 
     if (paymentStatus === 'paid') {
       if (order.status === 'pending') {
@@ -761,7 +920,9 @@ app.post('/v1/payments/webhooks/high-risk', (req, res) => {
         }
       }
 
-      payment.status = 'captured';
+      if (payment.status !== 'chargeback') {
+        payment.status = 'captured';
+      }
       payment.pspTxnId = payload.pspTxnId ? String(payload.pspTxnId) : payment.pspTxnId || makeId('txn');
       payment.updatedAt = now;
     } else if (paymentStatus === 'failed') {
@@ -789,10 +950,13 @@ app.post('/v1/payments/webhooks/high-risk', (req, res) => {
       checkoutSession.updatedAt = now;
     }
 
-    db.paymentWebhookEvents.push(webhookEvent);
+    webhookEvent.status = 'completed';
+    webhookEvent.ignoreReason = null;
+    webhookEvent.processedAt = now;
+    webhookEvent.updatedAt = now;
 
     addAudit(db, 'payment_webhook_processed', 'order', order.id, null, {
-      eventId: payload.eventId,
+      eventId,
       paymentStatus
     });
 

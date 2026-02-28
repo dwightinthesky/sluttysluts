@@ -60,6 +60,7 @@
   - 點擊扣量：`POST /v1/promotions/:promotionId/consume-click`
 - Wallet / Withdraw
   - 賣家錢包摘要：`GET /v1/wallets/:sellerId/summary`
+  - 賣家帳本（append-only 視圖）：`GET /v1/wallets/:sellerId/ledger`
   - 提現申請：`POST /v1/wallets/:sellerId/withdrawals`
   - 提現審核：`POST /v1/withdrawals/:withdrawalId/approve|reject`
 - High-Risk 金流流程
@@ -90,6 +91,11 @@ npm start
 
 所有受保護 API 需帶 `x-user-id` header。
 Webhook 需帶 `x-webhook-token`（預設 `dev-webhook-token`，可用環境變數 `HIGH_RISK_WEBHOOK_TOKEN` 覆寫）。
+Webhook 可選帶 `x-webhook-timestamp` 或 payload `eventCreatedAt`（支援 replay-window 驗證）。
+
+Webhook 冪等性與重放保護（可用環境變數調整）：
+- `WEBHOOK_REPLAY_WINDOW_SECONDS`（預設 86400）
+- `WEBHOOK_MAX_FUTURE_SKEW_SECONDS`（預設 300）
 
 ### 一鍵 smoke test
 先在另一個 terminal 啟動服務，再執行：
