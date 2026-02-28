@@ -145,7 +145,40 @@ paths:
         "202":
           description: Delivery confirmed
 
+  /v1/orders/{orderId}/shipping-proof:
+    post:
+      summary: Attach shipping proof for dispute evidence package
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShippingProofRequest'
+      responses:
+        "202":
+          description: Shipping proof updated
+
   /v1/disputes:
+    get:
+      summary: List disputes visible to current actor
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+        - in: query
+          name: orderId
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Dispute list
     post:
       summary: Open dispute
       requestBody:
@@ -157,6 +190,38 @@ paths:
       responses:
         "201":
           description: Dispute created
+
+  /v1/disputes/{disputeId}/resolve:
+    post:
+      summary: Resolve dispute as seller_won or seller_lost (admin/ops)
+      parameters:
+        - in: path
+          name: disputeId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResolveDisputeRequest'
+      responses:
+        "202":
+          description: Dispute resolved
+
+  /v1/disputes/{disputeId}/evidence-packet:
+    get:
+      summary: Build evidence packet for chargeback/dispute response
+      parameters:
+        - in: path
+          name: disputeId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Evidence packet
 
   /v1/payouts/release:
     post:
@@ -489,6 +554,17 @@ components:
           type: number
           minimum: 0
           maximum: 1
+        billingDescriptor:
+          type: string
+          description: Credit card statement descriptor shown to buyer
+        ipAddress:
+          type: string
+        deviceFingerprint:
+          type: string
+        avsResult:
+          type: string
+        cvvResult:
+          type: string
 
     PaymentWebhookRequest:
       type: object
@@ -529,6 +605,31 @@ components:
           items:
             type: string
             format: uri
+
+    ResolveDisputeRequest:
+      type: object
+      required: [outcome]
+      properties:
+        outcome:
+          type: string
+          enum: [seller_won, seller_lost]
+        note:
+          type: string
+
+    ShippingProofRequest:
+      type: object
+      required: [trackingNumber]
+      properties:
+        carrier:
+          type: string
+        trackingNumber:
+          type: string
+        proofUrl:
+          type: string
+          format: uri
+        markedDeliveredAt:
+          type: string
+          format: date-time
 
     ModerationDecisionRequest:
       type: object

@@ -67,9 +67,15 @@
   - 建立待付款訂單（含拆帳欄位）：`POST /v1/orders`
   - Hosted Checkout Webhook：`POST /v1/payments/webhooks/high-risk`
   - 訂單欄位包含：`basePrice / buyerFee / sellerCommission / totalCharged / sellerEarnings / reserveHeld / payoutableAmount`
+  - Chargeback 觸發時：自動建立/更新 dispute、執行 `DISPUTE_HOLD`、鎖定 reserve 提領
 - Ops Moderation Console（先審後發）
   - 待審核佇列：`GET /v1/ops/moderation/queue`
   - 審核決策（approve/reject）：`POST /v1/ops/moderation/listings/:listingId/decision`
+- Dispute Defense
+  - 爭議建立與查詢：`POST /v1/disputes`、`GET /v1/disputes`
+  - 爭議裁決（seller_won / seller_lost）：`POST /v1/disputes/:disputeId/resolve`
+  - 證據包輸出：`GET /v1/disputes/:disputeId/evidence-packet`
+  - 物流證明回填：`POST /v1/orders/:orderId/shipping-proof`
 - Chat Service
   - 建立會話：`POST /v1/chat/threads`
   - 會話列表：`GET /v1/chat/threads`
@@ -99,6 +105,9 @@ Webhook 可選帶 `x-webhook-timestamp` 或 payload `eventCreatedAt`（支援 re
 Webhook 冪等性與重放保護（可用環境變數調整）：
 - `WEBHOOK_REPLAY_WINDOW_SECONDS`（預設 86400）
 - `WEBHOOK_MAX_FUTURE_SKEW_SECONDS`（預設 300）
+
+Chargeback 成本參數：
+- `DISPUTE_FEE_AMOUNT`（預設 25）
 
 ### 一鍵 smoke test
 先在另一個 terminal 啟動服務，再執行：

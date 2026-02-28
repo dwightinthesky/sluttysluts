@@ -59,6 +59,7 @@ const BUYER_FEE_RATE = parseRate('BUYER_FEE_RATE', 0.05);
 const SELLER_COMMISSION_RATE = parseRate('SELLER_COMMISSION_RATE', 0.15);
 const ROLLING_RESERVE_RATE = parseRate('ROLLING_RESERVE_RATE', 0.1);
 const ROLLING_RESERVE_DAYS = Math.max(1, Number(process.env.ROLLING_RESERVE_DAYS || 120));
+const DISPUTE_FEE_AMOUNT = Math.max(0, roundMoney(Number(process.env.DISPUTE_FEE_AMOUNT || 25)));
 const HIGH_RISK_WEBHOOK_TOKEN = process.env.HIGH_RISK_WEBHOOK_TOKEN || 'dev-webhook-token';
 const WEBHOOK_REPLAY_WINDOW_SECONDS = Math.max(60, Number(process.env.WEBHOOK_REPLAY_WINDOW_SECONDS || 60 * 60 * 24));
 const WEBHOOK_MAX_FUTURE_SKEW_SECONDS = Math.max(0, Number(process.env.WEBHOOK_MAX_FUTURE_SKEW_SECONDS || 300));
@@ -170,11 +171,24 @@ function calculateWalletSummary(db, sellerId, currency) {
     .filter((entry) => entry.type === 'debit' && entry.status === 'pending')
     .reduce((sum, entry) => sum + entry.amount, 0);
 
+  const disputedHeld = entries
+    .filter((entry) => entry.type === 'debit' && entry.sourceType === 'dispute_hold' && ['pending', 'completed'].includes(entry.status))
+    .reduce((sum, entry) => sum + entry.amount, 0);
+
+  const disputedReleased = entries
+    .filter((entry) => entry.type === 'credit' && entry.sourceType === 'dispute_release' && ['available', 'completed'].includes(entry.status))
+    .reduce((sum, entry) => sum + entry.amount, 0);
+
+  const disputedBalance = Number(Math.max(0, disputedHeld - disputedReleased).toFixed(2));
+  const availableBalance = Number((creditCompleted - debitReservedOrDone).toFixed(2));
+
   return {
-    availableBalance: Number((creditCompleted - debitReservedOrDone).toFixed(2)),
+    availableBalance,
     pendingBalance: Number((creditPending - debitPending).toFixed(2)),
     lifetimeCredits: Number((creditCompleted + creditPending).toFixed(2)),
-    lifetimeDebits: Number(debitReservedOrDone.toFixed(2))
+    lifetimeDebits: Number(debitReservedOrDone.toFixed(2)),
+    disputedBalance,
+    withdrawalsBlocked: disputedBalance > 0 || availableBalance <= 0
   };
 }
 
@@ -217,8 +231,11 @@ function calculateReserveSummary(db, sellerId, currency) {
       return aMs - bMs;
     });
 
+  const lockedEntries = reserveEntries.filter((entry) => entry.status === 'disputed_hold');
+
   return {
     reserveBalance: roundMoney(pendingEntries.reduce((sum, entry) => sum + Number(entry.amount || 0), 0)),
+    lockedReserveBalance: roundMoney(lockedEntries.reduce((sum, entry) => sum + Number(entry.amount || 0), 0)),
     upcomingReserveReleases: pendingEntries.slice(0, 5).map((entry) => ({
       id: entry.id,
       amount: roundMoney(entry.amount || 0),
@@ -240,6 +257,10 @@ function getListingTitleForPayout(db, payoutId) {
 function ledgerCodeFromEntry(entry) {
   if (entry.sourceType === 'reserve' && entry.status === 'pending') return 'RESERVE_HOLD';
   if (entry.sourceType === 'reserve' && entry.status !== 'pending') return 'RESERVE_RELEASE';
+  if (entry.sourceType === 'dispute_hold') return 'DISPUTE_HOLD';
+  if (entry.sourceType === 'dispute_release') return 'DISPUTE_RELEASE';
+  if (entry.sourceType === 'dispute_fee') return 'DISPUTE_FEE';
+  if (entry.sourceType === 'chargeback_settlement') return 'CHARGEBACK_SETTLEMENT';
   if (entry.sourceType === 'withdrawal') return 'WITHDRAWAL';
   if (entry.sourceType === 'promotion') return 'PROMO_FEE';
   if (entry.sourceType === 'payout') return 'CREDIT';
@@ -261,6 +282,10 @@ function ledgerDescription(db, entry, code) {
   }
   if (code === 'RESERVE_HOLD') return `Rolling reserve hold (${ROLLING_RESERVE_DAYS}d)`;
   if (code === 'RESERVE_RELEASE') return 'Rolling reserve released';
+  if (code === 'DISPUTE_HOLD') return 'Chargeback dispute hold';
+  if (code === 'DISPUTE_RELEASE') return 'Dispute hold released';
+  if (code === 'DISPUTE_FEE') return 'Dispute processing fee';
+  if (code === 'CHARGEBACK_SETTLEMENT') return 'Chargeback settled against seller balance';
   if (code === 'WITHDRAWAL') return 'Withdrawal request';
   if (code === 'PROMO_FEE') return 'Promotion fee';
   return 'Wallet transaction';
@@ -322,11 +347,15 @@ function canAccessThread(actor, thread) {
   return Boolean(actor && (actor.id === thread.buyerId || actor.id === thread.sellerId));
 }
 
-function calculateOrderPricing({ basePrice, sellerCommissionRate }) {
+function calculateOrderPricing({ basePrice, sellerCommissionRate, reserveRate }) {
+  const normalizedReserveRate =
+    Number.isFinite(reserveRate) && reserveRate >= 0 && reserveRate <= 1
+      ? reserveRate
+      : ROLLING_RESERVE_RATE;
   const buyerFee = roundMoney(basePrice * BUYER_FEE_RATE);
   const sellerCommission = roundMoney(basePrice * sellerCommissionRate);
   const sellerEarnings = roundMoney(basePrice - sellerCommission);
-  const reserveHeld = roundMoney(sellerEarnings * ROLLING_RESERVE_RATE);
+  const reserveHeld = roundMoney(sellerEarnings * normalizedReserveRate);
   const payoutableAmount = roundMoney(sellerEarnings - reserveHeld);
   const totalCharged = roundMoney(basePrice + buyerFee);
 
@@ -338,7 +367,7 @@ function calculateOrderPricing({ basePrice, sellerCommissionRate }) {
     sellerCommissionRate,
     sellerEarnings,
     reserveHeld,
-    reserveRate: ROLLING_RESERVE_RATE,
+    reserveRate: normalizedReserveRate,
     payoutableAmount,
     totalCharged
   };
@@ -346,6 +375,29 @@ function calculateOrderPricing({ basePrice, sellerCommissionRate }) {
 
 function findOrderPayment(db, orderId) {
   return db.payments.find((item) => item.orderId === orderId && (!item.kind || item.kind === 'order')) || null;
+}
+
+function sellerDisputeStats(db, sellerId) {
+  const sellerOrders = db.orders.filter((item) => item.sellerId === sellerId);
+  const totalOrders = sellerOrders.length;
+  const disputedOrders = sellerOrders.filter((item) => ['disputed', 'chargeback_lost'].includes(item.status)).length;
+  const disputedByCase = db.disputes.filter(
+    (item) =>
+      item.sellerId === sellerId && ['open', 'resolved_seller_lost', 'resolved_buyer_won'].includes(item.status)
+  ).length;
+
+  return {
+    totalOrders,
+    disputedOrders: Math.max(disputedOrders, disputedByCase),
+    disputeRate: totalOrders ? Number((Math.max(disputedOrders, disputedByCase) / totalOrders).toFixed(4)) : 0
+  };
+}
+
+function sellerReserveRate(db, sellerId) {
+  const stats = sellerDisputeStats(db, sellerId);
+  if (stats.totalOrders >= 5 && stats.disputeRate >= 0.1) return 0.3;
+  if (stats.totalOrders >= 3 && stats.disputeRate >= 0.05) return 0.2;
+  return ROLLING_RESERVE_RATE;
 }
 
 function normalizeForHash(value) {
@@ -415,6 +467,54 @@ function isOrderStatusAllowedForWebhook(orderStatus, paymentStatus) {
   };
   const allowed = allowedByStatus[paymentStatus];
   return Boolean(allowed && allowed.has(orderStatus));
+}
+
+function collectOrderPayoutIds(db, orderId) {
+  return db.payouts.filter((item) => item.orderId === orderId).map((item) => item.id);
+}
+
+function applyChargebackHold(db, order, now) {
+  const payoutIds = collectOrderPayoutIds(db, order.id);
+  const payoutCredits = db.walletEntries
+    .filter((entry) => entry.type === 'credit' && entry.sourceType === 'payout' && payoutIds.includes(entry.sourceId))
+    .filter((entry) => ['available', 'completed'].includes(entry.status))
+    .reduce((sum, entry) => sum + Number(entry.amount || 0), 0);
+
+  const alreadyHeld = db.walletEntries
+    .filter((entry) => entry.type === 'debit' && entry.sourceType === 'dispute_hold' && entry.sourceId === order.id)
+    .filter((entry) => ['pending', 'completed'].includes(entry.status))
+    .reduce((sum, entry) => sum + Number(entry.amount || 0), 0);
+
+  const holdAmount = roundMoney(Math.max(0, payoutCredits - alreadyHeld));
+  if (holdAmount > 0) {
+    db.walletEntries.push({
+      id: makeId('wl'),
+      sellerId: order.sellerId,
+      type: 'debit',
+      sourceType: 'dispute_hold',
+      sourceId: order.id,
+      amount: holdAmount,
+      currency: order.currency,
+      status: 'completed',
+      createdAt: now,
+      updatedAt: now
+    });
+  }
+
+  let lockedReserveAmount = 0;
+  for (const entry of db.walletEntries) {
+    if (entry.type !== 'credit' || entry.sourceType !== 'reserve') continue;
+    if (!payoutIds.includes(entry.sourceId)) continue;
+    if (!['pending', 'available'].includes(entry.status)) continue;
+    entry.status = 'disputed_hold';
+    entry.updatedAt = now;
+    lockedReserveAmount += Number(entry.amount || 0);
+  }
+
+  return {
+    holdAmount,
+    lockedReserveAmount: roundMoney(lockedReserveAmount)
+  };
 }
 
 function latestModerationEventForEntity(db, entityType, entityId) {
@@ -804,10 +904,12 @@ app.post('/v1/orders', (req, res) => {
       Number.isFinite(sellerCommissionRate) && sellerCommissionRate >= 0 && sellerCommissionRate <= 1
         ? sellerCommissionRate
         : SELLER_COMMISSION_RATE;
+    const reserveRate = sellerReserveRate(db, listing.sellerId);
 
     const pricing = calculateOrderPricing({
       basePrice: listing.price,
-      sellerCommissionRate: normalizedCommissionRate
+      sellerCommissionRate: normalizedCommissionRate,
+      reserveRate
     });
 
     if (payload.expectedTotalCharged !== undefined) {
@@ -837,6 +939,13 @@ app.post('/v1/orders', (req, res) => {
       currency,
       status: 'pending',
       disputeWindowEndsAt: plusDaysIso(14),
+      billingDescriptor: payload.billingDescriptor ? String(payload.billingDescriptor) : 'SS-Tech Services',
+      checkoutRisk: {
+        ipAddress: payload.ipAddress ? String(payload.ipAddress) : null,
+        deviceFingerprint: payload.deviceFingerprint ? String(payload.deviceFingerprint) : null,
+        avsResult: payload.avsResult ? String(payload.avsResult) : null,
+        cvvResult: payload.cvvResult ? String(payload.cvvResult) : null
+      },
       createdAt: nowIso(),
       updatedAt: nowIso()
     };
@@ -1016,6 +1125,8 @@ app.post('/v1/payments/webhooks/high-risk', (req, res) => {
       });
     }
 
+    let chargebackAction = null;
+
     if (paymentStatus === 'paid') {
       if (order.status === 'pending') {
         order.status = 'held';
@@ -1050,6 +1161,31 @@ app.post('/v1/payments/webhooks/high-risk', (req, res) => {
       payment.failureReason = payload.failureReason ? String(payload.failureReason) : 'chargeback';
       payment.pspTxnId = payload.pspTxnId ? String(payload.pspTxnId) : payment.pspTxnId;
       payment.updatedAt = now;
+
+      let dispute = db.disputes.find(
+        (item) => item.orderId === order.id && ['open', 'resolved_seller_lost', 'resolved_buyer_won'].includes(item.status)
+      );
+      if (!dispute) {
+        dispute = {
+          id: makeId('dsp'),
+          orderId: order.id,
+          sellerId: order.sellerId,
+          buyerId: order.buyerId,
+          openedBy: 'psp_webhook',
+          reason: payload.failureReason ? String(payload.failureReason) : 'chargeback',
+          evidenceUrls: [],
+          source: 'psp_webhook',
+          status: 'open',
+          createdAt: now,
+          updatedAt: now
+        };
+        db.disputes.push(dispute);
+      } else if (dispute.status !== 'open') {
+        dispute.status = 'open';
+        dispute.updatedAt = now;
+      }
+
+      chargebackAction = applyChargebackHold(db, order, now);
     }
 
     const checkoutSession = db.checkoutSessions.find((item) => item.orderId === order.id && item.status === 'open');
@@ -1071,7 +1207,8 @@ app.post('/v1/payments/webhooks/high-risk', (req, res) => {
     return res.status(202).json({
       message: 'Webhook processed',
       orderStatus: order.status,
-      paymentStatus: payment.status
+      paymentStatus: payment.status,
+      chargebackAction
     });
   });
 });
@@ -1128,9 +1265,12 @@ app.post('/v1/disputes', (req, res) => {
     const dispute = {
       id: makeId('dsp'),
       orderId: payload.orderId,
+      sellerId: order.sellerId,
+      buyerId: order.buyerId,
       openedBy: actor.id,
       reason: String(payload.reason),
       evidenceUrls: Array.isArray(payload.evidenceUrls) ? payload.evidenceUrls : [],
+      source: 'platform',
       status: 'open',
       createdAt: nowIso(),
       updatedAt: nowIso()
@@ -1140,6 +1280,290 @@ app.post('/v1/disputes', (req, res) => {
     addAudit(db, 'dispute_opened', 'dispute', dispute.id, actor.id, { orderId: order.id });
 
     return res.status(201).json({ dispute });
+  });
+});
+
+app.get('/v1/disputes', (req, res) => {
+  const db = loadDb();
+  const actor = getActor(db, req);
+  if (!requireActorRole(res, actor, ['buyer', 'seller', 'admin', 'ops'])) return;
+
+  const status = req.query.status ? String(req.query.status) : null;
+  const orderId = req.query.orderId ? String(req.query.orderId) : null;
+
+  let rows = db.disputes;
+  if (!isAdminLike(actor)) {
+    rows = rows.filter((item) => item.buyerId === actor.id || item.sellerId === actor.id || item.openedBy === actor.id);
+  }
+  if (status) rows = rows.filter((item) => item.status === status);
+  if (orderId) rows = rows.filter((item) => item.orderId === orderId);
+
+  rows = rows
+    .slice()
+    .sort((a, b) => new Date(b.updatedAt || b.createdAt || 0).getTime() - new Date(a.updatedAt || a.createdAt || 0).getTime());
+
+  return res.json({
+    count: rows.length,
+    disputes: rows
+  });
+});
+
+app.post('/v1/disputes/:disputeId/resolve', (req, res) => {
+  const payload = req.body || {};
+  const missing = requireFields(payload, ['outcome']);
+  if (missing.length) {
+    return sendError(res, 400, 'VALIDATION_ERROR', 'Missing required fields', { missing });
+  }
+
+  const outcome = String(payload.outcome || '').toLowerCase();
+  if (!['seller_won', 'seller_lost'].includes(outcome)) {
+    return sendError(res, 400, 'VALIDATION_ERROR', 'outcome must be seller_won or seller_lost');
+  }
+
+  return mutateDb((db) => {
+    const actor = getActor(db, req);
+    if (!requireActorRole(res, actor, ['admin', 'ops'])) return null;
+
+    const dispute = db.disputes.find((item) => item.id === req.params.disputeId);
+    if (!dispute) return sendError(res, 404, 'DISPUTE_NOT_FOUND', 'Dispute not found');
+
+    const order = db.orders.find((item) => item.id === dispute.orderId);
+    if (!order) return sendError(res, 404, 'ORDER_NOT_FOUND', 'Order not found');
+    const payment = findOrderPayment(db, order.id);
+
+    if (dispute.status !== 'open') {
+      return res.status(200).json({
+        message: 'Dispute already resolved',
+        dispute
+      });
+    }
+
+    const now = nowIso();
+    const payoutIds = collectOrderPayoutIds(db, order.id);
+    let releaseAmount = 0;
+    let disputeFeeApplied = 0;
+
+    if (outcome === 'seller_won') {
+      const heldAmount = db.walletEntries
+        .filter((entry) => entry.type === 'debit' && entry.sourceType === 'dispute_hold' && entry.sourceId === order.id)
+        .filter((entry) => ['pending', 'completed'].includes(entry.status))
+        .reduce((sum, entry) => sum + Number(entry.amount || 0), 0);
+      const releasedAmount = db.walletEntries
+        .filter((entry) => entry.type === 'credit' && entry.sourceType === 'dispute_release' && entry.sourceId === order.id)
+        .filter((entry) => ['available', 'completed'].includes(entry.status))
+        .reduce((sum, entry) => sum + Number(entry.amount || 0), 0);
+
+      releaseAmount = roundMoney(Math.max(0, heldAmount - releasedAmount));
+      if (releaseAmount > 0) {
+        db.walletEntries.push({
+          id: makeId('wl'),
+          sellerId: order.sellerId,
+          type: 'credit',
+          sourceType: 'dispute_release',
+          sourceId: order.id,
+          amount: releaseAmount,
+          currency: order.currency,
+          status: 'available',
+          createdAt: now,
+          updatedAt: now
+        });
+      }
+
+      for (const entry of db.walletEntries) {
+        if (entry.type !== 'credit' || entry.sourceType !== 'reserve') continue;
+        if (!payoutIds.includes(entry.sourceId)) continue;
+        if (entry.status === 'disputed_hold') {
+          entry.status = 'pending';
+          entry.updatedAt = now;
+        }
+      }
+
+      dispute.status = 'resolved_seller_won';
+      if (payment) {
+        payment.status = 'captured';
+        payment.updatedAt = now;
+      }
+      order.status = order.deliveredAt ? 'released' : 'held';
+      order.updatedAt = now;
+    } else {
+      for (const entry of db.walletEntries) {
+        if (entry.type !== 'debit' || entry.sourceType !== 'dispute_hold') continue;
+        if (entry.sourceId !== order.id) continue;
+        if (!['pending', 'completed'].includes(entry.status)) continue;
+        entry.sourceType = 'chargeback_settlement';
+        entry.updatedAt = now;
+      }
+
+      for (const entry of db.walletEntries) {
+        if (entry.type !== 'credit' || entry.sourceType !== 'reserve') continue;
+        if (!payoutIds.includes(entry.sourceId)) continue;
+        if (entry.status === 'disputed_hold') {
+          entry.status = 'forfeited';
+          entry.updatedAt = now;
+        }
+      }
+
+      const feeExists = db.walletEntries.some(
+        (entry) =>
+          entry.type === 'debit' &&
+          entry.sourceType === 'dispute_fee' &&
+          entry.sourceId === dispute.id &&
+          ['pending', 'completed'].includes(entry.status)
+      );
+      if (!feeExists && DISPUTE_FEE_AMOUNT > 0) {
+        db.walletEntries.push({
+          id: makeId('wl'),
+          sellerId: order.sellerId,
+          type: 'debit',
+          sourceType: 'dispute_fee',
+          sourceId: dispute.id,
+          amount: DISPUTE_FEE_AMOUNT,
+          currency: order.currency,
+          status: 'completed',
+          createdAt: now,
+          updatedAt: now
+        });
+        disputeFeeApplied = DISPUTE_FEE_AMOUNT;
+      }
+
+      dispute.status = 'resolved_seller_lost';
+      order.status = 'chargeback_lost';
+      order.updatedAt = now;
+      if (payment) {
+        payment.status = 'chargeback';
+        payment.updatedAt = now;
+      }
+    }
+
+    dispute.outcome = outcome;
+    dispute.note = payload.note ? String(payload.note) : '';
+    dispute.resolvedBy = actor.id;
+    dispute.resolvedAt = now;
+    dispute.updatedAt = now;
+
+    addAudit(db, 'dispute_resolved', 'dispute', dispute.id, actor.id, {
+      outcome,
+      releaseAmount,
+      disputeFeeApplied
+    });
+
+    return res.status(202).json({
+      message: 'Dispute resolved',
+      dispute,
+      financials: {
+        releaseAmount,
+        disputeFeeApplied
+      }
+    });
+  });
+});
+
+app.get('/v1/disputes/:disputeId/evidence-packet', (req, res) => {
+  const db = loadDb();
+  const actor = getActor(db, req);
+  if (!requireActorRole(res, actor, ['buyer', 'seller', 'admin', 'ops'])) return;
+
+  const dispute = db.disputes.find((item) => item.id === req.params.disputeId);
+  if (!dispute) return sendError(res, 404, 'DISPUTE_NOT_FOUND', 'Dispute not found');
+
+  const order = db.orders.find((item) => item.id === dispute.orderId);
+  if (!order) return sendError(res, 404, 'ORDER_NOT_FOUND', 'Order not found');
+
+  const isParticipant = actor.id === order.buyerId || actor.id === order.sellerId;
+  if (!isParticipant && !isAdminLike(actor)) {
+    return sendError(res, 403, 'FORBIDDEN', 'Only participants or ops can view evidence packet');
+  }
+
+  const payment = findOrderPayment(db, order.id);
+  const checkout = db.checkoutSessions.find((item) => item.orderId === order.id) || null;
+  const threads = db.chatThreads.filter(
+    (item) =>
+      (item.orderId && item.orderId === order.id) ||
+      (item.buyerId === order.buyerId && item.sellerId === order.sellerId && (!item.listingId || item.listingId === order.listingId))
+  );
+  const threadIds = new Set(threads.map((item) => item.id));
+  const messages = db.chatMessages
+    .filter((item) => threadIds.has(item.threadId))
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+    .slice(-200);
+
+  return res.json({
+    disputeId: dispute.id,
+    orderId: order.id,
+    packetGeneratedAt: nowIso(),
+    order: {
+      id: order.id,
+      status: order.status,
+      createdAt: order.createdAt,
+      paidAt: order.paidAt || null,
+      deliveredAt: order.deliveredAt || null,
+      amount: order.amount,
+      currency: order.currency,
+      billingDescriptor: order.billingDescriptor || null
+    },
+    checkoutRisk: order.checkoutRisk || null,
+    payment: payment
+      ? {
+          id: payment.id,
+          status: payment.status,
+          psp: payment.psp,
+          pspTxnId: payment.pspTxnId || null
+        }
+      : null,
+    checkoutSession: checkout
+      ? {
+          id: checkout.id,
+          status: checkout.status,
+          checkoutUrl: checkout.checkoutUrl,
+          createdAt: checkout.createdAt,
+          updatedAt: checkout.updatedAt
+        }
+      : null,
+    shippingProof: order.shippingProof || null,
+    chatEvidence: {
+      threadCount: threads.length,
+      messageCount: messages.length,
+      messages
+    }
+  });
+});
+
+app.post('/v1/orders/:orderId/shipping-proof', (req, res) => {
+  const payload = req.body || {};
+  const missing = requireFields(payload, ['trackingNumber']);
+  if (missing.length) {
+    return sendError(res, 400, 'VALIDATION_ERROR', 'Missing required fields', { missing });
+  }
+
+  return mutateDb((db) => {
+    const actor = getActor(db, req);
+    if (!requireActorRole(res, actor, ['seller', 'admin', 'ops'])) return null;
+
+    const order = db.orders.find((item) => item.id === req.params.orderId);
+    if (!order) return sendError(res, 404, 'ORDER_NOT_FOUND', 'Order not found');
+    if (actor.role === 'seller' && actor.id !== order.sellerId) {
+      return sendError(res, 403, 'FORBIDDEN', 'Seller can only update own order');
+    }
+
+    order.shippingProof = {
+      carrier: payload.carrier ? String(payload.carrier) : 'unknown',
+      trackingNumber: String(payload.trackingNumber),
+      proofUrl: payload.proofUrl ? String(payload.proofUrl) : null,
+      markedDeliveredAt: payload.markedDeliveredAt ? String(payload.markedDeliveredAt) : null,
+      updatedBy: actor.id,
+      updatedAt: nowIso()
+    };
+    order.updatedAt = nowIso();
+
+    addAudit(db, 'order_shipping_proof_updated', 'order', order.id, actor.id, {
+      carrier: order.shippingProof.carrier
+    });
+
+    return res.status(202).json({
+      message: 'Shipping proof recorded',
+      orderId: order.id,
+      shippingProof: order.shippingProof
+    });
   });
 });
 
@@ -1425,11 +1849,15 @@ app.get('/v1/wallets/:sellerId/summary', (req, res) => {
     const releaseInfo = releaseMaturedReserveCredits(db, req.params.sellerId, currency);
     const summary = calculateWalletSummary(db, req.params.sellerId, currency);
     const reserveSummary = calculateReserveSummary(db, req.params.sellerId, currency);
+    const disputeStats = sellerDisputeStats(db, req.params.sellerId);
+    const dynamicReserveRate = sellerReserveRate(db, req.params.sellerId);
 
     return res.json({
       sellerId: req.params.sellerId,
       currency,
       reserveWindowDays: ROLLING_RESERVE_DAYS,
+      dynamicReserveRate,
+      disputeRate: disputeStats.disputeRate,
       releasedReserveCount: releaseInfo.releasedCount,
       ...summary,
       ...reserveSummary
@@ -1454,12 +1882,16 @@ app.get('/v1/wallets/:sellerId/ledger', (req, res) => {
     const releaseInfo = releaseMaturedReserveCredits(db, req.params.sellerId, currency);
     const summary = calculateWalletSummary(db, req.params.sellerId, currency);
     const reserveSummary = calculateReserveSummary(db, req.params.sellerId, currency);
+    const disputeStats = sellerDisputeStats(db, req.params.sellerId);
+    const dynamicReserveRate = sellerReserveRate(db, req.params.sellerId);
     const entries = buildWalletLedgerRows(db, req.params.sellerId, currency, limit);
 
     return res.json({
       sellerId: req.params.sellerId,
       currency,
       reserveWindowDays: ROLLING_RESERVE_DAYS,
+      dynamicReserveRate,
+      disputeRate: disputeStats.disputeRate,
       releasedReserveCount: releaseInfo.releasedCount,
       summary: {
         ...summary,
@@ -1495,6 +1927,12 @@ app.post('/v1/wallets/:sellerId/withdrawals', (req, res) => {
     const currency = String(payload.currency).toUpperCase();
     releaseMaturedReserveCredits(db, req.params.sellerId, currency);
     const summary = calculateWalletSummary(db, req.params.sellerId, currency);
+
+    if (summary.withdrawalsBlocked) {
+      return sendError(res, 409, 'WITHDRAWALS_BLOCKED', 'Withdrawals are temporarily blocked due to disputed funds', {
+        disputedBalance: summary.disputedBalance
+      });
+    }
 
     if (summary.availableBalance < amount) {
       return sendError(res, 409, 'INSUFFICIENT_BALANCE', 'Not enough available balance', {
