@@ -262,7 +262,7 @@
 
       .listing-grid {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
       }
 
@@ -276,11 +276,17 @@
         flex-direction: column;
         gap: 8px;
         transition: transform 0.22s ease, box-shadow 0.22s ease;
+        cursor: pointer;
       }
 
       .listing:hover {
         transform: translateY(-2px);
         box-shadow: 0 12px 24px rgba(15, 23, 42, 0.1);
+      }
+
+      .listing:focus-visible {
+        outline: 2px solid #be123c;
+        outline-offset: 2px;
       }
 
       .listing-media {
@@ -308,18 +314,13 @@
         flex-direction: column;
         gap: 4px;
         padding: 0 2px 2px;
-      }
-
-      .listing-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 8px;
+        min-height: 88px;
       }
 
       .listing h4 {
         margin: 0;
-        font: 600 0.92rem/1.25 'Sora', sans-serif;
+        font: 500 0.86rem/1.25 'Sora', sans-serif;
+        color: #6b7280;
       }
 
       .listing-sub {
@@ -334,28 +335,64 @@
         gap: 6px;
       }
 
-      .listing-meta {
+      .seller-name {
+        font: 600 0.76rem/1.2 'Sora', sans-serif;
+        color: #111827;
+      }
+
+      .verified-icon {
+        width: 14px;
+        height: 14px;
+        color: #3b82f6;
+        flex: 0 0 auto;
+      }
+
+      .listing-title {
         margin: 0;
-        color: var(--muted);
-        font-size: 0.78rem;
+      }
+
+      .listing-bottom {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
       }
 
       .listing-price {
         margin: 0;
         font: 700 0.95rem/1.2 'Sora', sans-serif;
+        color: #111827;
       }
 
-      .listing-actions {
-        display: flex;
-        justify-content: space-between;
+      .listing-select {
+        display: inline-flex;
         align-items: center;
-        gap: 8px;
-        margin-top: 2px;
+        padding: 4px 9px;
+        border-radius: 999px;
+        font: 600 0.7rem/1 'Sora', sans-serif;
+        border: 1px solid #e5e7eb;
+        color: #4b5563;
+        background: #ffffff;
       }
 
-      .listing .btn {
-        padding: 8px 10px;
-        font-size: 0.8rem;
+      .listing.is-selected .listing-select {
+        border-color: #fecdd3;
+        background: #fff1f2;
+        color: #9f1239;
+      }
+
+      .listing.is-selected .listing-media {
+        outline: 2px solid #fb7185;
+        outline-offset: -2px;
+      }
+
+      .truncate-1 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
       }
 
       .badge {
@@ -374,16 +411,10 @@
         color: #9f1239;
       }
 
-      .badge.verified {
-        border-color: #bfdbfe;
-        background: #eff6ff;
-        color: #1d4ed8;
-      }
-
       .badge-overlay {
         position: absolute;
-        top: 8px;
-        left: 8px;
+        top: 10px;
+        left: 10px;
       }
 
       .table {
@@ -447,9 +478,17 @@
         .grid.kpi {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
+      }
 
+      @media (min-width: 760px) {
         .listing-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (min-width: 1180px) {
+        .listing-grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
         }
       }
 
@@ -483,8 +522,7 @@
           padding: 10px;
         }
 
-        .grid.kpi,
-        .listing-grid {
+        .grid.kpi {
           grid-template-columns: 1fr;
         }
 
@@ -498,6 +536,12 @@
         .toolbar .persona {
           flex: 1;
           min-width: 0;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .listing-grid {
+          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -1041,7 +1085,8 @@
         role: 'customer',
         activePanel: 'overview',
         listings: [],
-        logs: []
+        logs: [],
+        selectedListingId: ''
       };
 
       const LISTING_PLACEHOLDER_IMAGE = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
@@ -1321,14 +1366,15 @@
         el.listingGrid.innerHTML = rows
           .map((item) => {
             const listingId = escapeHtml(item.id || 'unknown-listing');
+            const rawListingId = String(item.id || 'unknown-listing');
             const title = escapeHtml(item.title || item.id || 'Untitled Listing');
             const sellerName = escapeHtml(item.sellerName || item.sellerId || 'Creator');
             const subtitle = escapeHtml(item.subtitle || 'Curated listing');
-            const meta = escapeHtml(item.description || 'Secure checkout and verified fulfillment.');
             const currency = escapeHtml(item.currency || 'USD');
             const price = Number(item.price || 0).toFixed(2);
             const imageUrl = escapeHtml(resolveListingImage(item));
             const alt = escapeHtml(`${item.title || 'Listing'} preview`);
+            const isSelected = state.selectedListingId === rawListingId;
             const isVerified =
               item.sellerVerified === true ||
               item.verified === true ||
@@ -1336,7 +1382,7 @@
               item.kycStatus === 'verified';
 
             return `
-              <article class="listing">
+              <article class="listing ${isSelected ? 'is-selected' : ''}" data-select="${listingId}" role="button" tabindex="0">
                 <div class="listing-media">
                   <img src="${imageUrl}" alt="${alt}" loading="lazy" data-listing-image="1" data-fallback="${escapeHtml(
                     LISTING_PLACEHOLDER_IMAGE
@@ -1344,20 +1390,21 @@
                   ${item.isPromoted ? '<span class="badge promo badge-overlay">Promoted</span>' : ''}
                 </div>
                 <div class="listing-info">
-                  <div class="listing-head">
-                    <div>
-                      <h4>${title}</h4>
-                      <p class="listing-sub listing-seller">
-                        <span>${sellerName}</span>
-                        ${isVerified ? '<span class="badge verified">Verified</span>' : ''}
-                      </p>
-                    </div>
+                  <p class="listing-sub listing-seller">
+                    <span class="seller-name truncate-1">${sellerName}</span>
+                    ${
+                      isVerified
+                        ? `<svg class="verified-icon" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                          </svg>`
+                        : ''
+                    }
+                  </p>
+                  <h4 class="listing-title truncate-1">${title}</h4>
+                  <p class="listing-sub truncate-1">${subtitle}</p>
+                  <div class="listing-bottom">
                     <p class="listing-price">${currency} ${price}</p>
-                  </div>
-                  <p class="listing-meta">${meta}</p>
-                  <div class="listing-actions">
-                    <span class="listing-sub">${subtitle}</span>
-                    <button class="btn" data-select="${listingId}">Select</button>
+                    <span class="listing-select">${isSelected ? 'Selected' : 'Select'}</span>
                   </div>
                 </div>
               </article>
@@ -1365,11 +1412,25 @@
           })
           .join('');
 
-        document.querySelectorAll('[data-select]').forEach((btn) => {
-          btn.addEventListener('click', () => {
-            el.selectedListing.value = btn.getAttribute('data-select');
-            el.creatorListing.value = btn.getAttribute('data-select');
-            writeConsole(el.customerConsole, 'Listing Selected', { listingId: btn.getAttribute('data-select') });
+        document.querySelectorAll('.listing[data-select]').forEach((card) => {
+          card.addEventListener('click', () => {
+            const listingId = card.getAttribute('data-select') || '';
+            state.selectedListingId = listingId;
+            el.selectedListing.value = listingId;
+            el.creatorListing.value = listingId;
+            writeConsole(el.customerConsole, 'Listing Selected', { listingId });
+            renderListings();
+          });
+
+          card.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            event.preventDefault();
+            const listingId = card.getAttribute('data-select') || '';
+            state.selectedListingId = listingId;
+            el.selectedListing.value = listingId;
+            el.creatorListing.value = listingId;
+            writeConsole(el.customerConsole, 'Listing Selected', { listingId });
+            renderListings();
           });
         });
 
