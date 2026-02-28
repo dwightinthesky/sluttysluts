@@ -175,6 +175,35 @@
         color: #34d399;
       }
 
+      .stepper {
+        margin: 8px 0 14px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .step {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 8px 10px;
+        background: rgba(24, 24, 27, 0.5);
+      }
+
+      .step strong {
+        display: block;
+        font: 700 0.64rem/1 'Sora', sans-serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #f4f4f5;
+      }
+
+      .step span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.72rem;
+      }
+
       .layout {
         display: grid;
         grid-template-columns: 1.2fr 0.8fr;
@@ -228,6 +257,17 @@
         box-shadow: 0 0 0 1px rgba(244, 63, 94, 0.35);
       }
 
+      .field-error {
+        margin-top: 5px;
+        font-size: 0.71rem;
+        color: #fda4af;
+        min-height: 1em;
+      }
+
+      .field-error[data-show='0'] {
+        visibility: hidden;
+      }
+
       .privacy {
         margin-top: 6px;
         border: 1px solid var(--line);
@@ -258,6 +298,34 @@
         margin: 5px 0 0;
         color: var(--muted);
         font-size: 0.78rem;
+      }
+
+      .trust-strip {
+        margin-top: 8px;
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .trust-item {
+        border: 1px solid rgba(244, 244, 245, 0.14);
+        border-radius: 10px;
+        background: rgba(9, 9, 11, 0.45);
+        padding: 8px;
+        font-size: 0.7rem;
+        color: var(--muted);
+        line-height: 1.4;
+      }
+
+      .trust-item strong {
+        display: block;
+        margin-bottom: 2px;
+        color: #f4f4f5;
+        font: 700 0.62rem/1 'Sora', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
       }
 
       .summary {
@@ -395,6 +463,34 @@
         line-height: 1.5;
       }
 
+      .pay-amount {
+        margin-top: 6px;
+        text-align: center;
+        color: #a1a1aa;
+        font-size: 0.75rem;
+      }
+
+      .descriptor {
+        margin-top: 10px;
+        border: 1px solid rgba(244, 244, 245, 0.14);
+        border-radius: 11px;
+        background: rgba(9, 9, 11, 0.45);
+        padding: 9px 10px;
+      }
+
+      .descriptor strong {
+        font: 700 0.7rem/1 'Sora', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .descriptor p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 0.74rem;
+        line-height: 1.45;
+      }
+
       .status {
         margin-top: 10px;
         border: 1px solid #374151;
@@ -431,6 +527,10 @@
 
         .summary {
           position: static;
+        }
+
+        .trust-strip {
+          grid-template-columns: 1fr;
         }
       }
 
@@ -497,6 +597,21 @@
         </div>
       </div>
 
+      <div class="stepper" aria-label="Checkout progress">
+        <div class="step">
+          <strong id="step1Title">1. Identity</strong>
+          <span id="step1Sub">Delivery details</span>
+        </div>
+        <div class="step">
+          <strong id="step2Title">2. Confirmation</strong>
+          <span id="step2Sub">Fee transparency</span>
+        </div>
+        <div class="step">
+          <strong id="step3Title">3. Payment</strong>
+          <span id="step3Sub">Hosted gateway</span>
+        </div>
+      </div>
+
       <main class="layout">
         <section class="card">
           <h3 id="deliveryTitle">Delivery Details</h3>
@@ -505,21 +620,25 @@
               <div>
                 <label id="labelFirst" for="firstName">First Name / Alias</label>
                 <input id="firstName" class="input" type="text" autocomplete="given-name" placeholder="e.g. John" />
+                <div id="errorFirst" class="field-error" data-show="0">Required field.</div>
               </div>
               <div>
                 <label id="labelLast" for="lastName">Last Name</label>
                 <input id="lastName" class="input" type="text" autocomplete="family-name" placeholder="e.g. Doe" />
+                <div class="field-error" data-show="0"></div>
               </div>
             </div>
 
             <div>
               <label id="labelEmail" for="email">Email Address</label>
               <input id="email" class="input" type="email" autocomplete="email" placeholder="e.g. name@example.com" />
+              <div id="errorEmail" class="field-error" data-show="0">Valid email required.</div>
             </div>
 
             <div>
               <label id="labelAddress" for="address">Shipping Address</label>
               <input id="address" class="input" type="text" autocomplete="street-address" placeholder="123 Private Lane, Apt 4B" />
+              <div id="errorAddress" class="field-error" data-show="0">Address required.</div>
             </div>
 
             <div id="privacyCard" class="privacy is-active" role="button" tabindex="0" aria-label="Toggle discreet packaging">
@@ -527,6 +646,21 @@
               <div>
                 <strong id="privacyTitle">Require Discreet Packaging</strong>
                 <p id="privacySub">Item will arrive in a plain, unmarked mailer to protect your privacy.</p>
+              </div>
+            </div>
+
+            <div class="trust-strip">
+              <div class="trust-item">
+                <strong id="trustA1">Encrypted</strong>
+                <span id="trustB1">Data is protected in transit.</span>
+              </div>
+              <div class="trust-item">
+                <strong id="trustA2">Transparent Fees</strong>
+                <span id="trustB2">No hidden charge after redirect.</span>
+              </div>
+              <div class="trust-item">
+                <strong id="trustA3">Discreet Routing</strong>
+                <span id="trustB3">Neutral packaging and checkout flow.</span>
               </div>
             </div>
           </form>
@@ -578,9 +712,14 @@
           </div>
 
           <button id="payBtn" class="btn primary pay-btn" type="button">Proceed to Hosted Gateway</button>
+          <div id="payAmount" class="pay-amount">You will be charged: USD 0.00</div>
           <p id="payHint" class="hint">
             By proceeding, a pending order will be created. You will be redirected to our secure payment processor.
           </p>
+          <div class="descriptor">
+            <strong id="descriptorTitle">Billing descriptor</strong>
+            <p id="descriptorCopy">Your card statement will display: SS-TECH SERVICES. If this looks unfamiliar later, check your order first before filing a chargeback.</p>
+          </div>
           <div id="statusBox" class="status" role="status" aria-live="polite"></div>
         </aside>
       </main>

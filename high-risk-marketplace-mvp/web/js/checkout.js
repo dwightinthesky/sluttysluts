@@ -23,9 +23,28 @@ const I18N = {
         assuranceInfo: 'Covers secure hosted checkout, discreet routing, and 24/7 support.',
         total: 'Total Charge',
         totalSub: 'Includes all taxes and fees',
+        step1Title: '1. Identity',
+        step1Sub: 'Delivery details',
+        step2Title: '2. Confirmation',
+        step2Sub: 'Fee transparency',
+        step3Title: '3. Payment',
+        step3Sub: 'Hosted gateway',
+        trustA1: 'Encrypted',
+        trustB1: 'Data is protected in transit.',
+        trustA2: 'Transparent Fees',
+        trustB2: 'No hidden charge after redirect.',
+        trustA3: 'Discreet Routing',
+        trustB3: 'Neutral packaging and checkout flow.',
+        descriptorTitle: 'Billing descriptor',
+        descriptorCopy: 'Your card statement will display: SS-TECH SERVICES. If this looks unfamiliar later, check your order first before filing a chargeback.',
         pay: 'Proceed to Hosted Gateway',
+        payAmountPrefix: 'You will be charged:',
+        errorFirst: 'First name is required.',
+        errorEmail: 'Valid email required.',
+        errorAddress: 'Shipping address is required.',
         hint: 'By proceeding, a pending order will be created. You will be redirected to our secure payment processor.',
         validating: 'Creating pending order...',
+        processing: 'Opening hosted gateway...',
         success: 'Pending order created. Hosted checkout opened in a new tab.',
         fallback: 'API unavailable. Demo order generated locally: ',
         validationError: 'Please fill in first name, email, and shipping address.'
@@ -54,9 +73,28 @@ const I18N = {
         assuranceInfo: '包含安全 Hosted Checkout、隱私路由與 24/7 客服支援。',
         total: '最終刷卡金額',
         totalSub: '已包含所有費用與稅項',
+        step1Title: '1. 身分',
+        step1Sub: '收件資訊',
+        step2Title: '2. 確認',
+        step2Sub: '費用透明',
+        step3Title: '3. 付款',
+        step3Sub: '跳轉支付',
+        trustA1: '加密傳輸',
+        trustB1: '資料在傳輸過程中受保護。',
+        trustA2: '費用透明',
+        trustB2: '跳轉後不會出現隱藏費用。',
+        trustA3: '隱私路由',
+        trustB3: '中性包裝與低識別流程。',
+        descriptorTitle: '帳單名稱提示',
+        descriptorCopy: '你的信用卡帳單會顯示：SS-TECH SERVICES。若日後不熟悉，請先回平台查訂單再發起拒付。',
         pay: '前往 Hosted Gateway',
+        payAmountPrefix: '即將扣款：',
+        errorFirst: '請填寫名字。',
+        errorEmail: '請填寫有效 Email。',
+        errorAddress: '請填寫收件地址。',
         hint: '按下後會先建立待付款訂單，再跳轉至第三方支付頁面完成付款。',
         validating: '正在建立待付款訂單...',
+        processing: '正在開啟支付頁...',
         success: '待付款訂單建立成功，已在新分頁開啟付款頁。',
         fallback: 'API 無法使用，已建立本地示範訂單：',
         validationError: '請先填寫名字、Email 與收件地址。'
@@ -85,9 +123,28 @@ const I18N = {
         assuranceInfo: 'Covers secure hosted checkout, discreet routing, and 24/7 support.',
         total: 'Total Charge',
         totalSub: 'Includes all taxes and fees',
+        step1Title: '1. Identity',
+        step1Sub: 'Delivery details',
+        step2Title: '2. Confirmation',
+        step2Sub: 'Fee transparency',
+        step3Title: '3. Payment',
+        step3Sub: 'Hosted gateway',
+        trustA1: 'Encrypted',
+        trustB1: 'Data is protected in transit.',
+        trustA2: 'Transparent Fees',
+        trustB2: 'No hidden charge after redirect.',
+        trustA3: 'Discreet Routing',
+        trustB3: 'Neutral packaging and checkout flow.',
+        descriptorTitle: 'Billing descriptor',
+        descriptorCopy: 'Your card statement will display: SS-TECH SERVICES. If this looks unfamiliar later, check your order first before filing a chargeback.',
         pay: 'Proceed to Hosted Gateway',
+        payAmountPrefix: 'You will be charged:',
+        errorFirst: 'First name is required.',
+        errorEmail: 'Valid email required.',
+        errorAddress: 'Shipping address is required.',
         hint: 'By proceeding, a pending order will be created. You will be redirected to our secure payment processor.',
         validating: 'Creating pending order...',
+        processing: 'Opening hosted gateway...',
         success: 'Pending order created. Hosted checkout opened in a new tab.',
         fallback: 'API unavailable. Demo order generated locally: ',
         validationError: 'Please fill in first name, email, and shipping address.'
@@ -116,9 +173,28 @@ const I18N = {
         assuranceInfo: 'Covers secure hosted checkout, discreet routing, and 24/7 support.',
         total: 'Total Charge',
         totalSub: 'Includes all taxes and fees',
+        step1Title: '1. Identity',
+        step1Sub: 'Delivery details',
+        step2Title: '2. Confirmation',
+        step2Sub: 'Fee transparency',
+        step3Title: '3. Payment',
+        step3Sub: 'Hosted gateway',
+        trustA1: 'Encrypted',
+        trustB1: 'Data is protected in transit.',
+        trustA2: 'Transparent Fees',
+        trustB2: 'No hidden charge after redirect.',
+        trustA3: 'Discreet Routing',
+        trustB3: 'Neutral packaging and checkout flow.',
+        descriptorTitle: 'Billing descriptor',
+        descriptorCopy: 'Your card statement will display: SS-TECH SERVICES. If this looks unfamiliar later, check your order first before filing a chargeback.',
         pay: 'Proceed to Hosted Gateway',
+        payAmountPrefix: 'You will be charged:',
+        errorFirst: 'First name is required.',
+        errorEmail: 'Valid email required.',
+        errorAddress: 'Shipping address is required.',
         hint: 'By proceeding, a pending order will be created. You will be redirected to our secure payment processor.',
         validating: 'Creating pending order...',
+        processing: 'Opening hosted gateway...',
         success: 'Pending order created. Hosted checkout opened in a new tab.',
         fallback: 'API unavailable. Demo order generated locally: ',
         validationError: 'Please fill in first name, email, and shipping address.'
@@ -137,8 +213,11 @@ const FALLBACK_CART = {
 const state = {
     lang: 'en',
     cart: FALLBACK_CART,
-    discreet: true
+    discreet: true,
+    total: 0,
+    currency: 'USD'
 };
+const PROFILE_KEY = 'saas_checkout_profile_v1';
 function safeLang(raw) {
     return Object.prototype.hasOwnProperty.call(I18N, raw) ? raw : 'en';
 }
@@ -168,6 +247,70 @@ function readCart() {
         return FALLBACK_CART;
     }
 }
+function readProfile() {
+    try {
+        const raw = localStorage.getItem(PROFILE_KEY);
+        if (!raw)
+            return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object')
+            return null;
+        return parsed;
+    }
+    catch (_error) {
+        return null;
+    }
+}
+function getFormValues() {
+    return {
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        address: document.getElementById('address').value.trim()
+    };
+}
+function persistProfile() {
+    const payload = {
+        ...getFormValues(),
+        discreet: state.discreet,
+        updatedAt: new Date().toISOString()
+    };
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(payload));
+}
+function isEmailValid(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+function setFieldError(id, message, show) {
+    const node = document.getElementById(id);
+    if (!node)
+        return;
+    node.textContent = message;
+    node.setAttribute('data-show', show ? '1' : '0');
+}
+function validateForm(showErrors = false) {
+    const dict = I18N[state.lang] || I18N.en;
+    const values = getFormValues();
+    const firstOk = values.firstName.length > 0;
+    const emailOk = isEmailValid(values.email);
+    const addressOk = values.address.length > 0;
+    const valid = firstOk && emailOk && addressOk;
+    if (showErrors) {
+        setFieldError('errorFirst', dict.errorFirst, !firstOk);
+        setFieldError('errorEmail', dict.errorEmail, !emailOk);
+        setFieldError('errorAddress', dict.errorAddress, !addressOk);
+    }
+    else {
+        setFieldError('errorFirst', dict.errorFirst, false);
+        setFieldError('errorEmail', dict.errorEmail, false);
+        setFieldError('errorAddress', dict.errorAddress, false);
+    }
+    return { valid, values };
+}
+function updatePayButtonState() {
+    const button = document.getElementById('payBtn');
+    const validation = validateForm(false);
+    button.disabled = !validation.valid;
+}
 function updateLinks() {
     const lang = encodeURIComponent(state.lang);
     document.getElementById('linkLanding').setAttribute('href', `./index.html?lang=${lang}`);
@@ -185,6 +328,12 @@ function renderI18n() {
     document.getElementById('pageTitle').textContent = dict.pageTitle;
     document.getElementById('pageSub').textContent = dict.pageSub;
     document.getElementById('secureBadge').lastElementChild.textContent = dict.secureBadge;
+    document.getElementById('step1Title').textContent = dict.step1Title;
+    document.getElementById('step1Sub').textContent = dict.step1Sub;
+    document.getElementById('step2Title').textContent = dict.step2Title;
+    document.getElementById('step2Sub').textContent = dict.step2Sub;
+    document.getElementById('step3Title').textContent = dict.step3Title;
+    document.getElementById('step3Sub').textContent = dict.step3Sub;
     document.getElementById('deliveryTitle').textContent = dict.deliveryTitle;
     document.getElementById('labelFirst').textContent = dict.first;
     document.getElementById('labelLast').textContent = dict.last;
@@ -201,6 +350,15 @@ function renderI18n() {
     document.getElementById('totalSub').textContent = dict.totalSub;
     document.getElementById('payBtn').textContent = dict.pay;
     document.getElementById('payHint').textContent = dict.hint;
+    document.getElementById('trustA1').textContent = dict.trustA1;
+    document.getElementById('trustB1').textContent = dict.trustB1;
+    document.getElementById('trustA2').textContent = dict.trustA2;
+    document.getElementById('trustB2').textContent = dict.trustB2;
+    document.getElementById('trustA3').textContent = dict.trustA3;
+    document.getElementById('trustB3').textContent = dict.trustB3;
+    document.getElementById('descriptorTitle').textContent = dict.descriptorTitle;
+    document.getElementById('descriptorCopy').textContent = dict.descriptorCopy;
+    document.getElementById('payAmount').textContent = `${dict.payAmountPrefix} ${formatPrice(state.currency, state.total)}`;
 }
 function renderSummary() {
     const dict = I18N[state.lang] || I18N.en;
@@ -210,6 +368,8 @@ function renderSummary() {
     const shipping = Number(cart.shipping || 0);
     const platformFee = subtotal * Number(cart.platformFeeRate || 0.1);
     const total = subtotal + shipping + platformFee;
+    state.currency = currency;
+    state.total = total;
     document.getElementById('itemImage').src = cart.imageUrl || FALLBACK_CART.imageUrl;
     document.getElementById('itemTitle').textContent = cart.title || FALLBACK_CART.title;
     document.getElementById('itemSeller').firstElementChild.textContent = `${dict.seller}: ${cart.sellerName || FALLBACK_CART.sellerName}`;
@@ -218,6 +378,8 @@ function renderSummary() {
     document.getElementById('shippingValue').textContent = formatPrice(currency, shipping);
     document.getElementById('platformValue').textContent = formatPrice(currency, platformFee);
     document.getElementById('totalValue').textContent = formatPrice(currency, total);
+    document.getElementById('payAmount').textContent = `${dict.payAmountPrefix} ${formatPrice(currency, total)}`;
+    updatePayButtonState();
 }
 function renderDiscreet() {
     const card = document.getElementById('privacyCard');
@@ -234,16 +396,17 @@ function showStatus(message, type) {
 }
 async function createPendingOrder() {
     const dict = I18N[state.lang] || I18N.en;
-    const firstName = document.getElementById('firstName').value.trim();
-    const lastName = document.getElementById('lastName').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const address = document.getElementById('address').value.trim();
-    if (!firstName || !email || !address) {
+    const validation = validateForm(true);
+    if (!validation.valid) {
         showStatus(dict.validationError, 'error');
+        updatePayButtonState();
         return;
     }
+    const { firstName, lastName, email, address } = validation.values;
     const button = document.getElementById('payBtn');
+    const prevLabel = button.textContent || dict.pay;
     button.disabled = true;
+    button.textContent = dict.processing;
     showStatus(dict.validating, 'pending');
     const cart = state.cart;
     const base = (localStorage.getItem('saas_api_base') || 'http://localhost:8080').replace(/\/$/, '');
@@ -279,6 +442,7 @@ async function createPendingOrder() {
         if (checkoutUrl) {
             window.open(checkoutUrl, '_blank', 'noopener');
         }
+        persistProfile();
         showStatus(dict.success + (data.order && data.order.id ? ` (${data.order.id})` : ''), 'success');
     }
     catch (_error) {
@@ -286,7 +450,8 @@ async function createPendingOrder() {
         showStatus(dict.fallback + fakeId, 'error');
     }
     finally {
-        button.disabled = false;
+        button.textContent = prevLabel;
+        updatePayButtonState();
     }
 }
 function bindEvents() {
@@ -296,11 +461,13 @@ function bindEvents() {
         renderI18n();
         renderSummary();
         updateLinks();
+        validateForm(true);
     });
     const privacyCard = document.getElementById('privacyCard');
     privacyCard.addEventListener('click', () => {
         state.discreet = !state.discreet;
         renderDiscreet();
+        persistProfile();
     });
     privacyCard.addEventListener('keydown', (event) => {
         if (event.key !== 'Enter' && event.key !== ' ')
@@ -308,24 +475,45 @@ function bindEvents() {
         event.preventDefault();
         state.discreet = !state.discreet;
         renderDiscreet();
+        persistProfile();
     });
-    document.getElementById('discreet').addEventListener('click', (event) => {
+    document.getElementById('discreet')?.addEventListener('click', (event) => {
         event.stopPropagation();
         state.discreet = !state.discreet;
         renderDiscreet();
+        persistProfile();
     });
-    document.getElementById('payBtn').addEventListener('click', createPendingOrder);
+    ['firstName', 'lastName', 'email', 'address'].forEach((id) => {
+        const input = document.getElementById(id);
+        input?.addEventListener('input', () => {
+            validateForm(true);
+            updatePayButtonState();
+            persistProfile();
+        });
+    });
+    document.getElementById('payBtn')?.addEventListener('click', createPendingOrder);
 }
 function boot() {
     const query = getQuery();
     state.lang = safeLang(query.lang || localStorage.getItem('siteLang') || 'en');
     state.cart = readCart();
+    const profile = readProfile();
+    if (profile) {
+        document.getElementById('firstName').value = String(profile.firstName || '');
+        document.getElementById('lastName').value = String(profile.lastName || '');
+        document.getElementById('email').value = String(profile.email || '');
+        document.getElementById('address').value = String(profile.address || '');
+        if (typeof profile.discreet === 'boolean')
+            state.discreet = profile.discreet;
+    }
     document.getElementById('langSelect').value = state.lang;
     renderI18n();
     renderSummary();
     renderDiscreet();
     updateLinks();
     bindEvents();
+    validateForm(true);
+    updatePayButtonState();
 }
 boot();
 export {};
