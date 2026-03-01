@@ -333,11 +333,14 @@
       }
 
       .sx-trust {
-        padding: 20vh 4vw;
+        padding: clamp(72px, 12vh, 140px) 4vw clamp(64px, 10vh, 112px);
         background: #000;
       }
 
       .sx-trust-kicker {
+        display: block;
+        max-width: 1280px;
+        margin: 0 auto;
         font-size: 0.6rem;
         letter-spacing: 0.4em;
         color: var(--sx-gold);
@@ -345,36 +348,39 @@
       }
 
       .sx-trust-grid {
-        margin-top: 10vh;
+        margin: clamp(40px, 6vh, 72px) auto 0;
+        max-width: 1280px;
         display: grid;
-        grid-template-columns: repeat(12, 1fr);
-        gap: 2vw;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: clamp(12px, 1.4vw, 20px);
+        align-items: stretch;
       }
 
       .sx-trust-card {
         background: #050505;
         border: 1px solid #111;
-        padding: 4vw;
+        padding: clamp(24px, 2.8vw, 48px);
         position: relative;
         overflow: hidden;
+        min-height: 260px;
       }
 
       .sx-trust-card:nth-child(1) {
-        grid-column: 1 / 6;
-        transform: translateY(50px);
+        grid-column: 1 / 5;
+        transform: translateY(8px);
       }
 
       .sx-trust-card:nth-child(2) {
-        grid-column: 5 / 10;
-        margin-top: -100px;
+        grid-column: 5 / 9;
+        margin-top: -18px;
         z-index: 2;
         background: #0a0a0a;
         border-color: #222;
       }
 
       .sx-trust-card:nth-child(3) {
-        grid-column: 8 / 13;
-        transform: translateY(150px);
+        grid-column: 9 / 13;
+        transform: translateY(16px);
       }
 
       .sx-trust-icon {
@@ -399,20 +405,24 @@
       }
 
       .sx-archives {
-        padding: 20vh 4vw;
+        padding: clamp(72px, 12vh, 140px) 4vw;
       }
 
       .sx-archives h2 {
+        max-width: 1280px;
+        margin: 0 auto clamp(36px, 6vh, 72px);
         font-size: clamp(3rem, 6vw, 6rem);
         line-height: 1;
-        margin-bottom: 10vh;
       }
 
       .sx-archives-gallery {
+        max-width: 1280px;
+        margin: 0 auto;
         display: grid;
-        grid-template-columns: repeat(12, 1fr);
-        grid-auto-rows: minmax(100px, auto);
-        gap: 2vw;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        grid-template-rows: repeat(2, minmax(240px, 1fr));
+        gap: clamp(12px, 1.4vw, 20px);
+        min-height: 640px;
         position: relative;
       }
 
@@ -420,6 +430,11 @@
         position: relative;
         cursor: pointer;
         transition: filter 0.5s ease;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: #050505;
+        overflow: hidden;
+        height: 100%;
+        min-height: 0;
       }
 
       .sx-arch-item img {
@@ -432,54 +447,44 @@
 
       .sx-arch-item.i1 {
         grid-column: 1 / 8;
-        grid-row: 1 / 5;
+        grid-row: 1 / 3;
         z-index: 1;
+        transform: translateY(8px);
       }
 
       .sx-arch-item.i2 {
-        grid-column: 6 / 13;
-        grid-row: 3 / 7;
+        grid-column: 8 / 13;
+        grid-row: 1 / 2;
         z-index: 2;
-        margin-top: -5vw;
+        transform: translateY(-10px);
       }
 
       .sx-arch-item.i3 {
-        grid-column: 2 / 7;
-        grid-row: 6 / 9;
+        grid-column: 8 / 13;
+        grid-row: 2 / 3;
         z-index: 3;
-        margin-top: -10vw;
+        transform: translateY(10px);
       }
 
       .sx-arch-label {
         position: absolute;
+        top: 14px;
+        left: 14px;
         font-family: 'Space Grotesk', sans-serif;
-        font-size: 0.6rem;
-        letter-spacing: 0.4em;
+        font-size: 0.58rem;
+        letter-spacing: 0.28em;
         text-transform: uppercase;
         color: var(--sx-gold-light);
         z-index: 10;
         pointer-events: none;
-      }
-
-      .i1 .sx-arch-label {
-        top: -20px;
-        right: -50px;
-      }
-
-      .i2 .sx-arch-label {
-        bottom: 20px;
-        left: -80px;
-        transform: rotate(-90deg);
-        transform-origin: left bottom;
-      }
-
-      .i3 .sx-arch-label {
-        top: 50%;
-        right: -100px;
+        background: rgba(0, 0, 0, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(4px);
+        padding: 6px 10px;
       }
 
       .sx-archives-gallery:hover .sx-arch-item {
-        filter: brightness(30%);
+        filter: brightness(0.65);
       }
 
       .sx-archives-gallery .sx-arch-item:hover {
@@ -495,7 +500,7 @@
 
       .sx-muse {
         position: relative;
-        padding: 30vh 4vw;
+        padding: 18vh 4vw;
         background: linear-gradient(to bottom, #000, #1a100c, #000);
         text-align: center;
         overflow: hidden;
@@ -553,7 +558,7 @@
       }
 
       .sx-footer {
-        padding: 10vh 4vw 2vh;
+        padding: 8vh 4vw 2vh;
         background: #000;
         display: flex;
         flex-direction: column;
@@ -600,10 +605,36 @@
       }
 
       @media (max-width: 768px) {
+        .sx-topbar {
+          padding: 24px 5vw;
+        }
+
+        .sx-hero h1 {
+          letter-spacing: 0.12em;
+        }
+
+        .sx-explore-btn {
+          width: 130px;
+          height: 130px;
+          font-size: 0.52rem;
+        }
+
+        .sx-trust-grid {
+          grid-template-columns: 1fr;
+        }
+
         .sx-trust-card:nth-child(n) {
           grid-column: 1 / -1;
           transform: none;
           margin-top: 0;
+          min-height: auto;
+        }
+
+        .sx-archives-gallery {
+          grid-template-columns: 1fr;
+          grid-template-rows: none;
+          min-height: 0;
+          gap: 16px;
         }
 
         .sx-arch-item.i1,
@@ -612,17 +643,19 @@
           grid-column: 1 / -1;
           grid-row: auto;
           margin-top: 0;
+          transform: none;
+          min-height: 260px;
         }
 
         .sx-arch-label {
-          position: relative;
-          top: 0 !important;
-          right: 0 !important;
-          bottom: 0 !important;
-          left: 0 !important;
+          top: 12px !important;
+          left: 12px !important;
+          right: auto !important;
+          bottom: auto !important;
           transform: none !important;
-          display: block;
-          margin-bottom: 10px;
+          margin-bottom: 0;
+          font-size: 0.55rem;
+          letter-spacing: 0.26em;
         }
 
         .sx-fab {
@@ -706,17 +739,17 @@
         <div class="sx-archives-gallery">
           <div class="sx-arch-item i1">
             <div class="sx-arch-label" data-i18n="cat1Title">Intimates</div>
-            <img src="https://images.unsplash.com/photo-1572913017567-02f0649bedf9?q=80&w=1200&auto=format&fit=crop" alt="Intimates" />
+            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1200&auto=format&fit=crop" alt="Intimates" />
           </div>
 
           <div class="sx-arch-item i2">
             <div class="sx-arch-label" data-i18n="cat2Title">Hosiery</div>
-            <img src="https://images.unsplash.com/photo-1552874869-5c39ec9288dc?q=80&w=800&auto=format&fit=crop" alt="Hosiery" />
+            <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=900&auto=format&fit=crop" alt="Hosiery" />
           </div>
 
           <div class="sx-arch-item i3">
             <div class="sx-arch-label" data-i18n="cat3Title">Footwear</div>
-            <img src="https://images.unsplash.com/photo-1542280281-7ceac96cb9a4?q=80&w=800&auto=format&fit=crop" alt="Footwear" />
+            <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=900&auto=format&fit=crop" alt="Footwear" />
           </div>
         </div>
       </section>
