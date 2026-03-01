@@ -464,22 +464,18 @@ function bindEvents() {
         validateForm(true);
     });
     const privacyCard = document.getElementById('privacyCard');
-    privacyCard.addEventListener('click', () => {
-        state.discreet = !state.discreet;
-        renderDiscreet();
-        persistProfile();
-    });
-    privacyCard.addEventListener('keydown', (event) => {
-        if (event.key !== 'Enter' && event.key !== ' ')
+    const discreetInput = document.getElementById('discreet');
+    privacyCard?.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!discreetInput || target?.closest('input'))
             return;
-        event.preventDefault();
         state.discreet = !state.discreet;
+        discreetInput.checked = state.discreet;
         renderDiscreet();
         persistProfile();
     });
-    document.getElementById('discreet')?.addEventListener('click', (event) => {
-        event.stopPropagation();
-        state.discreet = !state.discreet;
+    discreetInput?.addEventListener('change', (event) => {
+        state.discreet = event.currentTarget.checked;
         renderDiscreet();
         persistProfile();
     });

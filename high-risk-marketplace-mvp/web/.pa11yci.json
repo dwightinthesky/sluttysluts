@@ -1,0 +1,30 @@
+{
+  "defaults": {
+    "runners": ["axe"],
+    "timeout": 30000,
+    "wait": 500,
+    "ignore": ["color-contrast"],
+    "axe": {
+      "runOnly": {
+        "type": "tag",
+        "values": ["wcag2a", "wcag2aa"]
+      }
+    },
+    "chromeLaunchConfig": {
+      "args": [
+        "--headless=new",
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage"
+      ]
+    }
+  },
+  "urls": [
+    "http://127.0.0.1:4173/index.html",
+    "http://127.0.0.1:4173/app.html?role=customer&lang=en",
+    "http://127.0.0.1:4173/checkout.html?lang=en",
+    "http://127.0.0.1:4173/product-detail.html?lang=en",
+    "http://127.0.0.1:4173/getting-started.html?lang=en"
+  ],
+  "threshold": 0
+}

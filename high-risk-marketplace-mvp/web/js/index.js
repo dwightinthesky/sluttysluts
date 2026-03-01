@@ -345,8 +345,15 @@ function setMobileMenu(open) {
     document.body.classList.toggle('menu-open', open);
     if (mobileMenuToggle)
         mobileMenuToggle.setAttribute('aria-expanded', String(open));
-    if (mobileDrawer)
-        mobileDrawer.setAttribute('aria-hidden', String(!open));
+    if (mobileDrawer) {
+        mobileDrawer.hidden = !open;
+        if (open) {
+            mobileDrawer.removeAttribute('inert');
+        }
+        else {
+            mobileDrawer.setAttribute('inert', '');
+        }
+    }
     if (mobileMenuBackdrop)
         mobileMenuBackdrop.hidden = !open;
 }

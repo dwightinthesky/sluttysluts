@@ -5,13 +5,13 @@
 
 :root {
   --brand-bg: #050507;
-  --brand-surface: rgba(11, 12, 16, 0.82);
-  --brand-surface-soft: rgba(19, 21, 30, 0.74);
-  --brand-line: rgba(255, 255, 255, 0.12);
-  --brand-line-strong: rgba(255, 255, 255, 0.22);
+  --brand-surface: rgba(9, 10, 14, 0.9);
+  --brand-surface-soft: rgba(16, 19, 28, 0.86);
+  --brand-line: rgba(255, 255, 255, 0.2);
+  --brand-line-strong: rgba(255, 255, 255, 0.34);
   --brand-ink: #f5f7fb;
-  --brand-muted: #99a4b7;
-  --brand-muted-soft: #b8c0cf;
+  --brand-muted: #c6d0df;
+  --brand-muted-soft: #e1e7f2;
   --brand-accent: #e11d48;
   --brand-accent-soft: rgba(225, 29, 72, 0.22);
   --brand-blue-soft: rgba(59, 130, 246, 0.2);
@@ -80,7 +80,7 @@ body[data-brand-system='1'] .brand-title {
 body[data-brand-system='1'] .brand p,
 body[data-brand-system='1'] .left .sub,
 body[data-brand-system='1'] .brand-sub {
-  color: var(--brand-muted) !important;
+  color: var(--brand-muted-soft) !important;
 }
 
 /* ---------- Controls ---------- */
@@ -116,9 +116,9 @@ body[data-brand-system='1'] .btn.primary {
 }
 
 body[data-brand-system='1'] .btn.soft {
-  background: var(--brand-accent-soft) !important;
-  border-color: rgba(244, 63, 94, 0.4) !important;
-  color: #fda4af !important;
+  background: linear-gradient(145deg, #6f1c34, #be123c) !important;
+  border-color: rgba(251, 113, 133, 0.54) !important;
+  color: #fff !important;
 }
 
 body[data-brand-system='1'] .btn.creator {
@@ -184,7 +184,17 @@ body[data-brand-system='1'] .hint,
 body[data-brand-system='1'] .sub,
 body[data-brand-system='1'] .item-seller,
 body[data-brand-system='1'] .seller-meta {
-  color: var(--brand-muted) !important;
+  color: var(--brand-muted-soft) !important;
+}
+
+body[data-brand-system='1'] a {
+  color: var(--brand-muted-soft);
+}
+
+body[data-brand-system='1'] .top-links a,
+body[data-brand-system='1'] .mobile-links a,
+body[data-brand-system='1'] .footer {
+  color: var(--brand-muted-soft) !important;
 }
 
 body[data-brand-system='1'] .section-title,
@@ -201,18 +211,20 @@ body[data-brand-system='1'] .panel-title {
 
 /* ---------- Landing page ---------- */
 body[data-brand-system='1'][data-page='landing'] .hero-logo {
-  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  color: #fff;
+  text-shadow: 0 10px 26px rgba(0, 0, 0, 0.72);
 }
 
 body[data-brand-system='1'][data-page='landing'] .hero-pill {
-  background: rgba(12, 13, 17, 0.76);
+  color: #fff;
+  background: rgba(7, 8, 12, 0.9);
   border: 1px solid var(--brand-line);
 }
 
 body[data-brand-system='1'][data-page='landing'] .panel-content {
   padding: 22px;
   border-radius: 16px;
-  background: linear-gradient(180deg, rgba(6, 7, 10, 0.22), rgba(6, 7, 10, 0.66));
+  background: linear-gradient(180deg, rgba(6, 7, 10, 0.58), rgba(6, 7, 10, 0.9));
 }
 
 body[data-brand-system='1'][data-page='landing'] .panel-link {
@@ -223,6 +235,20 @@ body[data-brand-system='1'][data-page='landing'] .panel-link {
   align-items: center;
   gap: 8px;
   background: rgba(10, 11, 16, 0.72);
+}
+
+body[data-brand-system='1'][data-page='landing'] .panel-kicker,
+body[data-brand-system='1'][data-page='landing'] .panel-title span,
+body[data-brand-system='1'][data-page='landing'] .panel-title em,
+body[data-brand-system='1'][data-page='landing'] .panel-copy,
+body[data-brand-system='1'][data-page='landing'] .hero-stat strong,
+body[data-brand-system='1'][data-page='landing'] .hero-stat span {
+  color: #fff !important;
+}
+
+body[data-brand-system='1'][data-page='landing'] .hero-stat {
+  background: rgba(6, 7, 12, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.26) !important;
 }
 
 body[data-brand-system='1'][data-page='landing'] .hero-stat strong {

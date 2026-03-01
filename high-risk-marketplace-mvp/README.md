@@ -157,6 +157,9 @@ npm run build:ts
 
 ### Web 品質閘門（企業級）
 - UI 契約檢查腳本：`web/scripts/check-ui-contract.mjs`
+- Lighthouse 規格：`web/lighthouserc.json`
+- WCAG AA 稽核：`web/.pa11yci.json`
+- 註：深色品牌頁的色彩對比採人工審查，`pa11y` 自動檢查目前排除 `color-contrast` 規則
 - 本機一鍵品質檢查：
 ```bash
 cd web

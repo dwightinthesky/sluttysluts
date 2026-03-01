@@ -1,8 +1,10 @@
 # Node
 backend/node_modules/
+web/node_modules/
 
 # Local runtime data
 backend/data/dev-db.json
+web/.lighthouseci/
 
 # OS
 .DS_Store

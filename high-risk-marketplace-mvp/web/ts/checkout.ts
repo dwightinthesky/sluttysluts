@@ -497,22 +497,18 @@
         });
 
         const privacyCard = document.getElementById('privacyCard');
-        privacyCard.addEventListener('click', () => {
+        const discreetInput = document.getElementById('discreet') as HTMLInputElement | null;
+        privacyCard?.addEventListener('click', (event) => {
+          const target = event.target as HTMLElement | null;
+          if (!discreetInput || target?.closest('input')) return;
           state.discreet = !state.discreet;
-          renderDiscreet();
-          persistProfile();
-        });
-        privacyCard.addEventListener('keydown', (event) => {
-          if (event.key !== 'Enter' && event.key !== ' ') return;
-          event.preventDefault();
-          state.discreet = !state.discreet;
+          discreetInput.checked = state.discreet;
           renderDiscreet();
           persistProfile();
         });
 
-        document.getElementById('discreet')?.addEventListener('click', (event) => {
-          event.stopPropagation();
-          state.discreet = !state.discreet;
+        discreetInput?.addEventListener('change', (event) => {
+          state.discreet = (event.currentTarget as HTMLInputElement).checked;
           renderDiscreet();
           persistProfile();
         });

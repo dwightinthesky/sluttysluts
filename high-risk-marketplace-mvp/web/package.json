@@ -6,9 +6,15 @@
     "build:ts": "tsc -p tsconfig.json",
     "watch:ts": "tsc -p tsconfig.json --watch",
     "quality:ui-contract": "node ./scripts/check-ui-contract.mjs",
-    "quality:all": "npm run build:ts && npm run quality:ui-contract"
+    "quality:lighthouse": "lhci autorun --config=./lighthouserc.json",
+    "quality:a11y": "pa11y-ci --config ./.pa11yci.json",
+    "quality:ux": "start-server-and-test \"python3 -m http.server 4173\" http://127.0.0.1:4173 \"npm run quality:lighthouse && npm run quality:a11y\"",
+    "quality:all": "npm run build:ts && npm run quality:ui-contract && npm run quality:ux"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.15.1",
+    "pa11y-ci": "^3.1.0",
+    "start-server-and-test": "^2.1.2",
     "typescript": "^5.9.2"
   }
 }

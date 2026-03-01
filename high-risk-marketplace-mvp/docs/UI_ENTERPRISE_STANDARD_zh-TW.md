@@ -39,7 +39,21 @@
   1. `npm ci`
   2. `npm run build:ts`
   3. `npm run quality:ui-contract`
+  4. `npm run quality:ux`（Lighthouse + WCAG2AA）
 - 部署流程（`deploy-pages.yml`）也會先跑同一組品質檢查。
+
+### Lighthouse 基準
+- 檔案：`web/lighthouserc.json`
+- 主要門檻：
+  - Performance >= 0.65
+  - Accessibility >= 0.90
+  - Best Practices >= 0.90
+
+### WCAG AA 稽核
+- 工具：`pa11y-ci`
+- 設定檔：`web/.pa11yci.json`
+- 規範：`axe + WCAG2A/WCAG2AA tags`
+- 自動化 gate 先排除 `color-contrast` 規則（深色品牌視覺需另做人工對比審查）
 
 ## 本機驗證
 ```bash

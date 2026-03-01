@@ -1357,8 +1357,8 @@
               <h3 data-i18n="customerTitle">Customer listing desk</h3>
               <p data-i18n="customerSub">Search inventory, select listing, and generate pending order request.</p>
               <div class="row" style="margin-top: 10px">
-                <input id="searchInput" class="input" style="flex: 1" placeholder="Search listings" />
-                <select id="filterSelect" class="select">
+                <input id="searchInput" class="input" style="flex: 1" placeholder="Search listings" aria-label="Search listings" />
+                <select id="filterSelect" class="select" aria-label="Filter listings">
                   <option value="all">All</option>
                   <option value="promoted">Promoted</option>
                   <option value="organic">Organic</option>
@@ -1372,7 +1372,7 @@
               <h3 data-i18n="orderTitle">Order workspace</h3>
               <p data-i18n="orderSub">Creates pending order and returns hosted checkout URL.</p>
               <div class="row" style="margin-top: 10px">
-                <input id="selectedListing" class="input" style="flex: 1" placeholder="Listing ID" />
+                <input id="selectedListing" class="input" style="flex: 1" placeholder="Listing ID" aria-label="Selected listing ID" />
                 <button id="createOrderBtn" class="btn primary" data-i18n="btnCreateOrder">Create pending order</button>
               </div>
               <pre id="customerConsole" class="console" style="margin-top: 10px"></pre>
@@ -1434,11 +1434,11 @@
 
                 <div class="promo-field">
                   <label class="label" for="creatorListing" data-i18n="promoListingLabel">Select Listing</label>
-                  <select id="creatorListing" class="select" style="width: 100%"></select>
+                  <select id="creatorListing" class="select" style="width: 100%" aria-label="Creator listing selector"></select>
                 </div>
 
                 <div id="promoPlanOptions" class="promo-plan-list"></div>
-                <select id="planSelect" class="select" style="display: none"></select>
+                <select id="planSelect" class="select" hidden aria-hidden="true" tabindex="-1"></select>
 
                 <div class="promo-wallet-row">
                   <span data-i18n="promoWalletLabel">Pay from wallet balance</span>
@@ -1462,7 +1462,7 @@
                 </p>
                 <div class="row wallet-action-row">
                   <button id="walletRefresh" class="btn" data-i18n="btnWalletRefresh">Refresh wallet</button>
-                  <input id="withdrawAmount" class="input" value="20" style="width: 92px" />
+                  <input id="withdrawAmount" class="input" value="20" style="width: 92px" aria-label="Withdraw amount" />
                   <button id="withdrawBtn" class="btn primary" data-i18n="btnWithdraw">Withdraw</button>
                 </div>
                 <pre id="walletConsole" class="console compact"></pre>
@@ -1528,8 +1528,8 @@
                 <h3 data-i18n="webhookTitle">Webhook simulator</h3>
                 <p data-i18n="webhookSub">Post payment event callbacks to update order and payment state.</p>
                 <div class="row" style="margin-top: 10px">
-                  <input id="webhookOrder" class="input" style="flex: 1" placeholder="Order ID" />
-                  <select id="webhookStatus" class="select">
+                  <input id="webhookOrder" class="input" style="flex: 1" placeholder="Order ID" aria-label="Webhook order ID" />
+                  <select id="webhookStatus" class="select" aria-label="Webhook payment status">
                     <option value="paid">paid</option>
                     <option value="failed">failed</option>
                     <option value="chargeback">chargeback</option>
