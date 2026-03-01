@@ -24,6 +24,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: high-risk-marketplace-mvp/web/package-lock.json
+
+      - name: Install web dependencies
+        working-directory: high-risk-marketplace-mvp/web
+        run: npm ci
+
+      - name: Build web TypeScript and enforce UI contract
+        working-directory: high-risk-marketplace-mvp/web
+        run: npm run quality:all
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:

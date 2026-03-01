@@ -23,6 +23,7 @@
 - `docs/COMPLIANCE_CHECKLIST_zh-TW.md`：法遵與政策清單
 - `docs/RISK_REGISTER_zh-TW.md`：風險登錄與應對
 - `docs/ROADMAP_90D_zh-TW.md`：90 天落地路線圖
+- `docs/UI_ENTERPRISE_STANDARD_zh-TW.md`：前端企業級 UI/UX 規範與品質閘門
 - `api/openapi.yaml`：API 規格草案
 - `sql/schema.sql`：資料庫結構草案（PostgreSQL）
 - `ops/KPI_DASHBOARD_TEMPLATE_zh-TW.md`：營運儀表板模板
@@ -153,6 +154,17 @@ cd web
 npm install
 npm run build:ts
 ```
+
+### Web 品質閘門（企業級）
+- UI 契約檢查腳本：`web/scripts/check-ui-contract.mjs`
+- 本機一鍵品質檢查：
+```bash
+cd web
+npm run quality:all
+```
+- GitHub Actions：
+  - `.github/workflows/web-quality.yml`（PR / Push）
+  - `deploy-pages.yml` 會先跑同樣檢查再部署
 
 ### Docker（後端 API）
 ```bash

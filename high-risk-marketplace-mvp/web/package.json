@@ -4,7 +4,9 @@
   "version": "1.0.0",
   "scripts": {
     "build:ts": "tsc -p tsconfig.json",
-    "watch:ts": "tsc -p tsconfig.json --watch"
+    "watch:ts": "tsc -p tsconfig.json --watch",
+    "quality:ui-contract": "node ./scripts/check-ui-contract.mjs",
+    "quality:all": "npm run build:ts && npm run quality:ui-contract"
   },
   "devDependencies": {
     "typescript": "^5.9.2"
