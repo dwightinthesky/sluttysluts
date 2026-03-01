@@ -3,27 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SluttySluts Marketplace Platform</title>
+    <title>SCENTX | Private Collection Marketplace</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Space+Grotesk:wght@300;400;500;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="./styles/brand-system.css" />
     <style>
       :root {
-        --bg: #050506;
-        --ink: #f5f5f7;
-        --muted: #b0b3bb;
-        --line: rgba(255, 255, 255, 0.12);
-        --glass: rgba(10, 10, 12, 0.62);
-        --brand: #cf345f;
-        --brand-soft: #ffe9cf;
-        --customer: #8b99b8;
-        --creator: #cf345f;
-        --card: rgba(16, 17, 22, 0.8);
-        --shadow: 0 26px 56px rgba(0, 0, 0, 0.42);
-        --hero-ease: cubic-bezier(0.16, 1, 0.3, 1);
+        --sx-bg: #000000;
+        --sx-ink: #ffffff;
+        --sx-muted: #666666;
+        --sx-gold: #b88673;
+        --sx-gold-light: #e5b79f;
+        --sx-ease: cubic-bezier(0.8, 0, 0.1, 1);
       }
 
       * {
@@ -40,1195 +35,712 @@
         scroll-behavior: smooth;
       }
 
-      body {
-        font-family: 'Space Grotesk', sans-serif;
-        color: var(--ink);
-        background:
-          radial-gradient(circle at 10% 14%, rgba(158, 102, 198, 0.14), transparent 34%),
-          radial-gradient(circle at 90% 86%, rgba(207, 52, 95, 0.14), transparent 42%),
-          linear-gradient(180deg, #070709 0%, #050506 50%, #070709 100%);
-        min-height: 100vh;
+      body[data-brand-system='1'][data-page='landing-scentx'] {
+        background: var(--sx-bg) !important;
+        color: var(--sx-ink) !important;
+        font-family: 'Space Grotesk', sans-serif !important;
         overflow-x: hidden;
-        text-rendering: geometricPrecision;
-        -webkit-font-smoothing: antialiased;
       }
 
-      body::before {
+      body[data-brand-system='1'][data-page='landing-scentx'] p,
+      body[data-brand-system='1'][data-page='landing-scentx'] a,
+      body[data-brand-system='1'][data-page='landing-scentx'] h1,
+      body[data-brand-system='1'][data-page='landing-scentx'] h2,
+      body[data-brand-system='1'][data-page='landing-scentx'] h3,
+      body[data-brand-system='1'][data-page='landing-scentx'] span,
+      body[data-brand-system='1'][data-page='landing-scentx'] li,
+      body[data-brand-system='1'][data-page='landing-scentx'] button,
+      body[data-brand-system='1'][data-page='landing-scentx'] select {
+        font-family: inherit;
+      }
+
+      body[data-brand-system='1'][data-page='landing-scentx']::before {
         content: '';
         position: fixed;
         inset: 0;
-        z-index: -2;
+        z-index: 9999;
         pointer-events: none;
-        background-image: linear-gradient(rgba(255, 255, 255, 0.032) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.032) 1px, transparent 1px);
-        background-size: 30px 30px;
-        mask-image: radial-gradient(circle at center, black 44%, transparent 85%);
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+        opacity: 0.6;
       }
 
-      body::after {
-        content: '';
+      h1,
+      h2,
+      h3,
+      .sx-brand-main {
+        font-family: 'Cormorant Garamond', serif;
+        font-weight: 300;
+      }
+
+      .sx-wrap {
+        position: relative;
+      }
+
+      .sx-topbar {
         position: fixed;
-        inset: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 40px 4vw;
         z-index: 100;
-        pointer-events: none;
-        opacity: 0.16;
-        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.34) 0.5px, transparent 0.6px);
-        background-size: 4px 4px;
-        mix-blend-mode: soft-light;
-      }
-
-      .container {
-        width: min(1400px, calc(100% - 48px));
-        margin-inline: auto;
-      }
-
-      .top {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 80;
-        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.82), transparent);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-      }
-
-      .topbar {
-        min-height: 80px;
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        gap: 16px;
-        padding-block: 10px;
-        position: relative;
-      }
-
-      .topbar::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
-      }
-
-      .brand {
-        display: inline-flex;
-        flex-direction: column;
-        text-decoration: none;
-        color: inherit;
-      }
-
-      .brand-mark {
-        display: none;
-      }
-
-      .brand-title {
-        margin: 0;
-        font: 700 1.2rem/1 'Space Grotesk', sans-serif;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-      }
-
-      .brand-sub {
-        margin: 4px 0 0;
-        color: var(--muted);
-        font-size: 0.65rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-      }
-
-      .top-links {
-        display: inline-flex;
-        align-items: center;
-        gap: 30px;
-      }
-
-      .top-links a {
-        color: var(--muted);
-        text-decoration: none;
-        font-size: 0.75rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        transition: color 0.3s ease, opacity 0.3s ease;
-        opacity: 0.84;
-      }
-
-      .top-links a:hover {
-        color: #fff;
-        opacity: 1;
-      }
-
-      .controls {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-      }
-
-      .mobile-menu-toggle {
-        display: none;
-        align-items: center;
-        justify-content: center;
-        width: 42px;
-        height: 42px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        background: rgba(8, 8, 10, 0.7);
-        color: #f8fafc;
-        cursor: pointer;
-      }
-
-      .mobile-menu-toggle svg {
-        width: 18px;
-        height: 18px;
-      }
-
-      .mobile-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(2px);
-        z-index: 88;
-      }
-
-      .mobile-drawer {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: min(360px, 92vw);
-        height: 100dvh;
-        background: rgba(5, 5, 7, 0.94);
-        border-left: 1px solid rgba(255, 255, 255, 0.12);
-        z-index: 89;
-        padding: 88px 18px 24px;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        transform: translateX(110%);
-        transition: transform 0.35s var(--hero-ease);
-      }
-
-      body.menu-open .mobile-drawer {
-        transform: translateX(0);
-      }
-
-      .mobile-links {
-        display: grid;
-        gap: 8px;
-      }
-
-      .mobile-links a {
-        color: #f5f5f6;
-        text-decoration: none;
-        font-size: 0.86rem;
-        text-transform: uppercase;
-        letter-spacing: 0.14em;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 10px;
-        padding: 12px 14px;
-        background: rgba(255, 255, 255, 0.02);
-      }
-
-      .mobile-controls {
-        margin-top: 4px;
-        display: grid;
-        gap: 8px;
-      }
-
-      .mobile-controls .select,
-      .mobile-controls .btn {
-        width: 100%;
-        justify-content: center;
-      }
-
-      .quick-dock {
-        display: none;
-      }
-
-      .select,
-      .btn {
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        font: 600 0.72rem/1 'Space Grotesk', sans-serif;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .select {
-        padding: 10px 12px;
-        min-width: 102px;
-        color: var(--muted);
-        background: rgba(3, 3, 3, 0.3);
-        border: none;
-        cursor: pointer;
-      }
-
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        padding: 10px 14px;
-        color: #f7f7f8;
-        transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-      }
-
-      .btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
-      }
-
-      .btn.customer {
-        background: linear-gradient(140deg, #1b2238, #2e405f);
-        border-color: rgba(143, 164, 199, 0.42);
-      }
-
-      .btn.creator {
-        background: linear-gradient(145deg, #71263c, #c9305e);
-        border-color: rgba(255, 210, 214, 0.36);
-      }
-
-      .btn.ghost {
-        background: rgba(20, 20, 24, 0.82);
-      }
-
-      .hero {
-        --hero-left: 50%;
-        --hero-right: 50%;
-        margin-top: 0;
-        border-radius: 0;
-        border: 0;
-        overflow: hidden;
-        position: relative;
-        min-height: 100vh;
-        width: 100vw;
-        display: flex;
-        box-shadow: none;
-        background: #07080b;
-      }
-
-      .hero::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background:
-          radial-gradient(circle at 50% 22%, rgba(255, 255, 255, 0.06), transparent 50%),
-          linear-gradient(120deg, rgba(14, 16, 26, 0.14), rgba(207, 52, 95, 0.08));
-        z-index: 2;
-      }
-
-      .hero::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: 6;
-        opacity: 0.18;
-        mix-blend-mode: soft-light;
-        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0.45px, transparent 0.55px);
-        background-size: 3px 3px;
-      }
-
-      .hero-center {
-        position: absolute;
-        top: 100px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 20;
-        text-align: center;
-        pointer-events: none;
+        align-items: flex-start;
         mix-blend-mode: difference;
       }
 
-      .hero-pill {
-        display: inline-block;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background: rgba(5, 5, 8, 0.42);
-        padding: 6px 16px;
-        border-radius: 999px;
+      .sx-brand {
+        display: flex;
+        flex-direction: column;
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .sx-brand-main {
+        font-size: 1.5rem;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
+      }
+
+      .sx-brand-sub {
+        font-size: 0.5rem;
+        letter-spacing: 0.5em;
+        text-transform: uppercase;
+        margin-top: 4px;
+        opacity: 0;
+        transform: translateY(-5px);
+        transition: all 0.5s var(--sx-ease);
+      }
+
+      .sx-brand:hover .sx-brand-sub {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .sx-menu-trigger {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 0.6rem;
         letter-spacing: 0.3em;
-        font: 400 0.55rem/1 'Space Grotesk', sans-serif;
+        text-transform: uppercase;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Space Grotesk', sans-serif;
+      }
+
+      .sx-menu-trigger::after {
+        content: '';
+        display: block;
+        width: 30px;
+        height: 1px;
+        background: currentColor;
+        transition: width 0.4s var(--sx-ease);
+      }
+
+      .sx-menu-trigger:hover::after {
+        width: 50px;
+      }
+
+      .sx-overlay-menu {
+        position: fixed;
+        inset: 0;
+        background: #050505;
+        z-index: 90;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 10vw;
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+        transition: clip-path 0.8s var(--sx-ease);
+      }
+
+      body.menu-open .sx-overlay-menu {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      }
+
+      .sx-overlay-menu nav {
+        display: flex;
+        flex-direction: column;
+        gap: 2vh;
+      }
+
+      .sx-overlay-menu a {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(3rem, 8vw, 7rem);
+        font-style: italic;
+        color: #333;
+        transition: color 0.4s ease, padding-left 0.4s var(--sx-ease);
+      }
+
+      .sx-overlay-menu a:hover {
+        color: var(--sx-gold-light);
+        padding-left: 40px;
+      }
+
+      .sx-overlay-controls {
+        margin-top: 10vh;
+        display: flex;
+        gap: 40px;
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+      }
+
+      .sx-overlay-controls select {
+        background: none;
+        border: none;
+        color: #999;
+        font-size: inherit;
+        letter-spacing: inherit;
+        text-transform: inherit;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .sx-overlay-controls option {
+        color: #fff;
+        background: #0a0a0a;
+      }
+
+      .sx-fab {
+        position: fixed;
+        bottom: 40px;
+        right: 4vw;
+        z-index: 95;
+        display: flex;
+        align-items: center;
+        background: var(--sx-gold);
+        color: #000;
+        border-radius: 999px;
+        padding: 15px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: all 0.5s var(--sx-ease);
+        text-decoration: none;
+      }
+
+      .sx-fab-icon {
+        font-family: sans-serif;
+        font-weight: 300;
+        font-size: 1.2rem;
+        line-height: 1;
+        width: 20px;
+        text-align: center;
+      }
+
+      .sx-fab-text {
+        max-width: 0;
+        opacity: 0;
+        white-space: nowrap;
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        transition: all 0.5s var(--sx-ease);
+      }
+
+      .sx-fab:hover {
+        padding: 15px 25px;
+        background: #fff;
+      }
+
+      .sx-fab:hover .sx-fab-text {
+        max-width: 200px;
+        opacity: 1;
+        margin-left: 15px;
+      }
+
+      .sx-hero {
+        height: 100vh;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .sx-hero-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: url('https://images.unsplash.com/photo-1583766395091-2eb9994ed094?q=80&w=2500&auto=format&fit=crop') center/cover;
+        filter: grayscale(100%) contrast(120%) brightness(40%);
+        animation: slowZoom 20s linear infinite alternate;
+      }
+
+      .sx-hero-content {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        padding: 0 4vw;
+      }
+
+      .sx-hero h1 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 4rem);
+        color: #fff;
+        line-height: 0.9;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+      }
+
+      .sx-hero h1 em {
+        display: block;
+        font-size: clamp(4rem, 15vw, 12rem);
+        color: var(--sx-gold);
+        text-transform: lowercase;
+        margin-left: -5vw;
+      }
+
+      .sx-explore-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: clamp(150px, 20vw, 300px);
+        height: clamp(150px, 20vw, 300px);
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.6rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        backdrop-filter: blur(5px);
+        transition: all 0.6s var(--sx-ease);
         color: #fff;
       }
 
-      .hero-logo {
-        margin-top: 16px;
-        font: 700 clamp(1.2rem, 2vw, 1.8rem) / 1 'Space Grotesk', sans-serif;
-        letter-spacing: 0.5em;
+      .sx-explore-btn:hover {
+        background: rgba(184, 134, 115, 0.1);
+        border-color: var(--sx-gold);
+        transform: translate(-50%, -50%) scale(1.1);
       }
 
-      .hero-logo span {
-        display: inline-block;
-        color: var(--brand-soft);
-        text-shadow: 0 0 16px rgba(244, 211, 216, 0.24);
+      .sx-hero-bottom-cta {
+        position: absolute;
+        bottom: 40px;
+        left: 4vw;
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--sx-muted);
+        border-bottom: 1px solid var(--sx-muted);
+        padding-bottom: 5px;
       }
 
-      .hero-panel {
+      .sx-trust {
+        padding: 20vh 4vw;
+        background: #000;
+      }
+
+      .sx-trust-kicker {
+        font-size: 0.6rem;
+        letter-spacing: 0.4em;
+        color: var(--sx-gold);
+        text-transform: uppercase;
+      }
+
+      .sx-trust-grid {
+        margin-top: 10vh;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 2vw;
+      }
+
+      .sx-trust-card {
+        background: #050505;
+        border: 1px solid #111;
+        padding: 4vw;
         position: relative;
-        flex: 0 0 50%;
-        min-width: 0;
-        transition: flex-basis 0.78s var(--hero-ease);
         overflow: hidden;
-        isolation: isolate;
       }
 
-      .hero-panel::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 20%);
-        opacity: 0.45;
+      .sx-trust-card:nth-child(1) {
+        grid-column: 1 / 6;
+        transform: translateY(50px);
       }
 
-      .hero-panel.customer-panel {
-        flex-basis: var(--hero-left);
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      .sx-trust-card:nth-child(2) {
+        grid-column: 5 / 10;
+        margin-top: -100px;
+        z-index: 2;
+        background: #0a0a0a;
+        border-color: #222;
       }
 
-      .hero-panel.creator-panel {
-        flex-basis: var(--hero-right);
+      .sx-trust-card:nth-child(3) {
+        grid-column: 8 / 13;
+        transform: translateY(150px);
       }
 
-      body[data-active-role='customer'] .hero {
-        --hero-left: 72%;
-        --hero-right: 28%;
+      .sx-trust-icon {
+        font-size: 2rem;
+        color: var(--sx-gold);
+        margin-bottom: 30px;
+        font-weight: 100;
       }
 
-      body[data-active-role='creator'] .hero {
-        --hero-left: 28%;
-        --hero-right: 72%;
+      .sx-trust-card h3 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: clamp(1rem, 2vw, 1.5rem);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 20px;
       }
 
-      .hero-panel + .hero-panel {
-        border-left: 0;
+      .sx-trust-card p {
+        color: var(--sx-muted);
+        font-size: 0.85rem;
+        line-height: 1.6;
       }
 
-      .panel-image {
-        position: absolute;
-        inset: 0;
+      .sx-archives {
+        padding: 20vh 4vw;
+      }
+
+      .sx-archives h2 {
+        font-size: clamp(3rem, 6vw, 6rem);
+        line-height: 1;
+        margin-bottom: 10vh;
+      }
+
+      .sx-archives-gallery {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-auto-rows: minmax(100px, auto);
+        gap: 2vw;
+        position: relative;
+      }
+
+      .sx-arch-item {
+        position: relative;
+        cursor: pointer;
+        transition: filter 0.5s ease;
+      }
+
+      .sx-arch-item img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        filter: grayscale(1) contrast(1.08) brightness(0.2);
-        transform: scale(1.08);
-        transition: transform 0.78s var(--hero-ease), opacity 0.64s var(--hero-ease), filter 0.64s var(--hero-ease);
-        opacity: 0.38;
+        filter: grayscale(80%) brightness(60%);
+        transition: all 0.8s var(--sx-ease);
       }
 
-      body[data-active-role='customer'] .customer-panel .panel-image,
-      body[data-active-role='creator'] .creator-panel .panel-image {
-        opacity: 0.82;
-        filter: grayscale(0.18) contrast(1.2) brightness(0.48);
-        transform: scale(1.04);
+      .sx-arch-item.i1 {
+        grid-column: 1 / 8;
+        grid-row: 1 / 5;
+        z-index: 1;
       }
 
-      .panel-tint {
+      .sx-arch-item.i2 {
+        grid-column: 6 / 13;
+        grid-row: 3 / 7;
+        z-index: 2;
+        margin-top: -5vw;
+      }
+
+      .sx-arch-item.i3 {
+        grid-column: 2 / 7;
+        grid-row: 6 / 9;
+        z-index: 3;
+        margin-top: -10vw;
+      }
+
+      .sx-arch-label {
         position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 60%);
-      }
-
-      .customer-panel .panel-tint {
-        background:
-          linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 60%),
-          radial-gradient(circle at 18% 62%, rgba(92, 118, 192, 0.42), transparent 48%);
-      }
-
-      .creator-panel .panel-tint {
-        background:
-          linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 60%),
-          radial-gradient(circle at 84% 58%, rgba(207, 52, 95, 0.45), transparent 52%);
-      }
-
-      .panel-content {
-        position: absolute;
-        inset: auto 4vw 80px;
-        z-index: 7;
-        width: 100%;
-        max-width: none;
-        transition: opacity 0.48s var(--hero-ease), transform 0.48s var(--hero-ease);
-      }
-
-      .creator-panel .panel-content {
-        margin-left: auto;
-        text-align: right;
-      }
-
-      .panel-kicker {
-        margin: 0 0 16px;
-        text-transform: uppercase;
-        letter-spacing: 0.5em;
-        font-size: 0.6rem;
-        color: #c8cddf;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .panel-kicker::before {
-        content: '';
-        display: inline-block;
-        width: 40px;
-        height: 1px;
-        background: currentColor;
-        opacity: 0.7;
-      }
-
-      .creator-panel .panel-kicker {
-        color: #e11d48;
-        justify-content: flex-end;
-      }
-
-      .creator-panel .panel-kicker::before {
-        display: none;
-      }
-
-      .creator-panel .panel-kicker::after {
-        content: '';
-        display: inline-block;
-        width: 40px;
-        height: 1px;
-        background: currentColor;
-        opacity: 0.7;
-      }
-
-      .panel-title {
-        margin: 0;
-        font: 400 clamp(4rem, 8vw, 10rem) / 0.85 'Playfair Display', serif;
-        letter-spacing: -0.01em;
-        text-transform: uppercase;
-      }
-
-      .panel-title em {
-        font-style: italic;
-        color: var(--brand-soft);
-        text-shadow: 0 0 24px rgba(244, 211, 216, 0.18);
-      }
-
-      .panel-copy {
-        margin: 0;
-        color: #a1a1aa;
-        font-size: 0.95rem;
-        max-width: 42ch;
-        line-height: 1.6;
-        font-weight: 300;
-      }
-
-      .creator-panel .panel-copy {
-        margin-left: auto;
-      }
-
-      .panel-extra {
-        margin-top: 32px;
-        display: grid;
-        gap: 18px;
-        max-height: 0;
-        opacity: 0;
-        overflow: hidden;
-        transition: max-height 0.6s var(--hero-ease), opacity 0.42s var(--hero-ease);
-      }
-
-      body[data-active-role='customer'] .customer-panel .panel-extra,
-      body[data-active-role='creator'] .creator-panel .panel-extra {
-        max-height: 230px;
-        opacity: 1;
-      }
-
-      .panel-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        text-decoration: none;
-        color: #fff;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-        padding-bottom: 6px;
-        letter-spacing: 0.2em;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        width: fit-content;
-        transition: border-color 0.3s ease, color 0.3s ease;
-      }
-
-      .panel-link:hover {
-        border-color: #fff;
-        color: #fff;
-      }
-
-      .creator-panel .panel-link {
-        color: var(--brand-soft);
-        border-color: rgba(244, 211, 216, 0.3);
-      }
-
-      .creator-panel .panel-link:hover {
-        border-color: var(--brand-soft);
-      }
-
-      .panel-link svg {
-        width: 15px;
-        height: 15px;
-        transition: transform 0.28s var(--hero-ease);
-      }
-
-      .panel-link:hover svg {
-        transform: translateX(2px);
-      }
-
-      body[data-active-role='customer'] .creator-panel .panel-content,
-      body[data-active-role='creator'] .customer-panel .panel-content {
-        opacity: 0.3;
-        transform: translateY(20px);
-      }
-
-      body[data-active-role='customer'] .customer-panel .panel-content,
-      body[data-active-role='creator'] .creator-panel .panel-content {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      .hero-stats {
-        position: absolute;
-        z-index: 8;
-        left: 24px;
-        right: 24px;
-        bottom: 24px;
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-        pointer-events: none;
-      }
-
-      .hero-stat {
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        background: rgba(8, 10, 16, 0.52);
-        backdrop-filter: blur(12px);
-        border-radius: 13px;
-        padding: 11px 12px;
-        transition: border-color 0.25s ease, transform 0.25s ease;
-      }
-
-      .hero-stat:hover {
-        border-color: rgba(255, 255, 255, 0.28);
-        transform: translateY(-1px);
-      }
-
-      .hero-stat strong {
-        display: block;
-        font: 700 1.24rem/1 'Space Grotesk', sans-serif;
-      }
-
-      .hero-stat span {
-        display: block;
-        margin-top: 6px;
-        font-size: 0.78rem;
-        color: #c6cbda;
-      }
-
-      .hero-progress {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 9;
-        height: 2px;
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      .hero-progress > span {
-        display: block;
-        height: 100%;
-        width: 50%;
-        background: #fff;
-        transition: width 0.8s var(--hero-ease), background 0.8s ease;
-      }
-
-      body[data-active-role='creator'] .hero-progress > span {
-        background: #e11d48;
-      }
-
-      .section {
-        padding-block: 120px 60px;
-        border-top: 1px solid var(--line);
-      }
-
-      .section-head {
-        max-width: 900px;
-        margin-bottom: 80px;
-      }
-
-      .section-kicker {
-        margin: 0 0 24px;
-        text-transform: uppercase;
-        letter-spacing: 0.3em;
-        color: var(--muted);
-        font-size: 0.7rem;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-      }
-
-      .section-kicker::before {
-        content: '';
-        width: 40px;
-        height: 1px;
-        background: var(--muted);
-      }
-
-      .section-title {
-        margin: 0;
-        font: 400 clamp(2.5rem, 5vw, 4.5rem) / 1.1 'Playfair Display', serif;
-      }
-
-      .section-copy {
-        margin: 24px 0 0;
-        color: #a1a1aa;
-        max-width: 50ch;
-        line-height: 1.8;
-        font-size: 1.1rem;
-        font-weight: 300;
-      }
-
-      .editorial-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 60px 40px;
-      }
-
-      .editorial-item {
-        position: relative;
-        padding-top: 24px;
-        border-top: 1px solid rgba(255, 255, 255, 0.15);
-        transition: transform 0.28s var(--hero-ease), border-color 0.28s var(--hero-ease);
-      }
-
-      .editorial-item:hover {
-        transform: translateY(-2px);
-        border-color: rgba(255, 255, 255, 0.3);
-      }
-
-      .editorial-num {
         font-family: 'Space Grotesk', sans-serif;
-        font-size: 0.8rem;
-        color: var(--muted);
-        margin-bottom: 16px;
-        display: block;
-      }
-
-      .editorial-item h3 {
-        margin: 0 0 16px;
-        font: 400 1.8rem/1.2 'Playfair Display', serif;
-      }
-
-      .editorial-item p {
-        margin: 0;
-        color: #a1a1aa;
-        line-height: 1.6;
-        font-weight: 300;
-        font-size: 0.95rem;
-      }
-
-      .flows {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2px;
-        background: var(--line);
-      }
-
-      .flow {
-        background: var(--bg);
-        padding: 60px 40px;
-        transition: background 0.25s ease;
-      }
-
-      .flow:hover {
-        background: rgba(11, 11, 14, 0.92);
-      }
-
-      .flow h3 {
-        margin: 0 0 16px;
-        font: 400 2.5rem/1.1 'Playfair Display', serif;
-      }
-
-      .flow p {
-        color: #a1a1aa;
-        font-weight: 300;
-        line-height: 1.6;
-      }
-
-      .flow ul {
-        margin: 32px 0;
-        padding: 0;
-        list-style: none;
-      }
-
-      .flow li {
-        padding-block: 16px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        color: #e4e4e7;
-        font-size: 0.95rem;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .flow li::before {
-        content: '→';
-        color: var(--muted);
-      }
-
-      .flow .btn {
-        margin-top: 14px;
-      }
-
-      .flow.creator {
-        background: var(--bg);
-      }
-
-      .flow.creator .panel-link {
-        color: #e11d48;
-        border-color: rgba(225, 29, 72, 0.3);
-      }
-
-      .flow.creator .panel-link:hover {
-        border-color: #e11d48;
-      }
-
-      .cta {
-        text-align: center;
-        padding-block: 120px;
-        margin-block: 0;
-        border: 0;
-        background: transparent;
-        border-radius: 0;
-        display: block;
-      }
-
-      .cta h3 {
-        margin: 0 0 24px;
-        font: 400 3rem/1.1 'Playfair Display', serif;
-      }
-
-      .cta p {
-        color: #a1a1aa;
-        max-width: 500px;
-        margin: 0 auto 40px;
-      }
-
-      .cta .controls {
-        justify-content: center;
-      }
-
-      .footer {
-        padding: 24px 0;
-        text-align: center;
-        color: #52525b;
-        font-size: 0.75rem;
-        letter-spacing: 0.1em;
+        font-size: 0.6rem;
+        letter-spacing: 0.4em;
         text-transform: uppercase;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--sx-gold-light);
+        z-index: 10;
+        pointer-events: none;
       }
 
-      .reveal {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.8s var(--hero-ease), transform 0.8s var(--hero-ease);
+      .i1 .sx-arch-label {
+        top: -20px;
+        right: -50px;
       }
 
-      .reveal.show {
-        opacity: 1;
-        transform: translateY(0);
+      .i2 .sx-arch-label {
+        bottom: 20px;
+        left: -80px;
+        transform: rotate(-90deg);
+        transform-origin: left bottom;
       }
 
-      @media (max-width: 1160px) {
-        .top-links {
-          display: none;
+      .i3 .sx-arch-label {
+        top: 50%;
+        right: -100px;
+      }
+
+      .sx-archives-gallery:hover .sx-arch-item {
+        filter: brightness(30%);
+      }
+
+      .sx-archives-gallery .sx-arch-item:hover {
+        filter: brightness(100%);
+        z-index: 10;
+      }
+
+      .sx-arch-item:hover img {
+        filter: grayscale(0%) brightness(100%);
+        transform: scale(1.03);
+        box-shadow: 0 0 50px rgba(184, 134, 115, 0.2);
+      }
+
+      .sx-muse {
+        position: relative;
+        padding: 30vh 4vw;
+        background: linear-gradient(to bottom, #000, #1a100c, #000);
+        text-align: center;
+        overflow: hidden;
+      }
+
+      .sx-muse::before {
+        content: 'X';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: sans-serif;
+        font-size: 150vw;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.02);
+        line-height: 1;
+        mix-blend-mode: overlay;
+        pointer-events: none;
+      }
+
+      .sx-muse h2 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        margin: 0 0 5vh;
+        position: relative;
+        z-index: 1;
+      }
+
+      .sx-muse h2 em {
+        display: block;
+        font-size: clamp(3rem, 8vw, 6rem);
+        color: var(--sx-gold-light);
+      }
+
+      .sx-muse-cta {
+        display: inline-flex;
+        width: clamp(120px, 15vw, 200px);
+        height: clamp(120px, 15vw, 200px);
+        background: var(--sx-gold);
+        color: #000;
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        font-weight: bold;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        z-index: 1;
+      }
+
+      .sx-muse-cta:hover {
+        transform: scale(1.1);
+        background: #fff;
+      }
+
+      .sx-footer {
+        padding: 10vh 4vw 2vh;
+        background: #000;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      .sx-footer-giant {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 22vw;
+        line-height: 0.7;
+        color: var(--sx-gold);
+        opacity: 0.1;
+        margin: 0;
+        white-space: nowrap;
+        user-select: none;
+      }
+
+      .sx-footer-bottom {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 20px;
+        margin-top: 5vh;
+        font-size: 0.55rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #555;
+      }
+
+      .sx-footer-links {
+        display: flex;
+        gap: 30px;
+      }
+
+      @keyframes slowZoom {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.1);
         }
       }
 
-      @media (max-width: 980px) {
-        .container {
-          width: calc(100% - 26px);
+      @media (max-width: 768px) {
+        .sx-trust-card:nth-child(n) {
+          grid-column: 1 / -1;
+          transform: none;
+          margin-top: 0;
         }
 
-        .controls {
-          display: none;
+        .sx-arch-item.i1,
+        .sx-arch-item.i2,
+        .sx-arch-item.i3 {
+          grid-column: 1 / -1;
+          grid-row: auto;
+          margin-top: 0;
         }
 
-        .mobile-menu-toggle {
-          display: inline-flex;
+        .sx-arch-label {
+          position: relative;
+          top: 0 !important;
+          right: 0 !important;
+          bottom: 0 !important;
+          left: 0 !important;
+          transform: none !important;
+          display: block;
+          margin-bottom: 10px;
         }
 
-        .hero {
-          min-height: 100vh;
-          flex-direction: column;
-        }
-
-        .hero-panel,
-        body[data-active-role='customer'] .hero-panel.customer-panel,
-        body[data-active-role='customer'] .hero-panel.creator-panel,
-        body[data-active-role='creator'] .hero-panel.customer-panel,
-        body[data-active-role='creator'] .hero-panel.creator-panel {
-          flex: 1 1 auto;
-        }
-
-        .hero-panel {
-          min-height: 50vh;
-        }
-
-        .hero-panel + .hero-panel {
-          border-left: 0;
-          border-top: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .hero-center {
-          top: 90px;
-        }
-
-        .hero-stats {
-          position: static;
-          margin: 12px;
-          pointer-events: auto;
-        }
-
-        .panel-extra {
-          max-height: 220px;
-          opacity: 1;
-        }
-
-        .editorial-list,
-        .flows {
-          grid-template-columns: 1fr;
-        }
-
-        .cta {
-          padding-block: 96px;
-        }
-      }
-
-      @media (max-width: 760px) {
-        .topbar {
-          min-height: 62px;
-          padding: 10px 0;
-          align-items: center;
-          flex-direction: row;
-        }
-
-        .brand-sub {
-          display: none;
-        }
-
-        .quick-dock {
-          position: fixed;
-          left: 12px;
-          right: 12px;
-          bottom: calc(12px + env(safe-area-inset-bottom));
-          z-index: 70;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 8px;
-          padding: 8px;
-          border-radius: 14px;
-          border: 1px solid rgba(255, 255, 255, 0.16);
-          background: rgba(5, 5, 7, 0.82);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-        }
-
-        .quick-dock .btn {
-          min-height: 40px;
-          font-size: 0.63rem;
-          padding: 8px 10px;
-        }
-
-        .hero-pill {
-          font-size: 0.57rem;
-          letter-spacing: 0.22em;
-        }
-
-        .panel-kicker {
-          letter-spacing: 0.26em;
-        }
-
-        .panel-content {
-          inset: auto 18px 40px;
-        }
-
-        .panel-copy {
-          font-size: 0.92rem;
-        }
-
-        .hero-stats {
-          grid-template-columns: 1fr;
-          gap: 7px;
+        .sx-fab {
+          right: 20px;
+          bottom: 20px;
         }
       }
     </style>
-    <link rel="stylesheet" href="./styles/brand-system.css" />
   </head>
-  <body data-brand-system="1" data-page="landing" data-active-role="customer">
-    <header class="top">
-      <div class="container topbar">
-        <a class="brand" href="#hero" aria-label="Homepage">
-          <span class="brand-mark">SS</span>
-          <span>
-            <h1 class="brand-title" data-i18n="brandTitle">SluttySluts Platform</h1>
-            <p class="brand-sub" data-i18n="brandSub">Private marketplace for creator commerce</p>
-          </span>
+  <body data-brand-system="1" data-page="landing-scentx">
+    <div class="topbar" hidden aria-hidden="true"></div>
+
+    <div class="sx-wrap">
+      <header class="sx-topbar">
+        <a href="#home" class="sx-brand">
+          <span class="sx-brand-main">SCENTX</span>
+          <span class="sx-brand-sub" data-i18n="brandSub">The Private Collection</span>
         </a>
+        <button id="menuTrigger" class="sx-menu-trigger" type="button" aria-expanded="false" aria-controls="overlayMenu">Menu</button>
+      </header>
 
-        <nav class="top-links">
-          <a href="#story" data-i18n="navStory">Platform Story</a>
-          <a href="#flows" data-i18n="navFlows">Workspaces</a>
-          <a href="#trust" data-i18n="navTrust">Trust Engine</a>
-          <a href="./getting-started.html" data-i18n="navStart">Getting Started</a>
+      <div id="overlayMenu" class="sx-overlay-menu" inert>
+        <nav>
+          <a href="#archives" data-i18n="navBoutique">Boutique</a>
+          <a href="#trust" data-i18n="navMuses">The Muses</a>
+          <a href="#philosophy" data-i18n="navPhilosophy">Philosophy</a>
         </nav>
-
-        <div class="controls">
-          <select id="langSelect" class="select" aria-label="Language selector">
-            <option value="en">Eng</option>
-            <option value="zh-TW">Zh-TW</option>
-            <option value="hu">Hungarian</option>
-            <option value="fr">French</option>
+        <div class="sx-overlay-controls">
+          <select id="langSelect" aria-label="Language selector">
+            <option value="en">EN</option>
+            <option value="zh-TW">TW</option>
+            <option value="hu">HU</option>
+            <option value="fr">FR</option>
           </select>
-          <a class="btn ghost" data-role-link="admin" href="./app.html?role=admin&lang=en" data-i18n="btnOps">Operations</a>
-          <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="btnCreator">Creator</a>
-          <a class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="btnCustomer">Customer</a>
+          <a href="./app.html?role=customer&lang=en" data-role-link="customer" data-i18n="btnSignIn">Sign In</a>
         </div>
-
-        <button id="mobileMenuToggle" class="mobile-menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileDrawer">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M4 7h16" />
-            <path d="M4 12h16" />
-            <path d="M4 17h16" />
-          </svg>
-        </button>
       </div>
-    </header>
 
-    <div id="mobileMenuBackdrop" class="mobile-backdrop" hidden></div>
-    <aside id="mobileDrawer" class="mobile-drawer" hidden inert>
-      <nav class="mobile-links">
-        <a href="#story" data-i18n="navStory">Platform Story</a>
-        <a href="#flows" data-i18n="navFlows">Workspaces</a>
-        <a href="#trust" data-i18n="navTrust">Trust Engine</a>
-        <a href="./getting-started.html" data-i18n="navStart">Getting Started</a>
-      </nav>
-      <div class="mobile-controls">
-        <select id="langSelectMobile" class="select" aria-label="Language selector">
-          <option value="en">Eng</option>
-          <option value="zh-TW">Zh-TW</option>
-          <option value="hu">Hungarian</option>
-          <option value="fr">French</option>
-        </select>
-        <a class="btn ghost" data-role-link="admin" href="./app.html?role=admin&lang=en" data-i18n="btnOps">Operations</a>
-        <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="btnCreator">Creator</a>
-        <a class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="btnCustomer">Customer</a>
-      </div>
-    </aside>
+      <a href="./app.html?role=customer&lang=en" data-role-link="customer" class="sx-fab">
+        <span class="sx-fab-icon">X</span>
+        <span class="sx-fab-text" data-i18n="btnRequestAccess">Request Access</span>
+      </a>
 
-    <main>
-      <section id="hero" class="hero">
-        <div class="hero-center" aria-hidden="true">
-          <div class="hero-pill" data-i18n="heroBadge">Role-first marketplace routing</div>
-          <div class="hero-logo">SLUTTY<span>SLUTS</span></div>
+      <section id="home" class="sx-hero">
+        <div class="sx-hero-bg" aria-hidden="true"></div>
+        <a href="#archives" class="sx-explore-btn" data-i18n="heroExplore">Explore Collection</a>
+
+        <div class="sx-hero-content">
+          <h1>
+            <span data-i18n="heroTitleLead">The Essence of</span>
+            <em data-i18n="heroTitleEm">Intimacy.</em>
+          </h1>
         </div>
 
-        <article class="hero-panel customer-panel" data-role-panel="customer" tabindex="0" aria-label="Customer entry panel">
-          <img
-            class="panel-image"
-            src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1600&q=80"
-            alt="Curated customer workspace background"
-          />
-          <div class="panel-tint"></div>
-          <div class="panel-content">
-            <p class="panel-kicker" data-i18n="heroCustomerKicker">Demand Side</p>
-            <h2 class="panel-title"><span data-i18n="heroCustomerTitleLead">THE</span> <em data-i18n="heroCustomerTitleEm">VAULT</em></h2>
-            <div class="panel-extra">
-              <p class="panel-copy" data-i18n="heroCustomerCopy">
-                Explore curated listings with transparent checkout fees, private communication, and verified delivery states.
-              </p>
-              <a class="panel-link" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroEnterCustomer"
-                >Enter as Customer
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M5 12h14" />
-                  <path d="m13 6 6 6-6 6" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </article>
-
-        <article class="hero-panel creator-panel" data-role-panel="creator" tabindex="0" aria-label="Creator entry panel">
-          <img
-            class="panel-image"
-            src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=1600&q=80"
-            alt="Creator monetization workspace background"
-          />
-          <div class="panel-tint"></div>
-          <div class="panel-content">
-            <p class="panel-kicker" data-i18n="heroCreatorKicker">Supply Side</p>
-            <h2 class="panel-title"><span data-i18n="heroCreatorTitleLead">THE</span> <em data-i18n="heroCreatorTitleEm">SYNDICATE</em></h2>
-            <div class="panel-extra">
-              <p class="panel-copy" data-i18n="heroCreatorCopy">
-                Monetize with promotion inventory, reserve-aware wallets, dispute-ready ledgers, and controlled payouts.
-              </p>
-              <a class="panel-link" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroEnterCreator"
-                >Enter as Creator
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M19 12H5" />
-                  <path d="m11 6-6 6 6 6" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </article>
-
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <strong>99.96%</strong>
-            <span data-i18n="metric1">webhook reliability with idempotent processing</span>
-          </div>
-          <div class="hero-stat">
-            <strong>120d</strong>
-            <span data-i18n="metric2">rolling reserve window visible in creator wallet</span>
-          </div>
-          <div class="hero-stat">
-            <strong>3x</strong>
-            <span data-i18n="metric3">promotion lift from inventory-based ranking plans</span>
-          </div>
-        </div>
-        <div class="hero-progress" aria-hidden="true"><span id="heroProgressBar"></span></div>
+        <a href="./app.html?role=creator&lang=en" data-role-link="creator" class="sx-hero-bottom-cta" data-i18n="heroApplyMuse">Apply as a Muse</a>
       </section>
 
-      <section id="story" class="section reveal">
-        <div class="container">
-          <div class="section-head">
-            <p class="section-kicker" data-i18n="storyKicker">Platform Architecture</p>
-            <h3 class="section-title" data-i18n="storyTitle">Built like a commerce engine, presented like a premium brand.</h3>
-            <p class="section-copy" data-i18n="storyCopy">
-              The experience looks editorial and exclusive, while the foundation runs dual-fee calculations, moderation states, dispute operations, and reserve-aware payouts.
-            </p>
+      <section id="trust" class="sx-trust">
+        <h2 class="sx-trust-kicker" data-i18n="trustTitle">Unseen. Secure. Absolute.</h2>
+        <div class="sx-trust-grid">
+          <article class="sx-trust-card">
+            <div class="sx-trust-icon">◱</div>
+            <h3 data-i18n="trustCard1Title">Zero-Knowledge</h3>
+            <p data-i18n="trustCard1Copy">Your identity is cryptographically separated from transactions.</p>
+          </article>
+          <article class="sx-trust-card">
+            <div class="sx-trust-icon">◫</div>
+            <h3 data-i18n="trustCard2Title">Impeccable Verification</h3>
+            <p data-i18n="trustCard2Copy">Every creator is manually reviewed before listing access.</p>
+          </article>
+          <article class="sx-trust-card">
+            <div class="sx-trust-icon">◪</div>
+            <h3 data-i18n="trustCard3Title">Escrow Protection</h3>
+            <p data-i18n="trustCard3Copy">Funds remain protected until order integrity is complete.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="archives" class="sx-archives">
+        <h2 data-i18n="archivesTitle">The Archives</h2>
+        <div class="sx-archives-gallery">
+          <div class="sx-arch-item i1">
+            <div class="sx-arch-label" data-i18n="cat1Title">Intimates</div>
+            <img src="https://images.unsplash.com/photo-1572913017567-02f0649bedf9?q=80&w=1200&auto=format&fit=crop" alt="Intimates" />
           </div>
-          <div class="editorial-list">
-            <article class="editorial-item">
-              <span class="editorial-num">01</span>
-              <h3 data-i18n="storyCard1Title">Dual-Fee Ledger Core</h3>
-              <p data-i18n="storyCard1Copy">Every order stores base price, buyer fee, commission, seller earnings, and reconciliation-ready transaction trails.</p>
-            </article>
-            <article class="editorial-item">
-              <span class="editorial-num">02</span>
-              <h3 data-i18n="storyCard2Title">Promotion Monetization</h3>
-              <p data-i18n="storyCard2Copy">Creators can buy duration or click-based ranking plans directly from their workspace and track conversion impact.</p>
-            </article>
-            <article class="editorial-item">
-              <span class="editorial-num">03</span>
-              <h3 data-i18n="storyCard3Title">Compliance by Design</h3>
-              <p data-i18n="storyCard3Copy">KYC gates, moderation queues, and review events control what gets published before it reaches customers.</p>
-            </article>
-            <article class="editorial-item">
-              <span class="editorial-num">04</span>
-              <h3 data-i18n="storyCard4Title">Chargeback Defense</h3>
-              <p data-i18n="storyCard4Copy">Dispute webhooks freeze funds, build evidence packets, and adjust reserve rates using seller risk profiles.</p>
-            </article>
+
+          <div class="sx-arch-item i2">
+            <div class="sx-arch-label" data-i18n="cat2Title">Hosiery</div>
+            <img src="https://images.unsplash.com/photo-1552874869-5c39ec9288dc?q=80&w=800&auto=format&fit=crop" alt="Hosiery" />
+          </div>
+
+          <div class="sx-arch-item i3">
+            <div class="sx-arch-label" data-i18n="cat3Title">Footwear</div>
+            <img src="https://images.unsplash.com/photo-1542280281-7ceac96cb9a4?q=80&w=800&auto=format&fit=crop" alt="Footwear" />
           </div>
         </div>
       </section>
 
-      <section id="flows" class="section reveal">
-        <div class="container">
-          <div class="section-head">
-            <p class="section-kicker" data-i18n="flowsKicker">Role Journeys</p>
-            <h3 class="section-title" data-i18n="flowsTitle">Two workspaces, one operating system.</h3>
-            <p class="section-copy" data-i18n="flowsCopy">Users choose identity once, then land in a journey tuned for conversion, control, and transparency.</p>
-          </div>
-
-          <div class="flows">
-            <article class="flow creator">
-              <h3 data-i18n="creatorTitle">Creator Workspace</h3>
-              <p data-i18n="creatorCopy">For catalog operations, promotion spend, reserve tracking, and withdrawal management.</p>
-              <ul>
-                <li data-i18n="creatorPoint1">Manage listings, pricing, and inventory states</li>
-                <li data-i18n="creatorPoint2">Buy promotion slots and monitor exposure performance</li>
-                <li data-i18n="creatorPoint3">Track available, pending, and disputed balances</li>
-              </ul>
-              <a class="panel-link" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroEnterCreator">Enter as Creator</a>
-            </article>
-            <article class="flow">
-              <h3 data-i18n="customerTitle">Customer Workspace</h3>
-              <p data-i18n="customerCopy">For discovery, transparent pending orders, hosted checkout, and delivery/dispute tracking.</p>
-              <ul>
-                <li data-i18n="customerPoint1">Browse promoted and organic listings</li>
-                <li data-i18n="customerPoint2">Review fee breakdown before hosted payment redirect</li>
-                <li data-i18n="customerPoint3">Track order, shipping proof, and dispute states</li>
-              </ul>
-              <a class="panel-link" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroEnterCustomer">Enter as Customer</a>
-            </article>
-          </div>
-        </div>
+      <section id="philosophy" class="sx-muse">
+        <h2>
+          <span data-i18n="museTitleLead">Become a Muse.</span>
+          <em data-i18n="museTitleEm">Monetize Your Aura.</em>
+        </h2>
+        <a href="./app.html?role=creator&lang=en" data-role-link="creator" class="sx-muse-cta" data-i18n="museSubmit">Submit</a>
       </section>
 
-      <section id="trust" class="section reveal" style="border-bottom: 1px solid rgba(255, 255, 255, 0.08)">
-        <div class="container">
-          <div class="section-head">
-            <p class="section-kicker" data-i18n="trustKicker">Trust Engine</p>
-            <h3 class="section-title" data-i18n="trustTitle">Safety systems stay in the background and keep conversion smooth.</h3>
-            <p class="section-copy" data-i18n="trustCopy">
-              High-risk commerce survives by being predictable. These controls protect margin, payouts, and payment partner health.
-            </p>
+      <footer class="sx-footer">
+        <h2 class="sx-footer-giant">SCENTX</h2>
+        <div class="sx-footer-bottom">
+          <span data-i18n="footerCopy">© 2026 SCENTX.</span>
+          <div class="sx-footer-links">
+            <a href="#" data-i18n="footerLegal1">Terms</a>
+            <a href="#" data-i18n="footerLegal2">Privacy Vault</a>
           </div>
-
-          <div class="editorial-list">
-            <article class="editorial-item">
-              <span class="editorial-num">I</span>
-              <h3 data-i18n="trustCard1Title">Idempotent Webhooks</h3>
-              <p data-i18n="trustCard1Copy">Duplicate payment callbacks are ignored safely so balances never credit twice.</p>
-            </article>
-            <article class="editorial-item">
-              <span class="editorial-num">II</span>
-              <h3 data-i18n="trustCard2Title">Append-only Ledger</h3>
-              <p data-i18n="trustCard2Copy">All balance transitions are written as immutable records for auditing and reconciliation.</p>
-            </article>
-            <article class="editorial-item">
-              <span class="editorial-num">III</span>
-              <h3 data-i18n="trustCard3Title">Moderation Console</h3>
-              <p data-i18n="trustCard3Copy">Operations teams process review queues with clear approve/reject state transitions.</p>
-            </article>
-            <article class="editorial-item">
-              <span class="editorial-num">IV</span>
-              <h3 data-i18n="trustCard4Title">Dispute State Machine</h3>
-              <p data-i18n="trustCard4Copy">Chargebacks create holds, lock risky withdrawals, and trigger evidence collection.</p>
-            </article>
-          </div>
+          <span data-i18n="footerBadge">Encrypted</span>
         </div>
-      </section>
-
-      <section class="container cta reveal">
-        <div>
-          <h3 data-i18n="ctaTitle">Choose your role and enter the live workspace.</h3>
-          <p data-i18n="ctaCopy">Language, route, and onboarding context are carried across so users land in the right operating flow immediately.</p>
-        </div>
-        <div class="controls">
-          <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroEnterCreator">Enter as Creator</a>
-          <a class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroEnterCustomer">Enter as Customer</a>
-        </div>
-      </section>
-
-      <footer class="container footer">
-        <span data-i18n="footer">SluttySluts Marketplace Platform. Role-first entry, multilingual routing, and production-ready commerce controls.</span>
       </footer>
-
-      <div class="quick-dock">
-        <a class="btn creator" data-role-link="creator" href="./app.html?role=creator&lang=en" data-i18n="heroEnterCreator">Enter as Creator</a>
-        <a class="btn customer" data-role-link="customer" href="./app.html?role=customer&lang=en" data-i18n="heroEnterCustomer">Enter as Customer</a>
-      </div>
-    </main>
+    </div>
 
     <script type="module" src="./js/index.js"></script>
   </body>
